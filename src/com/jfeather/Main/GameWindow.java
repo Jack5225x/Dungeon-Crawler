@@ -19,6 +19,7 @@ import javax.swing.JToolTip;
 import javax.swing.border.EmptyBorder;
 
 import com.jfeather.Exceptions.*;
+import com.jfeather.Generation.*;
 import com.jfeather.Items.*;
 import com.jfeather.Player.Character;
 
@@ -56,15 +57,17 @@ public class GameWindow extends JFrame {
 		setContentPane(contentPane);
 		setTitle("Game");
 		setResizable(false);
-		
-		Weapon starterSword = new Weapon("Starter Sword","A basic sword made of iron. Seems sturdy enough... for now. I should probably try to find another soon.", 1, 6, 1, 0, 0, 0, 0, new ImageIcon("Sprites/Items/Weapons/GreenSwordSmall.png"));
-		Armor testArmor = new Armor("Basic Armor", "A basic set of armor; suited for a new recruit.", 1, 1, 0, 0, 0, 0, new ImageIcon("Sprites/Items/Weapons/GreenSwordSmall.png"));
-		Helmet testHelmet = new Helmet("Basic Helmet", "A basic helmet; suited for a new recruit.", 1, 1, 0, 0, 0, 0, new ImageIcon("Sprites/Items/Weapons/GreenSwordSmall.png"));
+		WeaponsGen rwg = new WeaponsGen();
+		//Weapon starterSword = new Weapon("Starter Sword","A basic sword made of iron. Seems sturdy enough... for now. I should probably try to find another soon.", 1, 6, 1, 0, 0, 0, 0, new ImageIcon("Sprites/Items/Weapons/Swords/GreenSwordSmall.png"));
+		Armor testArmor = new Armor("Basic Armor", "A basic set of armor; suited for a new recruit.", 0, 1, 0, 0, 0, 0, new ImageIcon("Sprites/Items/Weapons/Swords/GreenSwordSmall.png"));
+		Helmet testHelmet = new Helmet("Basic Helmet", "A basic helmet; suited for a new recruit.", 1, 1, 0, 0, 0, 0, new ImageIcon("Sprites/Items/Weapons/Swords/GreenSwordSmall.png"));
 		Character jack = new Character("Jack");
 		Inventory inv = createInv(jack, 10);
+		jack.level = 50;
+		Weapon testRandom = rwg.genSword(jack);
 		inv.addItem(testHelmet);
 		inv.addItem(testArmor);
-		inv.addItem(starterSword);
+		inv.addItem(testRandom); 
 		TitleScreen ts = new TitleScreen(contentPane);
 		pack();
 	}

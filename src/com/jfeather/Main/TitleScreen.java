@@ -1,7 +1,5 @@
 package com.jfeather.Main;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -12,10 +10,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SwingWorker;
-import javax.swing.Timer;
 
-import com.jfeather.Exceptions.InventoryCapacityException;
 import com.jfeather.Player.SaveSelect;
 
 public class TitleScreen implements MouseListener {
@@ -41,8 +36,6 @@ public class TitleScreen implements MouseListener {
 		
 		exitText = new JLabel();
 		exitTextHighlighted = new JLabel();
-		
-
 	}
 	
 	@Override

@@ -91,7 +91,7 @@ public class Inventory extends JPanel implements MouseListener {
 			for (int i = 0; i < MAX_SLOTS + 3; i++) {
 				items[i] = new Item();
 			}
-			
+			/*
 			// Add the decorative inventory borders (looks kinda wonky rn TODO: make it not wonky)
 			JLabel topBorder = new JLabel(new ImageIcon("Sprites/Inventory/InventoryTopBorder.png"));
 			dialog.add(topBorder, BorderLayout.NORTH);
@@ -103,7 +103,7 @@ public class Inventory extends JPanel implements MouseListener {
 			JLabel leftBorder = new JLabel(new ImageIcon("Sprites/Inventory/InventoryBorderLeft.png"));
 			leftBorder.setBounds(0, 15, 14, 120);
 			dialog.add(leftBorder);
-
+			*/
 			
 			// For some reason this is needed to fix the other buttons
 			// Don't change below this line (unless you're better at coding than I am, which is probably not going to happen since I'm the only one working on this :( )
