@@ -63,8 +63,8 @@ public class GameWindow extends JFrame {
 		Helmet testHelmet = new Helmet("Basic Helmet", "A basic helmet; suited for a new recruit.", 1, 1, 0, 0, 0, 0, new ImageIcon("Sprites/Items/Weapons/Swords/GreenSwordSmall.png"));
 		Character jack = new Character("Jack");
 		Inventory inv = createInv(jack, 10);
-		jack.level = 50;
-		Weapon testRandom = rwg.genSword(jack);
+		jack.level = 10;
+		Weapon testRandom = rwg.genWeapon(jack, "bow");
 		inv.addItem(testHelmet);
 		inv.addItem(testArmor);
 		inv.addItem(testRandom); 

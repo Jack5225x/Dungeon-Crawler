@@ -42,7 +42,7 @@ public class Weapon {
 		if (luck != 0)
 			stats = stats + "Luck +<font color='red'>"+luck+"</font><br>";
 		
-		toolTip = "<html> <b><font color='"+rarityColor+"'>"+name+"</font><br>Damage: <font color='red'>"+damage+"</font><br>Speed: <font color='red'>"+speed+"</font><br>"+stats+"<i>"+DescrWrap.descrWrap(descr)+"</html>";
+		toolTip = "<html> <b><font color='"+rarityColor+"'>"+name+"</font><br>Damage: <font color='red'>"+damage+"</font><br>Speed: <font color='red'>"+speed+"</font><br>"+stats+"<i>"+DescrWrap.descrWrap(descr, name)+"</html>";
 	}
 	
 	public void debugWeapon(Weapon sword) {
@@ -50,7 +50,7 @@ public class Weapon {
 		System.out.println("Damage: "+sword.damage);
 		System.out.println("Speed: "+sword.speed);
 		System.out.println("Rarity ID: "+sword.rarity);
-		System.out.println("Description (Formatted): "+DescrWrap.descrWrap(sword.descr));
+		System.out.println("Description (Formatted): "+DescrWrap.descrWrap(sword.descr, name));
 	}
 	
 }
