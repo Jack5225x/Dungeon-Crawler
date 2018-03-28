@@ -4,7 +4,9 @@ I'm mainly doing this to learn more Java and get better at it so we'll see.
 
 All of the sprites in the game including the title screen, text, etc. were made by us. 
 
-[Piskler link](https://www.piskelapp.com/user/5364213177384960)
+[Piskler link (Nick)](https://www.piskelapp.com/user/5364213177384960)
+
+[Piskler link (Jack)](https://www.piskelapp.com/user/4977014434955264)
 
 At this point there is a title screen that sorta works and a basic inventory system with equipment slots and character stats.
 
