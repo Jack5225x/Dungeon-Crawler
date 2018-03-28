@@ -10,12 +10,12 @@ import com.jfeather.Player.Character;
 public class WeaponsGen {
 	
 	private String[] preConstructions = {"The ", ""};
-	private String[] basePreAdjectives = {"Mighty", "Strong" ,"Steadfast", "Crystal", "Shine", "Angelic", "Demonic", "Adorned"};
+	private String[] basePreAdjectives = {"Mighty", "Strong" ,"Steadfast", "Crystal", "Shiny", "Angelic", "Demonic", "Adorned", "Void"};
 	private String[] legendaryDivinePreAdjectives = {"Rainbow", "Godly", "Ancient", "Divine", "Legendary", "Infinity", "Quantum", "Tachyonic"};
-	private String[] basePostAdjectives = {"Avarice", "Swiftness", "Might", "Destruction", "Darkness", "Light"};
+	private String[] basePostAdjectives = {"Avarice", "Swiftness", "Strength", "Destruction", "Darkness", "Brightness"};
 	private String[] baseEntities = {"the Jester", "the Behemoth", "the Giant", "the Sentinel", "the Beholder", "the Peasant"};
 	private String[] legendaryDivinePostAdjectives = {"Might", "Magic", "Infinity", "the Void", "Impossibility", "Prisms", "Illusions", "Aether"};
-	private String[] legendaryDivineEntities = {"the Gods", "the King", "the Ancients", "the Morning Star", "a Meteor", "the McDonald's Breakfast Artisans"};
+	private String[] legendaryDivineEntities = {"Gods", "King", "Ancients", "Morning Star", "Meteor", "McDonald's Breakfast Artisans"};
 
 	// Weapon types and names
 	private String[] swordBaseNames = {"Sword", "Scimitar", "Blade", "Katana", "Greatsword", "Saber", "Rapier", "Longsword"};
@@ -41,7 +41,7 @@ public class WeaponsGen {
 	
 	// Description arrays
 	private String[][] descrPhrasesEntity = {
-			{"Forged for a ", "Crafted for a ", "Made by a "},
+			{"Forged for ", "Crafted for ", "Made by "},
 			{"very strong.", "very reliable.", "quite old", "seemingly new"}
 	};
 	
@@ -55,8 +55,8 @@ public class WeaponsGen {
 	};
 
 	private String[][] descrLegendaryDivine  = {
-			{"was recovered from an ancient tomb.", "was found alongside a forgotten king.", "defeated hordes of enemies in a lost past.", "was wielded by an old god.", "causes any who wield it to be controlled by a mystical energy.", "summons the might of ungodly forces.", "has proved to be too powerful for even the mightiest kings to wield"},
-			{"Wielded by", "Forged by", "Summoned by"}
+			{"was recovered from an ancient tomb.", "was found alongside a forgotten king.", "defeated hordes of enemies in a lost past.", "was wielded by an old god.", "causes any who wield it to be controlled by a mystical energy.", "summons the might of ungodly forces.", "has proved to be too powerful for even the mightiest kings to wield."},
+			{"Wielded by the", "Forged by the", "Summoned by the"}
 	};
 	
 	public Weapon genWeapon(Character c, String weaponType) {
@@ -92,16 +92,16 @@ public class WeaponsGen {
 				// Int
 				intelligence = rand.nextInt(c.level * 2) + (rarity + 1) * 2;
 				strength = 0;
-				agility = rand.nextInt((int)(c.level / 10) + 1);
-				luck = rand.nextInt((int)(c.level / 10) + 1);
+				agility = rand.nextInt((int)(c.level / 10 + 1) + 1);
+				luck = rand.nextInt((int)(c.level / 10 + 1) + 1);
 				speed = rand.nextInt(10) + 1;
 				break;
 			case 1:
 				// Str
 				strength = rand.nextInt(c.level * 2) + (rarity + 1) * 2;
 				intelligence = 0;
-				luck = rand.nextInt(c.level / 5) + (rarity + 1) * 2;
-				agility = rand.nextInt(c.level / 10) + (rarity + 1) * 2;
+				luck = rand.nextInt(c.level / 5 + 1) + (rarity + 1) * 2;
+				agility = rand.nextInt(c.level / 10 + 1) + (rarity + 1) * 2;
 				speed = rand.nextInt(6) + 1;
 				break;
 			case 2:
@@ -109,7 +109,7 @@ public class WeaponsGen {
 				strength = rand.nextInt(c.level / 2 + 1);
 				intelligence = rand.nextInt(c.level / 2 + 1);
 				luck = rand.nextInt(c.level);
-				agility = rand.nextInt(c.level / 5) + (rarity + 1) * 2;
+				agility = rand.nextInt(c.level / 5 + 1) + (rarity + 1) * 2;
 				speed = rand.nextInt(12) + 1;
 				break;
 			case 3:
@@ -117,12 +117,12 @@ public class WeaponsGen {
 				strength = rand.nextInt(c.level / 2 + 1);
 				intelligence = rand.nextInt(c.level / 2 + 1);
 				agility = rand.nextInt(c.level);
-				luck = rand.nextInt(c.level / 5) + (rarity + 1) * 2;
+				luck = rand.nextInt(c.level / 5 + 1) + (rarity + 1) * 2;
 				speed = rand.nextInt(10) + 5;
 				break;
 		}
 		
-		int damage = rand.nextInt(c.level) + (c.level) + 2;
+		int damage = rand.nextInt(c.level) + ((rarity + 1) * c.level) * 2;
 		
 		Weapon sword =  new Weapon(name, descr, rarity, damage, speed, strength, intelligence, agility, luck, genSprite("Sprites/Items/Weapons/" + spritesFolder, rarity));	
 		return sword;
@@ -131,21 +131,28 @@ public class WeaponsGen {
 	public ImageIcon genSprite(String folderName, int rarity) {
 		Random rng = new Random();
 		File[] arr = null;
-		if (rarity < 5) {
-			File folder = new File(folderName);
-			arr = folder.listFiles();
+		int index;
+		while (true) {
+			inside:
+			if (rarity < 5) {
+				File folder = new File(folderName);
+				arr = folder.listFiles();
+			}
+			if (rarity == 5) {
+				File folder = new File(folderName + "Legendary/");
+				arr = folder.listFiles();
+			}
+			if (rarity == 6) {
+				File folder = new File(folderName + "Divine/");
+				arr = folder.listFiles();
+			}
+			if (arr.length != 0) {
+				index = rng.nextInt(arr.length);
+				if (!(arr[index].getName().equals("Legendary")) && !(arr[index].getName().equals("Divine")) && !(arr[index].getName().equals(".directory")))
+					break;
+			}
 		}
-		if (rarity == 5) {
-			File folder = new File(folderName + "Legendary/");
-			arr = folder.listFiles();
-		}
-		if (rarity == 6) {
-			File folder = new File(folderName + "Divine/");
-			arr = folder.listFiles();
-		}
-		if (arr.length == 0)
-			return new ImageIcon("");
-		return new ImageIcon(arr[rng.nextInt(arr.length)].getPath());
+		return new ImageIcon(arr[index].getPath());
 	}
 	
 	public int genRarity() {
@@ -210,34 +217,44 @@ public class WeaponsGen {
 			default:
 		}
 		
-		String[] name = new String[4];
+		String[] name = new String[5];
 		int path = rng.nextInt(4);
-		
+		for (int i = 0; i < name.length; i++) {
+			name[i] = "";
+		}
 		// name[0] = the actual name
 		// name[1] = the type of weapon
-		// name[2] = entity
-		// name[3] = adjective
+		// name[2] = post entity
+		// name[3] = post adjective
+		// name[4] = pre adjective
 		
 		switch (path) {
 			case 0:
 				// No pre-adjective, with a post adjective
-				name[0] = preConstructions[rng.nextInt(preConstructions.length)] + " " + (name[1] = arr[rng.nextInt(arr.length)]) + " of " + (name[3] = postAdjectives[rng.nextInt(postAdjectives.length)]);
+				name[0] = preConstructions[rng.nextInt(preConstructions.length)] + (name[1] = arr[rng.nextInt(arr.length)]) + " of " + (name[3] = postAdjectives[rng.nextInt(postAdjectives.length)]);
 				name[2] = "";
+				name[4] = "";
 				break;
 			case 1:
 				// No pre-adjective, with a post entity
-				name[0] = preConstructions[rng.nextInt(preConstructions.length)] + " " + (name[1] = arr[rng.nextInt(arr.length)]) + " of " + (name[2] = entities[rng.nextInt(entities.length)]);
+				name[0] = preConstructions[rng.nextInt(preConstructions.length)] + (name[1] = arr[rng.nextInt(arr.length)]) + " of the " + (name[2] = entities[rng.nextInt(entities.length)]);
 				name[3] = "";
+				name[4] = "";
 				break;
 			case 2:
 				// Pre-adjective
-				name[0] = (name[3] = preAdjectives[rng.nextInt(preAdjectives.length)]) + " " + (name[1] = arr[rng.nextInt(arr.length)]);
+				name[0] = (name[4] = preAdjectives[rng.nextInt(preAdjectives.length)]) + " " + (name[1] = arr[rng.nextInt(arr.length)]);
 				name[2] = "";
+				name[3] = "";
 				break;
 			case 3: 
 				// Pre-entity
 				int temp;
-				name[0] = (name[2] = (entities[temp = rng.nextInt(entities.length)].substring(0, 1).toUpperCase()) + entities[temp].substring(1, entities[temp].length())) + "'s " + (name[1] = arr[rng.nextInt(arr.length)]);
+				name[2] = (entities[temp = rng.nextInt(entities.length)].substring(0, 1).toUpperCase()) + entities[temp].substring(1, entities[temp].length());
+				if (name[2].substring(name[2].length() - 1, name[2].length()).equals("s"))
+					name[0] = name[2] + "'" +  " " + (name[1] = arr[rng.nextInt(arr.length)]);
+				else
+					name[0] = name[2] + "'s " + (name[1] = arr[rng.nextInt(arr.length)]);
 				name[3] = "";
 				break;
 		}
@@ -270,17 +287,23 @@ public class WeaponsGen {
 			if (path == 1) {
 				descr = "A " + nameComponents[1].toLowerCase() + descrPhrasesType[0][rng.nextInt(descrPhrasesType[0].length)] + material + descrPhrasesType[1][rng.nextInt(descrPhrasesType[1].length)];
 			} else {
-				if (nameComponents[2].equals("")) {
+				if (nameComponents[2].equals("") && nameComponents[4].equals("")) {
 					descr = "The " + nameComponents[3].toLowerCase() + " of this " + nameComponents[1].toLowerCase() + " " + descrPhrasesAdjective[0][rng.nextInt(descrPhrasesAdjective[0].length)];
 				} else {
-					descr = descrPhrasesEntity[0][rng.nextInt(descrPhrasesEntity[0].length)] + nameComponents[2] + ", this " + material + " " + nameComponents[1].toLowerCase() + " is " + descrPhrasesEntity[1][rng.nextInt(descrPhrasesEntity[1].length)];
+					if (nameComponents[2].equals(""))
+						descr = "This " + material + " " + nameComponents[1].toLowerCase() + " " + descrPhrasesAdjective[0][rng.nextInt(descrPhrasesAdjective[0].length)];
+					else
+						descr = descrPhrasesEntity[0][rng.nextInt(descrPhrasesEntity[0].length)] + nameComponents[2] + ", this " + material + " " + nameComponents[1].toLowerCase() + " is " + descrPhrasesEntity[1][rng.nextInt(descrPhrasesEntity[1].length)];
 				}
 			}
 		} else {
-			if (nameComponents[2].equals("")) {
+			if (nameComponents[2].equals("") && nameComponents[4].equals("")) {
 				descr = "This " + material + " " + nameComponents[1].toLowerCase() + " " + descrLegendaryDivine[0][rng.nextInt(descrLegendaryDivine[0].length)];
 			} else {
-				descr = descrLegendaryDivine[1][rng.nextInt(descrLegendaryDivine[1].length)] + " " + nameComponents[2] + ", this " + nameComponents[1].toLowerCase() + " " + descrLegendaryDivine[0][rng.nextInt(descrLegendaryDivine[0].length)];
+				if (nameComponents[2].equals(""))
+					descr = "This " + material + " " + nameComponents[4].toLowerCase() + " " + nameComponents[1].toLowerCase() + " " + descrLegendaryDivine[0][rng.nextInt(descrLegendaryDivine[0].length)];
+				else
+					descr = descrLegendaryDivine[1][rng.nextInt(descrLegendaryDivine[1].length)] + " " + nameComponents[2] + ", this " + nameComponents[1].toLowerCase() + " " + descrLegendaryDivine[0][rng.nextInt(descrLegendaryDivine[0].length)];
 			}
 		}
 		return descr;

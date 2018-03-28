@@ -31,7 +31,6 @@ public class Inventory extends JPanel implements MouseListener {
 	public int weaponSlotIndex, armorSlotIndex, helmetSlotIndex, capacity;
 	public int[][] slotLocations = {{10, 20}, {10, 80}, {65, 20}, {65, 80}, {120, 20}, {120, 80}, {175, 20}, {175, 80}, {230, 20}, {230, 80}, {540, 20} ,{540, 80}, {485, 50}};
 	
-	
 	public Inventory(Character c, int inventoryCapacity) throws InventoryCapacityException {
 		capacity = inventoryCapacity;
 		if (inventoryCapacity > MAX_SLOTS)
