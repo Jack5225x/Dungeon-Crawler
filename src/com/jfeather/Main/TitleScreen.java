@@ -1,7 +1,5 @@
 package com.jfeather.Main;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -12,25 +10,36 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SwingWorker;
-import javax.swing.Timer;
 
 import com.jfeather.Exceptions.InventoryCapacityException;
+import com.jfeather.Game.GameInstance;
 import com.jfeather.Player.SaveSelect;
 
 public class TitleScreen implements MouseListener {
 
 	public JLabel title, titleGif, startText, startTextHighlighted, exitText, exitTextHighlighted;
 	public JPanel dialog;
+	public JLabel[] pointer; 
 	public boolean runGif = false;
 	
 	public TitleScreen(JPanel dialogPanel) {
 		dialog = new JPanel();
 		dialog = dialogPanel;
 		
+		// Set up the pointer
+		pointer = new JLabel[3];
+		for (int i = 0; i < pointer.length; i++) {
+			pointer[i] = new JLabel(new ImageIcon("Sprites/TitleScreen/TitleScreenPointer.png"));
+			dialog.add(pointer[i]);
+			pointer[i].setVisible(false);
+		}
+		pointer[0].setBounds(400, 132, 60, 25);
+		//pointer[1].setBounds(r);
+		pointer[2].setBounds(415, 247, 60, 25);
+		
 		// Add the background
 		// This will eventually be a looped gif, but for now a png works
-		title = new JLabel(gif("Sprites/TitleScreen/NewTitleScreenBackground.png"));
+		title = new JLabel(gif("Sprites/TitleScreen/TitleScreenBackground3.png"));
 		dialog.add(title);
 		title.addMouseListener(this);
 		
@@ -42,7 +51,6 @@ public class TitleScreen implements MouseListener {
 		exitText = new JLabel();
 		exitTextHighlighted = new JLabel();
 		
-
 	}
 	
 	@Override
@@ -52,16 +60,18 @@ public class TitleScreen implements MouseListener {
 			runTitle();
 			runGif = true;
 		} else {
+			GameWindow gw = new GameWindow();
 			int x = (int) (e.getLocationOnScreen().getX() - dialog.getLocationOnScreen().getX());
 			int y = (int) (e.getLocationOnScreen().getY() - dialog.getLocationOnScreen().getY());
 			//If the button is over the start button
 			if ((x > startText.getX() && x < startText.getX() + startText.getWidth()) && (y > startText.getY() && y < startText.getY() + startText.getHeight())) {
-				SaveSelect ss = new SaveSelect();
-				JOptionPane.showMessageDialog(null, ss.dialog);
+				//SaveSelect ss = new SaveSelect();
+				//JOptionPane.showMessageDialog(null, ss.dialog);
+				//GameInstance instance = new GameInstance(GameWindow.frame);
+				gw.done = true;
 			}
 			if ((x > exitText.getX() && x < exitText.getX() + exitText.getWidth()) && (y > exitText.getY() && y < exitText.getY() + exitText.getHeight())) {
 				// Close the window
-				GameWindow gw;
 				try {
 					gw = new GameWindow();
 					gw.close();
@@ -82,10 +92,12 @@ public class TitleScreen implements MouseListener {
 		if ((x > startText.getX() && x < startText.getX() + startText.getWidth()) && (y > startText.getY() && y < startText.getY() + startText.getHeight())) {
 			startText.setVisible(false);
 			startTextHighlighted.setVisible(true);
+			pointer[0].setVisible(true);
 		}
 		if ((x > exitText.getX() && x < exitText.getX() + exitText.getWidth()) && (y > exitText.getY() && y < exitText.getY() + exitText.getHeight())) {
 			exitText.setVisible(false);
 			exitTextHighlighted.setVisible(true);
+			pointer[2].setVisible(true);
 		}
 
 	}
@@ -94,10 +106,11 @@ public class TitleScreen implements MouseListener {
 		// Set all of the highlighted text to not be visible
 		startTextHighlighted.setVisible(false);
 		exitTextHighlighted.setVisible(false);
-		
+		pointer[0].setVisible(false);
 		// Enable all of the un-highlighted text labels
 		startText.setVisible(true);
 		exitText.setVisible(true);
+		pointer[2].setVisible(false);
 	}
 	@Override
 	public void mousePressed(MouseEvent e) {
@@ -119,7 +132,7 @@ public class TitleScreen implements MouseListener {
 			titleButtons();
 			
 			// Add the animated picture
-			titleGif = new JLabel(gif("Sprites/TitleScreen/NewTitleScreenBackground.gif"));
+			titleGif = new JLabel(gif("Sprites/TitleScreen/TitleScreenBackground3.png"));
 			dialog.add(titleGif);
 			
 			// Remove the static picture
@@ -138,27 +151,25 @@ public class TitleScreen implements MouseListener {
 		// Start Button
 		startTextHighlighted = new JLabel(gif("Sprites/TitleScreen/TitleScreenStartTextHighlighted.png"));
 		dialog.add(startTextHighlighted);
-		startTextHighlighted.setBounds(50, 300, 110, 45);
+		startTextHighlighted.setBounds(465, 120, 110, 45);
 		startTextHighlighted.addMouseListener(this);
 		// Set the highlighted button to not be visible
 		startTextHighlighted.setVisible(false);
-		
-		startText = new JLabel(gif("Sprites/TitleScreen/TitleScreenStartTextAnimation.gif"));
+		startText = new JLabel(gif("Sprites/TitleScreen/TitleScreenStartTextFadeIn.gif"));
 		dialog.add(startText);
-		startText.setBounds(50, 300, 110, 45);
+		startText.setBounds(465, 120, 110, 45);
 		startText.addMouseListener(this);
 					
 		// Exit Button
 		exitTextHighlighted = new JLabel(gif("Sprites/TitleScreen/TitleScreenExitTextHighlighted.png"));
 		dialog.add(exitTextHighlighted);
-		exitTextHighlighted.setBounds(510, 320, 110, 45);
+		exitTextHighlighted.setBounds(480, 235, 110, 45);
 		exitTextHighlighted.addMouseListener(this);
 		// Set the highlighted button to not be visible
 		exitTextHighlighted.setVisible(false);
-		
-		exitText = new JLabel(gif("Sprites/TitleScreen/TitleScreenExitTextAnimation.gif"));
+		exitText = new JLabel(gif("Sprites/TitleScreen/TitleScreenExitTextFadeIn.gif"));
 		dialog.add(exitText);
-		exitText.setBounds(510, 320, 110, 45);
+		exitText.setBounds(480, 235, 110, 45);
 		exitText.addMouseListener(this);
 
 	}

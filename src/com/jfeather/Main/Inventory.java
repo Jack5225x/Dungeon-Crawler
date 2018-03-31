@@ -31,7 +31,6 @@ public class Inventory extends JPanel implements MouseListener {
 	public int weaponSlotIndex, armorSlotIndex, helmetSlotIndex, capacity;
 	public int[][] slotLocations = {{10, 20}, {10, 80}, {65, 20}, {65, 80}, {120, 20}, {120, 80}, {175, 20}, {175, 80}, {230, 20}, {230, 80}, {540, 20} ,{540, 80}, {485, 50}};
 	
-	
 	public Inventory(Character c, int inventoryCapacity) throws InventoryCapacityException {
 		capacity = inventoryCapacity;
 		if (inventoryCapacity > MAX_SLOTS)
@@ -91,7 +90,7 @@ public class Inventory extends JPanel implements MouseListener {
 			for (int i = 0; i < MAX_SLOTS + 3; i++) {
 				items[i] = new Item();
 			}
-			
+			/*
 			// Add the decorative inventory borders (looks kinda wonky rn TODO: make it not wonky)
 			JLabel topBorder = new JLabel(new ImageIcon("Sprites/Inventory/InventoryTopBorder.png"));
 			dialog.add(topBorder, BorderLayout.NORTH);
@@ -103,7 +102,7 @@ public class Inventory extends JPanel implements MouseListener {
 			JLabel leftBorder = new JLabel(new ImageIcon("Sprites/Inventory/InventoryBorderLeft.png"));
 			leftBorder.setBounds(0, 15, 14, 120);
 			dialog.add(leftBorder);
-
+			*/
 			
 			// For some reason this is needed to fix the other buttons
 			// Don't change below this line (unless you're better at coding than I am, which is probably not going to happen since I'm the only one working on this :( )

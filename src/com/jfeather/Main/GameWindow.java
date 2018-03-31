@@ -19,6 +19,7 @@ import javax.swing.JToolTip;
 import javax.swing.border.EmptyBorder;
 
 import com.jfeather.Exceptions.*;
+import com.jfeather.Generation.*;
 import com.jfeather.Items.*;
 import com.jfeather.Player.Character;
 
@@ -27,7 +28,8 @@ public class GameWindow extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	public static GameWindow frame;
-
+	public boolean done;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -48,7 +50,7 @@ public class GameWindow extends JFrame {
 	 * Create the frame.
 	 */
 	
-	public GameWindow() throws IOException, InventoryCapacityException{
+	public GameWindow() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 640, 480);
 		contentPane = new JPanel();
@@ -56,28 +58,31 @@ public class GameWindow extends JFrame {
 		setContentPane(contentPane);
 		setTitle("Game");
 		setResizable(false);
+		done = false;
 		
-		Weapon starterSword = new Weapon("Starter Sword","A basic sword made of iron. Seems sturdy enough... for now. I should probably try to find another soon.", 1, 6, 1, 0, 0, 0, 0, new ImageIcon("Sprites/Items/Weapons/GreenSwordSmall.png"));
-		Armor testArmor = new Armor("Basic Armor", "A basic set of armor; suited for a new recruit.", 1, 1, 0, 0, 0, 0, new ImageIcon("Sprites/Items/Weapons/GreenSwordSmall.png"));
-		Helmet testHelmet = new Helmet("Basic Helmet", "A basic helmet; suited for a new recruit.", 1, 1, 0, 0, 0, 0, new ImageIcon("Sprites/Items/Weapons/GreenSwordSmall.png"));
+		WeaponsGen rwg = new WeaponsGen();
 		Character jack = new Character("Jack");
-		Inventory inv = createInv(jack, 10);
-		inv.addItem(testHelmet);
-		inv.addItem(testArmor);
-		inv.addItem(starterSword);
+		//Inventory inv = createInv(jack, 10);
+		jack.level = 10;
+		Weapon testSword = rwg.genWeapon(jack, "sword");
+		//inv.addItem(testSword);
 		TitleScreen ts = new TitleScreen(contentPane);
 		pack();
 	}
 	
-	public Inventory createInv(Character c, int capacity) throws InventoryCapacityException {
+	public Inventory createInv(Character c, int capacity) {
 		Inventory inv;
-		inv = new Inventory(c, capacity);
-		contentPane.add(inv.dialog, BorderLayout.SOUTH);
-		for (int i = 0; i < capacity; i++) {
-			inv.slots[i].setToolTipText("Empty Slot");
+		try {
+			inv = new Inventory(c, capacity);
+			contentPane.add(inv.dialog, BorderLayout.SOUTH);
+			for (int i = 0; i < capacity; i++) {
+				inv.slots[i].setToolTipText("Empty Slot");
+			}
+			return inv;
+		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
-		
-		return inv;
+		return null;
 	}
 	
 	public void close() {

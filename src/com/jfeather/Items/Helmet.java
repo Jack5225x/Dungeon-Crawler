@@ -18,7 +18,7 @@ public class Helmet {
 		strength = itemStrength;
 		name = itemName;
 		sprite = itemSprite;
-		String descr = DescrWrap.descrWrap(itemDescr);
+		String descr = DescrWrap.descrWrap(itemDescr, name);
 		String rarityColor = "";
 		switch (itemRarity) {
 			case 0: rarityColor = "black"; break;
