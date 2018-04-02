@@ -19,6 +19,7 @@ import javax.swing.JToolTip;
 import javax.swing.border.EmptyBorder;
 
 import com.jfeather.Exceptions.*;
+import com.jfeather.Game.GameInstance;
 import com.jfeather.Generation.*;
 import com.jfeather.Items.*;
 import com.jfeather.Player.Character;
@@ -29,6 +30,7 @@ public class GameWindow extends JFrame {
 	private JPanel contentPane;
 	public static GameWindow frame;
 	public boolean done;
+	public GameInstance instance;
 	
 	/**
 	 * Launch the application.
@@ -59,7 +61,7 @@ public class GameWindow extends JFrame {
 		setTitle("Game");
 		setResizable(false);
 		done = false;
-		
+		/*
 		WeaponsGen rwg = new WeaponsGen();
 		Character jack = new Character("Jack");
 		//Inventory inv = createInv(jack, 10);
@@ -67,6 +69,9 @@ public class GameWindow extends JFrame {
 		Weapon testSword = rwg.genWeapon(jack, "sword");
 		//inv.addItem(testSword);
 		TitleScreen ts = new TitleScreen(contentPane);
+		*/
+		createInstance();
+		//createInv(new Character("jack"), 10);
 		pack();
 	}
 	
@@ -83,6 +88,11 @@ public class GameWindow extends JFrame {
 			ex.printStackTrace();
 		}
 		return null;
+	}
+	
+	public void createInstance() {
+		instance = new GameInstance();
+		contentPane.add(instance.dialog);
 	}
 	
 	public void close() {

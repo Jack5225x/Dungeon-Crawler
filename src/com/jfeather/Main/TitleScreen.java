@@ -21,6 +21,7 @@ public class TitleScreen implements MouseListener {
 	public JPanel dialog;
 	public JLabel[] pointer; 
 	public boolean runGif = false;
+	private GameWindow gw = new GameWindow();
 	
 	public TitleScreen(JPanel dialogPanel) {
 		dialog = new JPanel();
@@ -60,7 +61,6 @@ public class TitleScreen implements MouseListener {
 			runTitle();
 			runGif = true;
 		} else {
-			GameWindow gw = new GameWindow();
 			int x = (int) (e.getLocationOnScreen().getX() - dialog.getLocationOnScreen().getX());
 			int y = (int) (e.getLocationOnScreen().getY() - dialog.getLocationOnScreen().getY());
 			//If the button is over the start button
@@ -68,12 +68,11 @@ public class TitleScreen implements MouseListener {
 				//SaveSelect ss = new SaveSelect();
 				//JOptionPane.showMessageDialog(null, ss.dialog);
 				//GameInstance instance = new GameInstance(GameWindow.frame);
-				gw.done = true;
+
 			}
 			if ((x > exitText.getX() && x < exitText.getX() + exitText.getWidth()) && (y > exitText.getY() && y < exitText.getY() + exitText.getHeight())) {
 				// Close the window
 				try {
-					gw = new GameWindow();
 					gw.close();
 				} catch (Exception ex) {
 					ex.printStackTrace();
