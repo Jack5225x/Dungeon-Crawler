@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
@@ -13,7 +14,7 @@ import javax.swing.JPanel;
 public class TitleText {
 
 	public JPanel dialog;
-	public JLabel[] labels;
+	public JLabel[] labels, spaces;
 	
 	public TitleText(JPanel newDialog, String str, int startX, int startY, int size, String color) {
 		dialog = newDialog;
@@ -44,13 +45,16 @@ public class TitleText {
 	
 	public void display(String str, int startX, int startY, int size, String color) {
 		labels = new JLabel[str.length()];
+		spaces = new JLabel[str.length()];
 		ImageIcon[] images = getLetters(str, size, color);
 		for (int i = 0; i < labels.length; i++) {
 			labels[i] = new JLabel(images[i]);
 			dialog.add(labels[i]);
 			labels[i].setBounds(startX, startY, images[i].getIconWidth(), images[i].getIconHeight());
+			spaces[i] = new JLabel();
+			dialog.add(spaces[i]);
+			spaces[i].setBounds(startX + images[i].getIconWidth(), startY, size / 5, size);
 			startX += images[i].getIconWidth() + size / 5;
-			//startY += images[i].getIconHeight();
 		}
 	}
 	
@@ -67,11 +71,26 @@ public class TitleText {
 	public void setVisible(boolean state) {
 		for (int i = 0; i < labels.length; i++)
 			labels[i].setVisible(state);
+		for (int i = 0; i < spaces.length; i++)
+			spaces[i].setVisible(state);
 	}
 	
 	public void addTo(JPanel dialog) {
 		for (int i = 0; i < labels.length; i++) {
 			dialog.add(labels[i]);
 		}
+		for (int i = 0; i < spaces.length; i++) {
+			dialog.add(spaces[i]);
+		}
+	}
+	
+	public void addMouseListener(MouseListener ml) {
+		for (int i = 0; i < labels.length; i++) {
+			labels[i].addMouseListener(ml);
+		}
+		for (int i = 0; i < spaces.length; i++) {
+			spaces[i].addMouseListener(ml);
+		}
+
 	}
 }

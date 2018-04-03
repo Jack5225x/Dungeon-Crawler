@@ -30,7 +30,7 @@ public class GameWindow extends JFrame {
 	private JPanel contentPane;
 	public static GameWindow frame;
 	public GameInstance instance;
-	public TitleScreen ts;
+	public volatile TitleScreen ts;
 	
 	/**
 	 * Launch the application.
@@ -78,10 +78,12 @@ public class GameWindow extends JFrame {
 		new Thread() {
 			@Override
 			public void run() {
-				//TitleText test = new TitleText(contentPane, "abcde", 50, 50, 25, "red");
-				//test.addTo(contentPane);
+				TitleText test = new TitleText(contentPane, "abcde", 50, 50, 25, "red");
+				test.addTo(contentPane);
 				contentPane.add(new JLabel());
+				//System.out.println(ts.test);
 			}
+			
 		}.start();
 		
 		//Character jack = new Character("Jack");

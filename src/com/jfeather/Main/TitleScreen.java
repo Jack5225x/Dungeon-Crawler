@@ -22,6 +22,7 @@ public class TitleScreen implements MouseListener {
 	public JLabel[] pointer; 
 	public boolean runGif = false;
 	private GameWindow gw = new GameWindow();
+	public MouseListener ml = this;
 	
 	public TitleScreen(JPanel dialogPanel) {
 		dialog = new JPanel();
@@ -66,7 +67,7 @@ public class TitleScreen implements MouseListener {
 			//If the button is over the start button
 			if ((x > startText.getX() && x < startText.getX() + startText.getWidth()) && (y > startText.getY() && y < startText.getY() + startText.getHeight())) {
 				dispose();
-				SaveSelect ss = new SaveSelect(dialog);
+				//SaveSelect ss = new SaveSelect(dialog);
 			}
 			if ((x > exitText.getX() && x < exitText.getX() + exitText.getWidth()) && (y > exitText.getY() && y < exitText.getY() + exitText.getHeight())) {
 				// Close the window
@@ -148,26 +149,38 @@ public class TitleScreen implements MouseListener {
 		startTextHighlighted = new JLabel(gif("Sprites/TitleScreen/TitleScreenStartTextHighlighted.png"));
 		dialog.add(startTextHighlighted);
 		startTextHighlighted.setBounds(465, 120, 110, 45);
-		startTextHighlighted.addMouseListener(this);
 		// Set the highlighted button to not be visible
 		startTextHighlighted.setVisible(false);
 		startText = new JLabel(gif("Sprites/TitleScreen/TitleScreenStartTextFadeIn.gif"));
 		dialog.add(startText);
 		startText.setBounds(465, 120, 110, 45);
-		startText.addMouseListener(this);
 					
 		// Exit Button
 		exitTextHighlighted = new JLabel(gif("Sprites/TitleScreen/TitleScreenExitTextHighlighted.png"));
 		dialog.add(exitTextHighlighted);
 		exitTextHighlighted.setBounds(480, 235, 110, 45);
-		exitTextHighlighted.addMouseListener(this);
 		// Set the highlighted button to not be visible
 		exitTextHighlighted.setVisible(false);
 		exitText = new JLabel(gif("Sprites/TitleScreen/TitleScreenExitTextFadeIn.gif"));
 		dialog.add(exitText);
 		exitText.setBounds(480, 235, 110, 45);
-		exitText.addMouseListener(this);
-
+			
+		// Add the mouse listeners after the animation finishes so it doesn't interrupt it
+		new Thread() {
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(1100);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				startTextHighlighted.addMouseListener(ml);
+				startText.addMouseListener(ml);
+				exitTextHighlighted.addMouseListener(ml);
+				exitText.addMouseListener(ml);
+				
+			}
+		}.start();
 	}
 	
 	public ImageIcon gif(String path) {
@@ -188,8 +201,8 @@ public class TitleScreen implements MouseListener {
 		exitText.setVisible(false);
 		startTextHighlighted.setVisible(false);
 		exitTextHighlighted.setVisible(false);
-		startText.removeMouseListener(this);
-		exitText.removeMouseListener(this);
+		startText.removeMouseListener(ml);
+		exitText.removeMouseListener(ml);
 		pointer[0].setVisible(false);
 		pointer[1].setVisible(false);
 		pointer[2].setVisible(false);
