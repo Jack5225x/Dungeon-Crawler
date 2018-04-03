@@ -48,7 +48,7 @@ public class TitleScreen implements MouseListener {
 		// If these aren't defined, the mouse listener will run into a NullPointerException because it will try and disable them or something, idk
 		startText = new JLabel();
 		startTextHighlighted = new JLabel();
-		
+				
 		exitText = new JLabel();
 		exitTextHighlighted = new JLabel();
 		
@@ -65,10 +65,8 @@ public class TitleScreen implements MouseListener {
 			int y = (int) (e.getLocationOnScreen().getY() - dialog.getLocationOnScreen().getY());
 			//If the button is over the start button
 			if ((x > startText.getX() && x < startText.getX() + startText.getWidth()) && (y > startText.getY() && y < startText.getY() + startText.getHeight())) {
-				//SaveSelect ss = new SaveSelect();
-				//JOptionPane.showMessageDialog(null, ss.dialog);
-				//GameInstance instance = new GameInstance(GameWindow.frame);
-
+				dispose();
+				SaveSelect ss = new SaveSelect(dialog);
 			}
 			if ((x > exitText.getX() && x < exitText.getX() + exitText.getWidth()) && (y > exitText.getY() && y < exitText.getY() + exitText.getHeight())) {
 				// Close the window
@@ -146,7 +144,6 @@ public class TitleScreen implements MouseListener {
 		// Add the buttons on the title screen using a fancy animation
 		// Since the animations don't loop, they can be reused as the non-highlighted buttons
 		// This includes adding the mouse listeners to these components, so that the button detection works later
-
 		// Start Button
 		startTextHighlighted = new JLabel(gif("Sprites/TitleScreen/TitleScreenStartTextHighlighted.png"));
 		dialog.add(startTextHighlighted);
@@ -186,6 +183,19 @@ public class TitleScreen implements MouseListener {
 
 	}
 	
+	public void dispose() {
+		startText.setVisible(false);
+		exitText.setVisible(false);
+		startTextHighlighted.setVisible(false);
+		exitTextHighlighted.setVisible(false);
+		startText.removeMouseListener(this);
+		exitText.removeMouseListener(this);
+		pointer[0].setVisible(false);
+		pointer[1].setVisible(false);
+		pointer[2].setVisible(false);
+		titleGif.setVisible(false);
+		dialog.removeAll();
+	}
 }
 
 

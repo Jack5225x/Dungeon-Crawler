@@ -29,8 +29,8 @@ public class GameWindow extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	public static GameWindow frame;
-	public boolean done;
 	public GameInstance instance;
+	public TitleScreen ts;
 	
 	/**
 	 * Launch the application.
@@ -60,19 +60,33 @@ public class GameWindow extends JFrame {
 		setContentPane(contentPane);
 		setTitle("Game");
 		setResizable(false);
-		done = false;
 		/*
 		WeaponsGen rwg = new WeaponsGen();
-		Character jack = new Character("Jack");
 		//Inventory inv = createInv(jack, 10);
 		jack.level = 10;
 		Weapon testSword = rwg.genWeapon(jack, "sword");
 		//inv.addItem(testSword);
-		TitleScreen ts = new TitleScreen(contentPane);
-		*/
-		createInstance();
-		//createInv(new Character("jack"), 10);
-		pack();
+		 */
+		new Thread() {
+			@Override
+			public void run() {
+				ts = new TitleScreen(contentPane);
+				pack();
+			}
+		}.start();
+		
+		new Thread() {
+			@Override
+			public void run() {
+				//TitleText test = new TitleText(contentPane, "abcde", 50, 50, 25, "red");
+				//test.addTo(contentPane);
+				contentPane.add(new JLabel());
+			}
+		}.start();
+		
+		//Character jack = new Character("Jack");
+		//createInstance(jack);
+		
 	}
 	
 	public Inventory createInv(Character c, int capacity) {
@@ -90,8 +104,8 @@ public class GameWindow extends JFrame {
 		return null;
 	}
 	
-	public void createInstance() {
-		instance = new GameInstance();
+	public void createInstance(Character c) {
+		instance = new GameInstance(createInv(c, 10));
 		contentPane.add(instance.dialog);
 	}
 	

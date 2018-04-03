@@ -11,10 +11,14 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.ActionMap;
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
 import com.jfeather.Main.GameWindow;
+import com.jfeather.Main.Inventory;
+import com.jfeather.Main.TitleText;
+
 
 public class GameInstance implements KeyListener {
 	
@@ -35,8 +39,9 @@ public class GameInstance implements KeyListener {
 	public boolean mUp, mDown, mRight, mLeft, rRight, rLeft;
 	public JLabel player;
 	public JPanel dialog;
+	public int delta;
 	
-	public GameInstance() {
+	public GameInstance(Inventory inv) {
 		initialize();
 	}
 	
@@ -46,10 +51,13 @@ public class GameInstance implements KeyListener {
 		dialog.setLayout(new BorderLayout());
 		dialog.addKeyListener(this);
 		
-		player = new JLabel("Player");
-		dialog.add(player, BorderLayout.CENTER);
+		//player = new JLabel(new ImageIcon("Sprites/TitleScreen/Text/A.png"));
+		//dialog.add(player, BorderLayout.CENTER);
 		//player.setBounds(320, 165, 50, 25);
 		
+		//TitleText tt = new TitleText(dialog);
+		//tt.display("abcdefghijklmn", 50, 50, 12, "blue");
+		dialog.add(new JLabel());
 		/*
 		// Old stuff that's kinda funky
 		dialog.getInputMap(IFW).put(KeyStroke.getKeyStroke("W"), MOVE_UP);

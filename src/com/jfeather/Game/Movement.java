@@ -5,12 +5,11 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JLabel;
 
-public class Movement extends AbstractAction {
+public class Movement {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
 	
 	private boolean mUp, mDown, mLeft, mRight, rRight, rLeft;
 	private JLabel label;
@@ -23,22 +22,6 @@ public class Movement extends AbstractAction {
 		mRight = newRight;
 		rRight = newRRight;
 		rLeft = newRLeft;
-	}
-	
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (mUp)
-			moveUp();
-		if (mDown)
-			moveDown();
-		if (mRight)
-			moveRight();
-		if (mLeft)
-			moveLeft();
-		if (rRight)
-			rotateRight();
-		if (rLeft)
-			rotateLeft();
 	}
 	
 	public void moveUp() {
