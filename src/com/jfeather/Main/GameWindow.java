@@ -67,28 +67,17 @@ public class GameWindow extends JFrame {
 		Weapon testSword = rwg.genWeapon(jack, "sword");
 		//inv.addItem(testSword);
 		 */
-		new Thread() {
+		Thread title = new Thread() {
 			@Override
 			public void run() {
 				ts = new TitleScreen(contentPane);
 				pack();
 			}
-		}.start();
-		
-		new Thread() {
-			@Override
-			public void run() {
-				TitleText test = new TitleText(contentPane, "abcde", 50, 50, 25, "red");
-				test.addTo(contentPane);
-				contentPane.add(new JLabel());
-				//System.out.println(ts.test);
-			}
-			
-		}.start();
-		
+		};
+		title.start();
+		//th.stop();
 		//Character jack = new Character("Jack");
 		//createInstance(jack);
-		
 	}
 	
 	public Inventory createInv(Character c, int capacity) {

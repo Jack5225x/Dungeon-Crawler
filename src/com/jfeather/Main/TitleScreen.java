@@ -23,6 +23,7 @@ public class TitleScreen implements MouseListener {
 	public boolean runGif = false;
 	private GameWindow gw = new GameWindow();
 	public MouseListener ml = this;
+	public TitleText test;
 	
 	public TitleScreen(JPanel dialogPanel) {
 		dialog = new JPanel();
@@ -53,6 +54,7 @@ public class TitleScreen implements MouseListener {
 		exitText = new JLabel();
 		exitTextHighlighted = new JLabel();
 		
+		test = new TitleText(dialog);
 	}
 	
 	@Override
@@ -97,6 +99,8 @@ public class TitleScreen implements MouseListener {
 			exitTextHighlighted.setVisible(true);
 			pointer[2].setVisible(true);
 		}
+		if (test.isWithin(e))
+			test.setColor("green");
 
 	}
 	@Override
@@ -109,6 +113,7 @@ public class TitleScreen implements MouseListener {
 		startText.setVisible(true);
 		exitText.setVisible(true);
 		pointer[2].setVisible(false);
+		test = new TitleText(dialog, "abc", 50, 50, 25, "red");
 	}
 	@Override
 	public void mousePressed(MouseEvent e) {
@@ -164,7 +169,10 @@ public class TitleScreen implements MouseListener {
 		exitText = new JLabel(gif("Sprites/TitleScreen/TitleScreenExitTextFadeIn.gif"));
 		dialog.add(exitText);
 		exitText.setBounds(480, 235, 110, 45);
-			
+		
+		test = new TitleText(dialog, "abc", 50, 50, 25, "red");
+		test.addMouseListener(this);
+		
 		// Add the mouse listeners after the animation finishes so it doesn't interrupt it
 		new Thread() {
 			@Override

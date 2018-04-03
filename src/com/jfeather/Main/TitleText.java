@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 
@@ -15,13 +16,25 @@ public class TitleText {
 
 	public JPanel dialog;
 	public JLabel[] labels, spaces;
+	public int width, height, x, y, size;
+	public String color, text;
+	private JLabel listener;
 	
-	public TitleText(JPanel newDialog, String str, int startX, int startY, int size, String color) {
+	public TitleText(JPanel newDialog, String str, int startX, int startY, int newSize, String newColor) {
 		dialog = newDialog;
-		display(str, startX, startY, size, color);
+		x = startX;
+		y = startY;
+		size = newSize;
+		color = newColor;
+		text = str;
+		display(text, x, y, size, color);
 	}
 	
-	public String[] separateChars(String str) {
+	public TitleText(JPanel newDialog) {
+		dialog = newDialog;
+	}
+	
+	private String[] separateChars(String str) {
 		String[] arr = new String[str.length()];
 		for (int i = 0; i < arr.length; i++) {
 			arr[i] = str.substring(i, i+1);
@@ -29,7 +42,7 @@ public class TitleText {
 		return arr;
 	}
 	
-	public ImageIcon[] getLetters(String str, int size, String color) {
+	private ImageIcon[] getLetters(String str, int size, String color) {
 		String[] letters = separateChars(str);
 		ImageIcon[] images = new ImageIcon[letters.length];
 		for (int i = 0; i < letters.length; i++) {
@@ -43,7 +56,7 @@ public class TitleText {
 		return scaledImages;
 	}
 	
-	public void display(String str, int startX, int startY, int size, String color) {
+	private void display(String str, int startX, int startY, int size, String color) {
 		labels = new JLabel[str.length()];
 		spaces = new JLabel[str.length()];
 		ImageIcon[] images = getLetters(str, size, color);
@@ -56,9 +69,11 @@ public class TitleText {
 			spaces[i].setBounds(startX + images[i].getIconWidth(), startY, size / 5, size);
 			startX += images[i].getIconWidth() + size / 5;
 		}
+		width = startX - x;
+		height = size;
 	}
 	
-	public ImageIcon scale(ImageIcon image, int newHeight) {
+	private ImageIcon scale(ImageIcon image, int newHeight) {
 		int newWidth = (int)((newHeight / 12) + .5) * image.getIconWidth();
 		if (newWidth != 0) {
 			Image img = image.getImage();
@@ -85,12 +100,57 @@ public class TitleText {
 	}
 	
 	public void addMouseListener(MouseListener ml) {
+		listener = new JLabel();
+		listener.setBounds(x, y, width, height);
+		listener.addMouseListener(ml);
+		dialog.add(listener);
+	}
+	
+	public void removeMosueListener(MouseListener ml) {
+		listener.removeMouseListener(ml);
+		dialog.remove(listener);
+	}
+	
+	public boolean isWithin(MouseEvent e) {
+		int locX = (int) (e.getLocationOnScreen().getX() - dialog.getLocationOnScreen().getX());
+		int locY = (int) (e.getLocationOnScreen().getY() - dialog.getLocationOnScreen().getY());
+		if (locX > x && locX < x + width && locY > y && locY < y + height)
+			return true;
+		return false;
+	}
+	
+	public void dispose() {
 		for (int i = 0; i < labels.length; i++) {
-			labels[i].addMouseListener(ml);
+			dialog.remove(labels[i]);
 		}
 		for (int i = 0; i < spaces.length; i++) {
-			spaces[i].addMouseListener(ml);
+			dialog.remove(spaces[i]);
 		}
-
 	}
+	
+	public int getWidth() {
+		return width;
+	}
+	
+	public int getHeight() {
+		return height;
+	}
+	
+	public void setSize(int newSize) {
+		size = newSize;
+		dispose();
+		display(text, x, y, size, color);
+	}
+	
+	public void setColor(String newColor) {
+		color = newColor;
+		dispose();
+		display(text, x, y, size, color);
+		System.out.println(x + " " + y + " " + size + " " + color);
+	}
+	
+	public String getText() {
+		return text;
+	}
+
 }
