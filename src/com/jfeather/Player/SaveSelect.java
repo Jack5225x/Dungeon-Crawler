@@ -136,9 +136,9 @@ public class SaveSelect extends JPanel {
 	}
 	
 	public void showSaves() {
-		TitleText slot1Name = new TitleText(dialog, saveName1, 20, 120, 10, "cyan");
-		TitleText slot2Name = new TitleText(dialog, saveName2, 20, 175, 10, "cyan");
-		TitleText slot3Name = new TitleText(dialog, saveName3, 20, 235, 10, "cyan");
+		//TitleText slot1Name = new TitleText(dialog, saveName1, 20, 120, 10, "cyan");
+		//TitleText slot2Name = new TitleText(dialog, saveName2, 20, 175, 10, "cyan");
+		//TitleText slot3Name = new TitleText(dialog, saveName3, 20, 235, 10, "cyan");
 		dialog.add(new JLabel());
 	}
 }

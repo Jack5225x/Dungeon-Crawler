@@ -23,7 +23,7 @@ public class TitleScreen implements MouseListener {
 	public boolean runGif = false;
 	private GameWindow gw = new GameWindow();
 	public MouseListener ml = this;
-	public TitleText test;
+	public TitleText start, startHighlighted, exit, exitHighlighted;
 	
 	public TitleScreen(JPanel dialogPanel) {
 		dialog = new JPanel();
@@ -36,9 +36,9 @@ public class TitleScreen implements MouseListener {
 			dialog.add(pointer[i]);
 			pointer[i].setVisible(false);
 		}
-		pointer[0].setBounds(400, 132, 60, 25);
+		pointer[0].setBounds(395, 132, 60, 25);
 		//pointer[1].setBounds(r);
-		pointer[2].setBounds(415, 247, 60, 25);
+		pointer[2].setBounds(395, 247, 60, 25);
 		
 		// Add the background
 		// This will eventually be a looped gif, but for now a png works
@@ -54,7 +54,12 @@ public class TitleScreen implements MouseListener {
 		exitText = new JLabel();
 		exitTextHighlighted = new JLabel();
 		
-		test = new TitleText(dialog);
+		// Pseudo-initialize this to prevent NullPointer
+		start = new TitleText(dialog);
+		startHighlighted = new TitleText(dialog);
+		exit = new TitleText(dialog);
+		exitHighlighted = new TitleText(dialog);
+
 	}
 	
 	@Override
@@ -99,8 +104,17 @@ public class TitleScreen implements MouseListener {
 			exitTextHighlighted.setVisible(true);
 			pointer[2].setVisible(true);
 		}
-		if (test.isWithin(e))
-			test.setColor("green");
+				
+		if (start.isWithin(e)) {
+			start.setVisible(false);
+			startHighlighted.setVisible(true);
+			pointer[0].setVisible(true);
+		}
+		if (exit.isWithin(e)) {
+			exit.setVisible(false);
+			exitHighlighted.setVisible(true);
+			pointer[2].setVisible(true);
+		}
 
 	}
 	@Override
@@ -113,7 +127,11 @@ public class TitleScreen implements MouseListener {
 		startText.setVisible(true);
 		exitText.setVisible(true);
 		pointer[2].setVisible(false);
-		test = new TitleText(dialog, "abc", 50, 50, 25, "red");
+		start.setVisible(true);
+		startHighlighted.setVisible(false);
+		exit.setVisible(true);
+		exitHighlighted.setVisible(false);
+
 	}
 	@Override
 	public void mousePressed(MouseEvent e) {
@@ -151,6 +169,7 @@ public class TitleScreen implements MouseListener {
 		// Since the animations don't loop, they can be reused as the non-highlighted buttons
 		// This includes adding the mouse listeners to these components, so that the button detection works later
 		// Start Button
+		/*
 		startTextHighlighted = new JLabel(gif("Sprites/TitleScreen/TitleScreenStartTextHighlighted.png"));
 		dialog.add(startTextHighlighted);
 		startTextHighlighted.setBounds(465, 120, 110, 45);
@@ -159,7 +178,7 @@ public class TitleScreen implements MouseListener {
 		startText = new JLabel(gif("Sprites/TitleScreen/TitleScreenStartTextFadeIn.gif"));
 		dialog.add(startText);
 		startText.setBounds(465, 120, 110, 45);
-					
+		
 		// Exit Button
 		exitTextHighlighted = new JLabel(gif("Sprites/TitleScreen/TitleScreenExitTextHighlighted.png"));
 		dialog.add(exitTextHighlighted);
@@ -169,10 +188,16 @@ public class TitleScreen implements MouseListener {
 		exitText = new JLabel(gif("Sprites/TitleScreen/TitleScreenExitTextFadeIn.gif"));
 		dialog.add(exitText);
 		exitText.setBounds(480, 235, 110, 45);
-		
-		test = new TitleText(dialog, "abc", 50, 50, 25, "red");
-		test.addMouseListener(this);
-		
+		*/
+		start = new TitleText(dialog, "jack", 465, 130, 24, "green");
+		start.addMouseListener(this);
+		startHighlighted = new TitleText(dialog, "jack", 465, 129, 26, "cyan");
+		startHighlighted.setVisible(false);
+		exit = new TitleText(dialog, "jack", 465, 245, 24, "green");
+		exit.addMouseListener(this);
+		exitHighlighted = new TitleText(dialog, "jack", 465, 244, 26, "cyan");
+		exitHighlighted.addMouseListener(this);
+		exitHighlighted.setVisible(false);
 		// Add the mouse listeners after the animation finishes so it doesn't interrupt it
 		new Thread() {
 			@Override
@@ -182,11 +207,10 @@ public class TitleScreen implements MouseListener {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				startTextHighlighted.addMouseListener(ml);
-				startText.addMouseListener(ml);
-				exitTextHighlighted.addMouseListener(ml);
-				exitText.addMouseListener(ml);
-				
+				//startTextHighlighted.addMouseListener(ml);
+				//startText.addMouseListener(ml);
+				//exitTextHighlighted.addMouseListener(ml);
+				//exitText.addMouseListener(ml);
 			}
 		}.start();
 	}

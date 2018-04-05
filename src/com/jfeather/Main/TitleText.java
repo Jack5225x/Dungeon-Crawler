@@ -15,7 +15,7 @@ import javax.swing.JPanel;
 public class TitleText {
 
 	public JPanel dialog;
-	public JLabel[] labels, spaces;
+	public JLabel[] labels;
 	public int width, height, x, y, size;
 	public String color, text;
 	private JLabel listener;
@@ -56,17 +56,13 @@ public class TitleText {
 		return scaledImages;
 	}
 	
-	private void display(String str, int startX, int startY, int size, String color) {
+	public void display(String str, int startX, int startY, int size, String color) {
 		labels = new JLabel[str.length()];
-		spaces = new JLabel[str.length()];
 		ImageIcon[] images = getLetters(str, size, color);
 		for (int i = 0; i < labels.length; i++) {
 			labels[i] = new JLabel(images[i]);
 			dialog.add(labels[i]);
 			labels[i].setBounds(startX, startY, images[i].getIconWidth(), images[i].getIconHeight());
-			spaces[i] = new JLabel();
-			dialog.add(spaces[i]);
-			spaces[i].setBounds(startX + images[i].getIconWidth(), startY, size / 5, size);
 			startX += images[i].getIconWidth() + size / 5;
 		}
 		width = startX - x;
@@ -86,16 +82,11 @@ public class TitleText {
 	public void setVisible(boolean state) {
 		for (int i = 0; i < labels.length; i++)
 			labels[i].setVisible(state);
-		for (int i = 0; i < spaces.length; i++)
-			spaces[i].setVisible(state);
 	}
 	
 	public void addTo(JPanel dialog) {
 		for (int i = 0; i < labels.length; i++) {
 			dialog.add(labels[i]);
-		}
-		for (int i = 0; i < spaces.length; i++) {
-			dialog.add(spaces[i]);
 		}
 	}
 	
@@ -106,7 +97,7 @@ public class TitleText {
 		dialog.add(listener);
 	}
 	
-	public void removeMosueListener(MouseListener ml) {
+	public void removeMouseListener(MouseListener ml) {
 		listener.removeMouseListener(ml);
 		dialog.remove(listener);
 	}
@@ -119,12 +110,9 @@ public class TitleText {
 		return false;
 	}
 	
-	public void dispose() {
+	public void remove() {
 		for (int i = 0; i < labels.length; i++) {
 			dialog.remove(labels[i]);
-		}
-		for (int i = 0; i < spaces.length; i++) {
-			dialog.remove(spaces[i]);
 		}
 	}
 	
@@ -138,19 +126,18 @@ public class TitleText {
 	
 	public void setSize(int newSize) {
 		size = newSize;
-		dispose();
+		remove();
 		display(text, x, y, size, color);
 	}
 	
 	public void setColor(String newColor) {
 		color = newColor;
-		dispose();
+		remove();
 		display(text, x, y, size, color);
-		System.out.println(x + " " + y + " " + size + " " + color);
 	}
 	
 	public String getText() {
 		return text;
 	}
-
+	
 }

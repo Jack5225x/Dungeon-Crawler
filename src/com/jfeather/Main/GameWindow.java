@@ -60,13 +60,15 @@ public class GameWindow extends JFrame {
 		setContentPane(contentPane);
 		setTitle("Game");
 		setResizable(false);
-		/*
+		
 		WeaponsGen rwg = new WeaponsGen();
-		//Inventory inv = createInv(jack, 10);
-		jack.level = 10;
+		Character jack = new Character("Jack");
+		Inventory inv = createInv(jack, 10);
+		jack.level = 1000;
 		Weapon testSword = rwg.genWeapon(jack, "sword");
-		//inv.addItem(testSword);
-		 */
+		inv.addItem(testSword);
+		 
+		/*
 		Thread title = new Thread() {
 			@Override
 			public void run() {
@@ -75,6 +77,7 @@ public class GameWindow extends JFrame {
 			}
 		};
 		title.start();
+		*/
 		//th.stop();
 		//Character jack = new Character("Jack");
 		//createInstance(jack);
