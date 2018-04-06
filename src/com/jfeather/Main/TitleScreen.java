@@ -36,7 +36,7 @@ public class TitleScreen implements MouseListener {
 			dialog.add(pointer[i]);
 			pointer[i].setVisible(false);
 		}
-		pointer[0].setBounds(395, 132, 60, 25);
+		pointer[0].setBounds(375, 132, 60, 25);
 		//pointer[1].setBounds(r);
 		pointer[2].setBounds(395, 247, 60, 25);
 		
@@ -189,13 +189,13 @@ public class TitleScreen implements MouseListener {
 		dialog.add(exitText);
 		exitText.setBounds(480, 235, 110, 45);
 		*/
-		start = new TitleText(dialog, "jack", 465, 130, 24, "green");
+		start = new TitleText(dialog, "Start", 445, 130, 24, "cyan");
 		start.addMouseListener(this);
-		startHighlighted = new TitleText(dialog, "jack", 465, 129, 26, "cyan");
+		startHighlighted = new TitleText(dialog, "Start", 445, 129, 26, "blue");
 		startHighlighted.setVisible(false);
-		exit = new TitleText(dialog, "jack", 465, 245, 24, "green");
+		exit = new TitleText(dialog, "Exit", 465, 245, 24, "cyan");
 		exit.addMouseListener(this);
-		exitHighlighted = new TitleText(dialog, "jack", 465, 244, 26, "cyan");
+		exitHighlighted = new TitleText(dialog, "Exit", 465, 244, 26, "blue");
 		exitHighlighted.addMouseListener(this);
 		exitHighlighted.setVisible(false);
 		// Add the mouse listeners after the animation finishes so it doesn't interrupt it

@@ -21,17 +21,23 @@ import com.jfeather.Items.*;
 import com.jfeather.Player.Character;
 
 public class Inventory extends JPanel implements MouseListener {
-
+	
+	public Character character;
 	private static final long serialVersionUID = 1L;
 	public JPanel dialog = new JPanel();
 	public JButton[] slots;
 	public Item[] items;
+	public JLabel healthBar, manaBar;
 	public JButton armorSlot, weaponSlot, helmetSlot, statsButton;
 	public final int MAX_SLOTS = 10;
 	public int weaponSlotIndex, armorSlotIndex, helmetSlotIndex, capacity;
 	public int[][] slotLocations = {{10, 20}, {10, 80}, {65, 20}, {65, 80}, {120, 20}, {120, 80}, {175, 20}, {175, 80}, {230, 20}, {230, 80}, {540, 20} ,{540, 80}, {485, 50}};
+	private int totalStrength, totalDefense, totalAgility, totalLuck, totalIntelligence;
+	private volatile boolean update = false;
+	private int updateInterval = 200;
 	
 	public Inventory(Character c, int inventoryCapacity) throws InventoryCapacityException {
+		character = c;
 		capacity = inventoryCapacity;
 		if (inventoryCapacity > MAX_SLOTS)
 			throw new InventoryCapacityException();
@@ -104,6 +110,15 @@ public class Inventory extends JPanel implements MouseListener {
 			dialog.add(leftBorder);
 			*/
 			
+			// Add the health and mana bars
+			healthBar = new JLabel(new ImageIcon("Sprites/Inventory/HealthBar.png"));
+			healthBar.setBounds(290, 75, 181, 25);
+			dialog.add(healthBar);
+
+			manaBar = new JLabel(new ImageIcon("Sprites/Inventory/ManaBar.png"));
+			manaBar.setBounds(290, 105, 181, 25);
+			dialog.add(manaBar);
+			
 			// For some reason this is needed to fix the other buttons
 			// Don't change below this line (unless you're better at coding than I am, which is probably not going to happen since I'm the only one working on this :( )
 			JButton fix = new JButton();
@@ -111,27 +126,38 @@ public class Inventory extends JPanel implements MouseListener {
 			fix.setVisible(false);
 			fix.setEnabled(false);
 			
+			new Thread() {
+				@Override
+				public void run() {
+					while (true) {
+						if (update) {
+							try {
+								Thread.sleep(updateInterval);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							updateStats();
+						}
+					}
+				}
+			}.start();
+			
 		}
 		
 		statsButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent ex) {
-				int totalStrength = items[MAX_SLOTS].strength + items[MAX_SLOTS + 1].strength + items[MAX_SLOTS + 2].strength + c.strength;
-				int totalInt = items[MAX_SLOTS].intelligence + items[MAX_SLOTS + 1].intelligence + items[MAX_SLOTS + 2].intelligence + c.intelligence;
-				int totalDef = items[MAX_SLOTS].defense + items[MAX_SLOTS + 1].defense + items[MAX_SLOTS + 2].defense + c.defense;
-				int totalAgility = items[MAX_SLOTS].agility + items[MAX_SLOTS + 1].agility + items[MAX_SLOTS + 2].agility + c.agility;
-				int totalLuck = items[MAX_SLOTS].luck + items[MAX_SLOTS + 1].luck + items[MAX_SLOTS + 2].luck + c.luck;
-
 				
-				String stats = "<html><b>Character Name: </font><font color='red'>"+c.name+"</font>"
-						+ "<br><b>Level: </font><font color='orange'>"+c.level+"</font>"
-						+ "<br><b>Strength: </font><font color='yellow'>"+totalStrength+"     </font>"
-						+ "<b><br>Intelligence: </font><font color='yellow'>"+totalInt+"</font>"
-						+ "<br><b>Defense: </font><font color='green'>"+totalDef+"</font>"
-						+ "<br><b>Health: </font><font color='blue'>"+c.health+"     </font>"
-						+ "<b><br>Mana: </font><font color='purple'>"+c.mana+"</font>"
+				String stats = "<html><b>Character Name: </font><font color='blue'>"+c.getName()+"</font>"
+						+ "<br><b>Level: </font><font color='green'>"+c.getLevel()+"</font>"
+						+ "<br><b>Strength: </font><font color='red'>"+totalStrength+"     </font>"
+						+ "<b><br>Intelligence: </font><font color='red'>"+totalIntelligence+"</font>"
+						+ "<br><b>Defense: </font><font color='red'>"+totalDefense+"</font>"
+						+ "<br><b>Health: </font><font color='red'>"+c.getHealth()+"</font>/<font color='red'>"+c.getMaxHealth() + "</font>"
+						+ "<b><br>Mana: </font><font color='red'>"+c.getMana()+"</font>/<font color='red'>"+c.getMaxMana() + "</font>"
 						+ "<br><b>Agility: </font><font color='red'>"+totalAgility+"</font>"
-						+ "<br><b>Luck: </font><font color='orange'>"+totalLuck+"</font>";
+						+ "<br><b>Luck: </font><font color='red'>"+totalLuck+"</font>";
 				JOptionPane.showMessageDialog(null, stats, "Stats", JOptionPane.PLAIN_MESSAGE);
 			}
 		});
@@ -329,4 +355,45 @@ public class Inventory extends JPanel implements MouseListener {
 
 		
 	}
+	
+	public void updateStats() {
+		totalStrength = items[MAX_SLOTS].strength + items[MAX_SLOTS + 1].strength + items[MAX_SLOTS + 2].strength + character.getStrength();
+		totalIntelligence = items[MAX_SLOTS].intelligence + items[MAX_SLOTS + 1].intelligence + items[MAX_SLOTS + 2].intelligence + character.getIntelligence();
+		totalDefense = items[MAX_SLOTS].defense + items[MAX_SLOTS + 1].defense + items[MAX_SLOTS + 2].defense + character.getDefense();
+		totalAgility = items[MAX_SLOTS].agility + items[MAX_SLOTS + 1].agility + items[MAX_SLOTS + 2].agility + character.getAgility();
+		totalLuck = items[MAX_SLOTS].luck + items[MAX_SLOTS + 1].luck + items[MAX_SLOTS + 2].luck + character.getLuck();
+		healthBar.setBounds(290, 75, (character.getHealth() / character.getMaxHealth()) * 181, 25);
+		manaBar.setBounds(manaBar.getX(), manaBar.getY(), (character.getMana() / character.getMaxMana()) * 181, 25);
+		healthBar.setToolTipText("<html>Health: <font color='red'>"+character.getHealth() + "</font>/<font color='red'>" + character.getMaxHealth());
+		manaBar.setToolTipText("<html>Mana: <font color='red'>"+character.getMana() + "</font>/<font color='red'>" + character.getMaxMana());
+	}
+	
+	public void setUpdate(boolean state) {
+		update = state;
+	}
+	
+	public void setUpdateInterval(int newIntervalMillis) {
+		updateInterval = newIntervalMillis;
+	}
+	
+	public int getTotalStrength() {
+		return totalStrength;
+	}
+	
+	public int getTotalIntelligence() {
+		return totalIntelligence;
+	}
+	
+	public int getTotalDefense() {
+		return totalDefense;
+	}
+	
+	public int getTotalLuck() {
+		return totalLuck;
+	}
+	
+	public int getTotalAgility() {
+		return totalAgility;
+	}
+	
 }

@@ -6,15 +6,17 @@ import javax.swing.ImageIcon;
 
 public class Character {
 
-	public int level, health, mana, intelligence, strength, defense, agility, luck;
-	public String name;
-	public ImageIcon sprite;
+	private int level, health, maxHealth, mana, maxMana, intelligence, strength, defense, agility, luck;
+	private String name;
+	private ImageIcon sprite;
 		
 	public Character(String charName) {
 		name = charName;
 		sprite = null;
 		level = 1;
+		maxHealth = 100;
 		health = 100;
+		maxMana = 100;
 		mana = 100;
 		intelligence = 1;
 		strength = 1;
@@ -78,6 +80,135 @@ public class Character {
 				}
 			}
 		}
+	}
+	
+	public int getLevel() {
+		return level;
+	}
+	
+	public int getMaxHealth() {
+		return maxHealth;
+	}
+	
+	public int getMaxMana() {
+		return maxMana;
+	}
+	
+	public int getHealth() {
+		return health;
+	}
+	
+	public int getMana() {
+		return mana;
+	}
+	
+	public int getIntelligence() {
+		return intelligence;
+	}
+	
+	public int getStrength() {
+		return strength;
+	}
+	
+	public int getDefense() {
+		return defense;
+	}
+	
+	public int getAgility() {
+		return agility;
+	}
+	
+	public int getLuck() {
+		return luck;
+	}
+	
+	public void setLevel(int newLevel) {
+		if (newLevel > level) {
+			while (level < newLevel) {
+				levelUp();
+			}
+			
+		} else {
+			level = 1;
+			health = 100;
+			mana = 100;
+			intelligence = 1;
+			strength = 1;
+			defense = 0;
+			agility = 1;
+			luck = 1;
+			while (level < newLevel) {
+				levelUp();
+			}
+		}
+	}
+	
+	public void setMaxHealth(int newHealth) {
+		maxHealth = newHealth;
+	}
+	
+	public void setMaxMana(int newMana) {
+		maxMana = newMana;
+	}
+	
+	public void setIntelligence(int newIntelligence) {
+		intelligence = newIntelligence;
+	}
+	
+	public void setStrength(int newStrength) {
+		strength = newStrength;
+	}
+	
+	public void setDefense(int newDefense) {
+		defense = newDefense;
+	}
+	
+	public void setAgility(int newAgility) {
+		agility = newAgility;
+	}
+	
+	public void setLuck(int newLuck) {
+		luck = newLuck;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String newName) {
+		name = newName;
+	}
+	
+	public ImageIcon getSprite() {
+		return sprite;
+	}
+	
+	public void setSprite(ImageIcon newSprite) {
+		sprite = newSprite;
+	}
+	
+	public void setHealth(int newHealth) {
+		health = newHealth;
+	}
+	
+	public void setMana(int newMana) {
+		mana = newMana;
+	}
+	
+	public void subtractHealth(int healthDecrement) {
+		health -= healthDecrement;
+	}
+	
+	public void addHealth(int healthIncrement) {
+		health += healthIncrement;
+	}
+	
+	public void subtractMana(int manaDecrement) {
+		mana -= manaDecrement;
+	}
+	
+	public void addMana(int manaIncrement) {
+		mana += manaIncrement;
 	}
 
 }

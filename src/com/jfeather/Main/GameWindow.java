@@ -14,6 +14,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JToolTip;
 import javax.swing.border.EmptyBorder;
@@ -47,10 +48,6 @@ public class GameWindow extends JFrame {
 			}
 		});
 	}
-
-	/**
-	 * Create the frame.
-	 */
 	
 	public GameWindow() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -64,11 +61,11 @@ public class GameWindow extends JFrame {
 		WeaponsGen rwg = new WeaponsGen();
 		Character jack = new Character("Jack");
 		Inventory inv = createInv(jack, 10);
-		jack.level = 1000;
-		Weapon testSword = rwg.genWeapon(jack, "sword");
-		inv.addItem(testSword);
-		 
-		/*
+		for (int i = 0; i < 10; i++) {
+			Weapon testSword = rwg.genWeapon(jack, "sword");
+			inv.addItem(testSword);
+		}
+		
 		Thread title = new Thread() {
 			@Override
 			public void run() {
@@ -77,10 +74,29 @@ public class GameWindow extends JFrame {
 			}
 		};
 		title.start();
-		*/
+		
+		new Thread () {
+			@Override
+			public void run() {
+				while (true) {
+					try {
+						Thread.sleep(500);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					//jack.subtractHealth(1);
+					while (true) {
+						
+					}
+				}
+			}
+		}.start();
 		//th.stop();
 		//Character jack = new Character("Jack");
 		//createInstance(jack);
+		inv.setUpdate(true);
+		//inv.setUpdateInterval(1000);
 	}
 	
 	public Inventory createInv(Character c, int capacity) {

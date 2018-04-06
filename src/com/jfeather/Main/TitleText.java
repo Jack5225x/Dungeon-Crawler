@@ -32,6 +32,7 @@ public class TitleText {
 	
 	public TitleText(JPanel newDialog) {
 		dialog = newDialog;
+		labels = new JLabel[0];
 	}
 	
 	private String[] separateChars(String str) {
@@ -80,8 +81,12 @@ public class TitleText {
 	}
 	
 	public void setVisible(boolean state) {
-		for (int i = 0; i < labels.length; i++)
-			labels[i].setVisible(state);
+		if (labels.length != 0) {
+			for (int i = 0; i < labels.length; i++)
+				labels[i].setVisible(state);
+		} else {
+			//System.out.println("Invalid array length! (Not initialized)");
+		}
 	}
 	
 	public void addTo(JPanel dialog) {
@@ -111,9 +116,12 @@ public class TitleText {
 	}
 	
 	public void remove() {
-		for (int i = 0; i < labels.length; i++) {
-			dialog.remove(labels[i]);
-		}
+		if (labels.length != 0) {
+			for (int i = 0; i < labels.length; i++) {
+				dialog.remove(labels[i]);
+			}
+		} else
+			System.out.println("Invalid array length! (Not initialized)");
 	}
 	
 	public int getWidth() {
