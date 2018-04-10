@@ -1,174 +1,97 @@
 package com.jfeather.Game;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.Graphics;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import javax.swing.InputMap;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.ActionMap;
-import javax.swing.ImageIcon;
 import javax.swing.JPanel;
-import javax.swing.KeyStroke;
+import javax.swing.Timer;
 
 import com.jfeather.Main.GameWindow;
 import com.jfeather.Main.Inventory;
 import com.jfeather.Main.TitleText;
+import com.jfeather.Player.PlayerInstance;
+import com.jfeather.Player.Character;
 
 
-public class GameInstance implements KeyListener {
+public class GameInstance extends JPanel implements KeyListener {
 	
-	// https://help.adobe.com/en_US/AS2LCR/Flash_10.0/help.html?content=00000520.html
-	// A list of key codes
+		
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	
-	/*
-	// Old stuff
-	private static final int IFW = JComponent.WHEN_IN_FOCUSED_WINDOW;
-	public static final String MOVE_UP = "up";
-	public static final String MOVE_DOWN = "down";
-	public static final String MOVE_RIGHT = "right";
-	public static final String MOVE_LEFT = "left";
-	public static final String ROTATE_RIGHT = "rright";
-	public static final String ROTATE_LEFT = "rleft";
-	*/
+	private int frames = 33;
+	private Timer timer;
+	private PlayerInstance player;
+	public final KeyListener KL = this;
+	private Character character;
 	
-	public boolean mUp, mDown, mRight, mLeft, rRight, rLeft;
-	public JLabel player;
-	public JPanel dialog;
-	public int delta;
-	
-	public GameInstance(Inventory inv) {
+	public GameInstance(Character c) {
 		initialize();
+		character = c;
+		
+		timer = new Timer(frames, new Listener());
+		timer.start();
 	}
 	
 	public void initialize() {
-		dialog = new JPanel();
-		dialog.setPreferredSize(new Dimension(640, 330));
-		dialog.setLayout(new BorderLayout());
-		dialog.addKeyListener(this);
-		
-		//player = new JLabel(new ImageIcon("Sprites/TitleScreen/Text/A.png"));
-		//dialog.add(player, BorderLayout.CENTER);
-		//player.setBounds(320, 165, 50, 25);
-		
-		//TitleText tt = new TitleText(dialog);
-		//tt.display("abcdefghijklmn", 50, 50, 12, "blue");
-		dialog.add(new JLabel());
-		/*
-		// Old stuff that's kinda funky
-		dialog.getInputMap(IFW).put(KeyStroke.getKeyStroke("W"), MOVE_UP);
-		dialog.getActionMap().put(MOVE_UP, new Movement(MOVE_UP, player));
-		
-		dialog.getInputMap(IFW).put(KeyStroke.getKeyStroke("S"), MOVE_DOWN);
-		dialog.getActionMap().put(MOVE_DOWN, new Movement(MOVE_DOWN, player));
+		addKeyListener(this);
+		setPreferredSize(new Dimension(640, 330));
+		setDoubleBuffered(true);
+		player = new PlayerInstance();
+	}
 
-		dialog.getInputMap(IFW).put(KeyStroke.getKeyStroke("D"), MOVE_RIGHT);
-		dialog.getActionMap().put(MOVE_RIGHT, new Movement(MOVE_RIGHT, player));
-
-		dialog.getInputMap(IFW).put(KeyStroke.getKeyStroke("A"), MOVE_LEFT);
-		dialog.getActionMap().put(MOVE_LEFT, new Movement(MOVE_LEFT, player));
-
-		dialog.getInputMap(IFW).put(KeyStroke.getKeyStroke("E"), ROTATE_RIGHT);
-		dialog.getActionMap().put(ROTATE_RIGHT, new Movement(ROTATE_RIGHT, player));
-		
-		dialog.getInputMap(IFW).put(KeyStroke.getKeyStroke("Q"), ROTATE_LEFT);
-		dialog.getActionMap().put(ROTATE_LEFT, new Movement(ROTATE_LEFT, player));
-		 */
-		
-		new Thread() {
-			@Override
-			public void run() {
-				// Run below the rest of the program
-				Thread.currentThread().setPriority(MIN_PRIORITY);
-				
-				// Constantly looking for new inputs
-				while (true) {
-					Movement mv = new Movement(player, mUp, mDown, mRight, mLeft, rRight, rLeft);
-					if (mUp)
-						mv.moveUp();
-					if (mDown)
-						mv.moveDown();
-					if (mRight)
-						mv.moveRight();
-					if (mLeft)
-						mv.moveLeft();
-					if (rRight)
-						mv.rotateRight();
-					if (rLeft)
-						mv.rotateLeft();
-				}
-			}
-		}.start();
+	public void setFPS(int newFPS) {
+		timer.stop();
+		frames = 1000 / newFPS;
+		timer = new Timer(frames, new Listener());
+		timer.start();
+	}
+	
+	@Override
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		draw(g);
+		Toolkit.getDefaultToolkit().sync();
+	}
+	
+	public void draw(Graphics g) {
+		Graphics2D g2d = (Graphics2D) g;
+		g2d.drawImage(player.getImage(), player.getX(), player.getY(), this);
+	}
+	
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// Won't be used but needs to stay here
 	}
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
-		System.out.println(e.getKeyCode());
-		switch (e.getKeyCode()) {
-			case 87:
-				// W
-				mUp = true;
-				break;
-			case 83:
-				// S
-				mDown = true;
-				break;
-			case 65:
-				// A
-				mLeft = true;
-				break;
-			case 68:
-				// D
-				mRight = true;
-				break;
-			case 81:
-				// Q
-				rLeft = true;
-				break;
-			case 69:
-				// E
-				rRight = true;
-				break;
-		}
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-		switch (e.getKeyCode()) {
-			case 87:
-				// W
-				mUp = false;
-				break;
-			case 83:
-				// S
-				mDown = false;
-				break;
-			case 65:
-				// A
-				mLeft = false;
-				break;
-			case 68:
-				// D
-				mRight = false;
-				break;
-			case 81:
-				// Q
-				rLeft = false;
-				break;
-			case 69:
-				// E
-				rRight = false;
-				break;
-		}
-	}
-
-	@Override
-	public void keyTyped(KeyEvent e) {
-		// This won't be used
+		// TODO Find out why this isn't detecting
+		player.keyPressed(e, character.getAgility());
 	}
 	
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Same as previous
+		player.keyReleased(e);
+	}
+	
+	private class Listener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			player.move();
+			repaint();
+		}
+		
+	}
+
 }

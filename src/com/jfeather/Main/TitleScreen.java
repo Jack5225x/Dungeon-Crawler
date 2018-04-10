@@ -72,11 +72,11 @@ public class TitleScreen implements MouseListener {
 			int x = (int) (e.getLocationOnScreen().getX() - dialog.getLocationOnScreen().getX());
 			int y = (int) (e.getLocationOnScreen().getY() - dialog.getLocationOnScreen().getY());
 			//If the button is over the start button
-			if ((x > startText.getX() && x < startText.getX() + startText.getWidth()) && (y > startText.getY() && y < startText.getY() + startText.getHeight())) {
+			if (start.isWithin(e)) {
 				dispose();
 				//SaveSelect ss = new SaveSelect(dialog);
 			}
-			if ((x > exitText.getX() && x < exitText.getX() + exitText.getWidth()) && (y > exitText.getY() && y < exitText.getY() + exitText.getHeight())) {
+			if (exit.isWithin(e)) {
 				// Close the window
 				try {
 					gw.close();

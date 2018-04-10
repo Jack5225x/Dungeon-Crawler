@@ -12,10 +12,9 @@ public class Movement {
 	 */
 	
 	private boolean mUp, mDown, mLeft, mRight, rRight, rLeft;
-	private JLabel label;
+	private int x, y, dx, dy;
 	
-	public Movement(JLabel newLabel, boolean newUp, boolean newDown, boolean newRight, boolean newLeft, boolean newRRight, boolean newRLeft) {
-		label = newLabel;
+	public Movement(boolean newUp, boolean newDown, boolean newRight, boolean newLeft, boolean newRRight, boolean newRLeft) {
 		mUp = newUp;
 		mDown = newDown;
 		mLeft = newLeft;
@@ -26,22 +25,18 @@ public class Movement {
 	
 	public void moveUp() {
 		System.out.println("Up");
-		label.setBounds(label.getX(), label.getY() + 3, label.getWidth(), label.getHeight());
 	}
 	
 	public void moveDown() {
 		System.out.println("Down");
-		label.setBounds(label.getX(), label.getY() - 3, label.getWidth(), label.getHeight());
 	}
 	
 	public void moveRight() {
 		System.out.println("Right");
-		label.setBounds(label.getX() + 3, label.getY(), label.getWidth(), label.getHeight());
 	}
 	
 	public void moveLeft() {
 		System.out.println("Left");
-		label.setBounds(label.getX() - 3, label.getY(), label.getWidth(), label.getHeight());
 	}
 	
 	public void rotateRight() {

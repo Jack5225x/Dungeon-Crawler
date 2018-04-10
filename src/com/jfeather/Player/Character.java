@@ -195,6 +195,10 @@ public class Character {
 		mana = newMana;
 	}
 	
+	public void addStrength(int increment) {
+		strength += increment;
+	}
+	
 	public void subtractHealth(int healthDecrement) {
 		health -= healthDecrement;
 	}

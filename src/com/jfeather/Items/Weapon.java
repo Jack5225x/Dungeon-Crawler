@@ -4,7 +4,7 @@ import javax.swing.ImageIcon;
 
 import com.jfeather.Items.DescrWrap;
 public class Weapon {
-
+	
 	public int damage, strength, intelligence, speed, rarity, itemType, agility, luck;
 	public ImageIcon sprite;
 	public String name, toolTip, descr;

@@ -3,6 +3,8 @@ package com.jfeather.Main;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -58,14 +60,22 @@ public class GameWindow extends JFrame {
 		setTitle("Game");
 		setResizable(false);
 		
-		WeaponsGen rwg = new WeaponsGen();
 		Character jack = new Character("Jack");
+		jack.setLevel(1);
+		
+		GameInstance instance = new GameInstance(jack);
+		add(instance);
+		addKeyListener(instance.KL);
+		
+		/*
+		WeaponsGen rwg = new WeaponsGen();
 		Inventory inv = createInv(jack, 10);
+		
 		for (int i = 0; i < 10; i++) {
 			Weapon testSword = rwg.genWeapon(jack, "sword");
 			inv.addItem(testSword);
 		}
-		
+		/*
 		Thread title = new Thread() {
 			@Override
 			public void run() {
@@ -97,6 +107,7 @@ public class GameWindow extends JFrame {
 		//createInstance(jack);
 		inv.setUpdate(true);
 		//inv.setUpdateInterval(1000);
+		*/
 	}
 	
 	public Inventory createInv(Character c, int capacity) {
@@ -113,14 +124,9 @@ public class GameWindow extends JFrame {
 		}
 		return null;
 	}
-	
-	public void createInstance(Character c) {
-		instance = new GameInstance(createInv(c, 10));
-		contentPane.add(instance.dialog);
-	}
-	
+		
 	public void close() {
 		frame.dispose();
-		
 	}
+
 }
