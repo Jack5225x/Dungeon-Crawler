@@ -9,7 +9,7 @@ public class Character {
 	private int level, health, maxHealth, mana, maxMana, intelligence, strength, defense, agility, luck;
 	private String name;
 	private ImageIcon sprite;
-		
+	
 	public Character(String charName) {
 		name = charName;
 		sprite = null;
