@@ -1,26 +1,9 @@
 package com.jfeather.Player;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.awt.Image;
-import java.awt.Rectangle;
-import java.awt.Shape;
-import java.awt.Transparency;
 import java.awt.event.KeyEvent;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
-import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
-import java.awt.image.RenderedImage;
 import java.io.File;
 import java.net.URL;
-import java.text.AttributedCharacterIterator;
 
 import javax.swing.ImageIcon;
 
@@ -31,18 +14,19 @@ public class PlayerInstance {
 	private Image sprite;
 	private int rollCooldown = 2500;
 	private boolean rollReady = true;
+	private Character character;
 	
-	public PlayerInstance() {
+	public PlayerInstance(Character c) {
+		character = c;
 		initialize();
 	}
 	
 	public void initialize() {
-		ImageIcon icon = new ImageIcon("Sprites/Character/CharacterStill.png");
+		ImageIcon icon = new ImageIcon("Sprites/Character/CharacterUp.png");
 		sprite = icon.getImage();
 		
 		w = sprite.getWidth(null);
 		h = sprite.getHeight(null);
-		
 	}
 	
 	public int getX() {
@@ -218,6 +202,10 @@ public class PlayerInstance {
     	}
     	
     	// Activate the cooldown
+    	if (character.getAgility() < 150)
+    		rollCooldown = 2500 - character.getAgility() * 10;
+    	else
+    		rollCooldown = 750;
     	rollReady = false;
     	new Thread() {
     		@Override

@@ -61,7 +61,6 @@ public class GameWindow extends JFrame {
 		setResizable(false);
 		
 		Character jack = new Character("Jack");
-		jack.setAgility(50);
 		
 		GameInstance instance = new GameInstance(jack);
 		add(instance);

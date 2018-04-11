@@ -12,6 +12,7 @@ import java.awt.event.KeyListener;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import com.jfeather.Level.LevelInstance;
 import com.jfeather.Main.GameWindow;
 import com.jfeather.Main.Inventory;
 import com.jfeather.Main.TitleText;
@@ -32,10 +33,11 @@ public class GameInstance extends JPanel implements KeyListener {
 	private PlayerInstance player;
 	public final KeyListener KL = this;
 	private Character character;
+	//private LevelInstance level;
 	
 	public GameInstance(Character c) {
-		initialize();
 		character = c;
+		initialize();
 		
 		timer = new Timer(frames, new Listener());
 		timer.start();
@@ -45,7 +47,7 @@ public class GameInstance extends JPanel implements KeyListener {
 		addKeyListener(this);
 		setPreferredSize(new Dimension(640, 330));
 		setDoubleBuffered(true);
-		player = new PlayerInstance();
+		player = new PlayerInstance(character);
 	}
 
 	public void setFPS(int newFPS) {
