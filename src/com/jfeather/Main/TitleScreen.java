@@ -42,7 +42,7 @@ public class TitleScreen implements MouseListener {
 		
 		// Add the background
 		// This will eventually be a looped gif, but for now a png works
-		title = new JLabel(gif("Sprites/TitleScreen/TitleScreenBackground3.png"));
+		title = new JLabel(gif("Sprites/TitleScreen/TitleScreenFinal.png"));
 		dialog.add(title);
 		title.addMouseListener(this);
 		
@@ -153,7 +153,7 @@ public class TitleScreen implements MouseListener {
 			titleButtons();
 			
 			// Add the animated picture
-			titleGif = new JLabel(gif("Sprites/TitleScreen/TitleScreenBackground3.png"));
+			titleGif = new JLabel(gif("Sprites/TitleScreen/TitleScreenFinal.png"));
 			dialog.add(titleGif);
 			
 			// Remove the static picture
@@ -189,13 +189,13 @@ public class TitleScreen implements MouseListener {
 		dialog.add(exitText);
 		exitText.setBounds(480, 235, 110, 45);
 		*/
-		start = new TitleText(dialog, "Start", 445, 130, 24, "cyan");
+		start = new TitleText(dialog, "Start", 445, 130, 24, TitleText.CYAN);
 		start.addMouseListener(this);
-		startHighlighted = new TitleText(dialog, "Start", 445, 129, 26, "blue");
+		startHighlighted = new TitleText(dialog, "Start", 445, 129, 26, TitleText.BLUE);
 		startHighlighted.setVisible(false);
-		exit = new TitleText(dialog, "Exit", 465, 245, 24, "cyan");
+		exit = new TitleText(dialog, "Exit", 465, 245, 24, TitleText.CYAN);
 		exit.addMouseListener(this);
-		exitHighlighted = new TitleText(dialog, "Exit", 465, 244, 26, "blue");
+		exitHighlighted = new TitleText(dialog, "Exit", 465, 244, 26, TitleText.BLUE);
 		exitHighlighted.addMouseListener(this);
 		exitHighlighted.setVisible(false);
 		// Add the mouse listeners after the animation finishes so it doesn't interrupt it

@@ -9,16 +9,18 @@ import javax.swing.ImageIcon;
 
 public class PlayerInstance {
 	
-	private int dx, dy, x = 100, y = 100, w, h, angle, da;
+	private int dx, dy, x, y, w, h, angle, da;
 	private boolean right = false, left = false, up = false, down = false, roll = false;
 	private Image sprite;
 	private int rollCooldown = 2500;
 	private boolean rollReady = true;
 	private Character character;
 	
-	public PlayerInstance(Character c) {
+	public PlayerInstance(Character c, int startX, int startY) {
 		character = c;
 		initialize();
+		x = startX - sprite.getWidth(null) / 2;
+		y = startY - sprite.getHeight(null) / 2;
 	}
 	
 	public void initialize() {

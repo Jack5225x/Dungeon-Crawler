@@ -33,7 +33,7 @@ public class GameInstance extends JPanel implements KeyListener {
 	private PlayerInstance player;
 	public final KeyListener KL = this;
 	private Character character;
-	//private LevelInstance level;
+	private LevelInstance level;
 	
 	public GameInstance(Character c) {
 		character = c;
@@ -45,9 +45,11 @@ public class GameInstance extends JPanel implements KeyListener {
 	
 	public void initialize() {
 		addKeyListener(this);
-		setPreferredSize(new Dimension(640, 330));
+		Dimension dim = new Dimension(640, 380);
+		setPreferredSize(dim);
 		setDoubleBuffered(true);
-		player = new PlayerInstance(character);
+		player = new PlayerInstance(character, (int)(dim.getWidth() / 2), (int)(dim.getHeight() / 2));
+		level = new LevelInstance(1, character);
 	}
 
 	public void setFPS(int newFPS) {

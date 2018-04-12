@@ -61,12 +61,12 @@ public class GameWindow extends JFrame {
 		setResizable(false);
 		
 		Character jack = new Character("Jack");
-		
+		/*
 		GameInstance instance = new GameInstance(jack);
 		add(instance);
 		addKeyListener(instance.KL);
-		/*
 		
+		*/
 		WeaponsGen rwg = new WeaponsGen();
 		Inventory inv = createInv(jack, 10);
 		
@@ -106,7 +106,7 @@ public class GameWindow extends JFrame {
 		//createInstance(jack);
 		inv.setUpdate(true);
 		//inv.setUpdateInterval(1000);
-		*/
+		
 	}
 	
 	public Inventory createInv(Character c, int capacity) {

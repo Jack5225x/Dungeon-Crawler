@@ -1,12 +1,8 @@
 package com.jfeather.Main;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -14,10 +10,14 @@ import javax.swing.JPanel;
 
 public class TitleText {
 
-	public JPanel dialog;
-	public JLabel[] labels;
-	public int width, height, x, y, size;
-	public String color, text;
+	public static String BLUE = "blue";
+	public static String RED = "red";
+	public static String CYAN = "cyan";
+	public static String GREEN = "green";
+	private JPanel dialog;
+	private JLabel[] labels;
+	private int width, height, x, y, size;
+	private String color, text;
 	private JLabel listener;
 	
 	public TitleText(JPanel newDialog, String str, int startX, int startY, int newSize, String newColor) {
