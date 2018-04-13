@@ -58,11 +58,11 @@ public class GameWindow extends JFrame {
 		setResizable(false);
 		
 		Character jack = new Character("Jack");
-		
+		jack.setAgility(200);
 		GameInstance instance = new GameInstance(jack);
 		add(instance);
 		addKeyListener(instance.KL);
-		instance.setFPS(100);
+		instance.setFPS(60);
 		/*
 		
 		WeaponsGen rwg = new WeaponsGen();

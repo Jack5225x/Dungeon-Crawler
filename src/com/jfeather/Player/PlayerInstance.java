@@ -15,6 +15,12 @@ public class PlayerInstance {
 	private int rollCooldown = 2500;
 	private boolean rollReady = true;
 	private Character character;
+	private int facing;
+	
+	public static int DIR_LEFT = 0;
+	public static int DIR_RIGHT = 1;
+	public static int DIR_UP = 2;
+	public static int DIR_DOWN = 3;
 	
 	public PlayerInstance(Character c, int startX, int startY) {
 		character = c;
@@ -228,15 +234,19 @@ public class PlayerInstance {
     	// Round 2 baby
     	if (left && !right && !down && !up) {
     		sprite = gif("Sprites/Character/CharacterLeft.png");
+    		facing = DIR_LEFT;
     	} else {
     		if (!left && right && !down && !up) {
         		sprite = gif("Sprites/Character/CharacterRight.png");
+        		facing = DIR_RIGHT;
     		} else {
     			if (!left && !right && down && !up) {
     	    		sprite = gif("Sprites/Character/CharacterDown.png");
+    	    		facing = DIR_DOWN;
     			} else {
     				if (!left && !right && !down && up) {
     		    		sprite = gif("Sprites/Character/CharacterUp.png");
+    		    		facing = DIR_UP;
     				} else {
     					if (left && !right && down && !up) {
     						//System.out.println("Down left");
@@ -276,6 +286,18 @@ public class PlayerInstance {
 	
 	public Character getCharacter() {
 		return character;
+	}
+	
+	public int getDirection() {
+		return facing;
+	}
+	
+	public void setX(int newX) {
+		x = newX;
+	}
+	
+	public void setY(int newY) {
+		y = newY;
 	}
 
 }

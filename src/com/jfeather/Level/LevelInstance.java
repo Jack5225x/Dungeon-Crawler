@@ -1,11 +1,14 @@
 package com.jfeather.Level;
 
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
 
+import com.jfeather.Game.GameInstance;
 import com.jfeather.Player.Character;
 import com.jfeather.Player.PlayerInstance;
 
@@ -14,16 +17,22 @@ public class LevelInstance {
 	private int floor;
 	private Character character;
 	private PlayerInstance player;
+	private GameInstance instance;
 	private Image sprite;
 	private int x, y, a, dx, dy, da;
-	private boolean left, right, down, up, roll, rollReady;
+	private boolean left, right, down, up, roll, rollReady = true;
 	private int rollCooldown;
+	private boolean isOffset = false;
+	private boolean moveable = true;
 	
-	public LevelInstance(int floorNumber, PlayerInstance p) {
+	public LevelInstance(int floorNumber, PlayerInstance p, GameInstance i) {
 		floor = floorNumber;
 		player = p;
+		instance = i;
+		a = 0;
 		character = player.getCharacter();
 		sprite = (new ImageIcon("Sprites/Level/TestLevel.png")).getImage();
+		
 	}
 
 	public int getFloor() {
@@ -71,44 +80,48 @@ public class LevelInstance {
 		y = newY;
 	}
 	
-    public void keyPressed(KeyEvent e, int speed) {
+    public void keyPressed(KeyEvent e, int speed, Graphics g) {
         int key = e.getKeyCode();
-        int d = (int) 3.5 + speed / 10;
-        if (key == 65) {
-        	// A
-            dx = -d;
-            left = true;
-        }
-        if (key == 68) {
-        	// D
-            dx = d;
-            right = true;
-        }
-        if (key == 87) {
-        	// W
-            dy = -d;
-            up = true;
-        }
-        if (key == 83) {
-        	// S
-            dy = d;
-            down = true;
-        }
-        if (key == 81)
-        	// Q
-        	da = -3;
-        if (key == 69)
-        	// E
-        	da = 3;
-        if (key == 32) {
-        	// Space
-        	roll = true;
+        if (moveable) {
+	        int d = (int) (8 / (1 + Math.pow(2.717, speed / -10)));
+	        if (key == 65) {
+	        	// A
+	            dx = d;
+	            left = true;
+	        }
+	        if (key == 68) {
+	        	// D
+	            dx = -d;
+	            right = true;
+	        }
+	        if (key == 87) {
+	        	// W
+	            dy = d;
+	            up = true;
+	        }
+	        if (key == 83) {
+	        	// S
+	            dy = -d;
+	            down = true;
+	        }
+	        if (key == 81)
+	        	// Q
+	        	da = -3;
+	        if (key == 69)
+	        	// E
+	        	da = 3;
+	        if (key == 32) {
+	        	// Space
+	        	roll = true;
+	        }
+	        if (key == 88) {
+	        	toggleOffset();
+	        }
         }
     }
 
     public void keyReleased(KeyEvent e) {    
         int key = e.getKeyCode();
-        
         if (key == 65) {
         	// A
             dx = 0;
@@ -141,40 +154,79 @@ public class LevelInstance {
         }
     }
 	
-	public void move() {
+	public void move(Graphics g) {
 		x += dx;
 		y += dy;
+		
 		a += da;
+		//rotate(g, sprite, a);
+		if (rollReady && roll)
+			roll();
 	}
 	
     private void roll() {
     	// Clown fiesta time
+    	
+    	int d = 100;
+    	double root = Math.sqrt(2);
     	// Determine the direction
     	if (left && !right && !down && !up) {
-    		System.out.println("Left");
+    		//System.out.println("Left");
+    		dx = d;
+    		dy = 0;
     	} else {
     		if (!left && right && !down && !up) {
-    			System.out.println("Right");
+    			//System.out.println("Right");
+    			dx = -d;
+    			dy = 0;
     		} else {
     			if (!left && !right && down && !up) {
-    				System.out.println("Down");
+    				//System.out.println("Down");
+    				dx = 0;
+    				dy = -d;
     			} else {
     				if (!left && !right && !down && up) {
-    					System.out.println("Up");
+    					//System.out.println("Up");
+    					dx = 0;
+    					dy = d;
     				} else {
     					if (left && !right && down && !up) {
-    						System.out.println("Down left");
+    						//System.out.println("Down left");
+    						dx = (int)(d / root);
+    						dy = (int)(-d / root);
     					} else {
     						if (left && !right && !down && up) {
-    							System.out.println("Up left");
+    							//System.out.println("Up left");
+        						dx = (int)(d / root);
+        						dy = (int)(d / root);
     						} else {
     							if (!left && right && down && !up) {
-    								System.out.println("Down right");
+    								//System.out.println("Down right");
+    	    						dx = (int)(-d / root);
+    	    						dy = (int)(-d / root);
     							} else {
     								if (!left && right && !down && up) {
-    									System.out.println("Up right");
+    									//System.out.println("Up right");
+    		    						dx = (int)(-d / root);
+    		    						dy = (int)(d / root);
     								} else {
-    									System.out.println("Up");
+    									if (player.getDirection() == PlayerInstance.DIR_RIGHT) {
+    										dx = -d;
+    										dy = 0;
+    									}
+    									if (player.getDirection() == PlayerInstance.DIR_LEFT) {
+    										dx = d;
+    										dy = 0;
+    									}
+    									if (player.getDirection() == PlayerInstance.DIR_UP) {
+    										dx = 0;
+    										dy = d;
+    									}
+    									if (player.getDirection() == PlayerInstance.DIR_DOWN) {
+    										dx = 0;
+    										dy = -d;
+    									}
+
     								}
     							}
     						}
@@ -183,6 +235,60 @@ public class LevelInstance {
     			}
     		}
     	}
+    	
+    	int finalX = x + dx;
+    	int finalY = y + dy;
+    	int ogX = player.getX();
+    	int ogY = player.getY();
+    	
+    	System.out.println(finalX + " " + ogX + " " + dx);
+    	System.out.println(finalY + " " + ogY + " " + dy);
+    	new Thread() {
+    		public void run() {
+    			moveable = false;
+    			int k = 0;
+    			if (dx < 0)
+    				k = -1;
+    			else
+    				k = 1;
+    			while (x != finalX && k != 0) {
+    				if (!approaching(finalX, ogX, x))
+    					k = -k;
+    				x += k;
+    				try {
+						Thread.sleep(2);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+    			}
+    			moveable = true;
+    		}
+    	}.start();
+    	
+    	new Thread() {
+    		public void run() {
+    			moveable = false;
+    			int k = 0;
+    			if (dy < 0)
+    				k = -1;
+    			else
+    				k = 1;
+    			while (y != finalY) {
+    				if (!approaching(finalY, ogY, y))
+    					k = -k;
+    				y += k;
+    				try {
+						Thread.sleep(2);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+    			}
+    			moveable = true;
+    		}
+    	}.start();
+
     	
     	// Activate the cooldown
     	if (character.getAgility() < 150)
@@ -202,7 +308,34 @@ public class LevelInstance {
     			rollReady = true;
     		}
     	}.start();
-    	
+    	dy = 0;
+    	dx = 0;
     }
-
+    
+    public void toggleOffset() {
+    	isOffset = !isOffset;
+    	if (isOffset) {
+    		player.setY((int) (instance.getHeight() * .50));
+    		setY((int) (instance.getHeight() * .50));
+    	} else {
+    		player.setY((int) (instance.getHeight() * .75));
+    		setY((int) (instance.getHeight() * .75));
+    	}
+    }
+    
+    public void rotate(Graphics g, Image image, int angle) {
+    	Graphics2D g2d = (Graphics2D) g.create();
+    	g2d.rotate(Math.toRadians(angle), player.getX(), player.getY());
+    	g2d.drawImage(image, getX(), getY(), instance);
+    	g2d.dispose();
+    }
+    
+    public boolean approaching(int finalX, int ogX, int newX) {
+    	int d1 = Math.abs(finalX - ogX);
+    	int d2 = Math.abs(finalX - newX);
+    	if (d1 > d2)
+    		return true;
+    	return false;
+    }
+    
 }

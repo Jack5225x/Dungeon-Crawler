@@ -1,5 +1,6 @@
 package com.jfeather.Game;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Graphics;
@@ -47,13 +48,14 @@ public class GameInstance extends JPanel implements KeyListener {
 		Dimension dim = new Dimension(640, 380);
 		setPreferredSize(dim);
 		setDoubleBuffered(true);
+		setBackground(Color.BLACK);
 		width = (int)(dim.getWidth());
 		height = (int)(dim.getHeight());
 
-		player = new PlayerInstance(character, width / 2, height / 2);
+		player = new PlayerInstance(character, width / 2, (int)(height * .5));
 		
-		level = new LevelInstance(1, player);
-		level.setCoords((width / 2) - level.getWidth() / 2, (height / 2) - level.getHeight() / 2);
+		level = new LevelInstance(1, player, this);
+		level.setCoords((width / 2) - level.getWidth() / 2, (int)(height * .5) - level.getHeight() / 2);
 	}
 
 	public void setFPS(int newFPS) {
@@ -85,7 +87,7 @@ public class GameInstance extends JPanel implements KeyListener {
 	public void keyPressed(KeyEvent e) {
 		// TODO Find out why this isn't detecting
 		player.keyPressed(e, character.getAgility());
-		level.keyPressed(e, character.getAgility());
+		level.keyPressed(e, character.getAgility(), getGraphics());
 	}
 	
 	@Override
@@ -100,7 +102,7 @@ public class GameInstance extends JPanel implements KeyListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			player.updateSprite();
-			level.move();
+			level.move(getGraphics());
 			repaint();
 		}
 		
