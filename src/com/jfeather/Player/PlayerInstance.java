@@ -273,5 +273,9 @@ public class PlayerInstance {
 		return (new ImageIcon(url)).getImage();
 
 	}
+	
+	public Character getCharacter() {
+		return character;
+	}
 
 }

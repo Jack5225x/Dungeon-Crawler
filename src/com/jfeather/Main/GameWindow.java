@@ -35,9 +35,6 @@ public class GameWindow extends JFrame {
 	public GameInstance instance;
 	public volatile TitleScreen ts;
 	
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -61,12 +58,13 @@ public class GameWindow extends JFrame {
 		setResizable(false);
 		
 		Character jack = new Character("Jack");
-		/*
+		
 		GameInstance instance = new GameInstance(jack);
 		add(instance);
 		addKeyListener(instance.KL);
+		instance.setFPS(100);
+		/*
 		
-		*/
 		WeaponsGen rwg = new WeaponsGen();
 		Inventory inv = createInv(jack, 10);
 		
@@ -106,7 +104,7 @@ public class GameWindow extends JFrame {
 		//createInstance(jack);
 		inv.setUpdate(true);
 		//inv.setUpdateInterval(1000);
-		
+		*/
 	}
 	
 	public Inventory createInv(Character c, int capacity) {

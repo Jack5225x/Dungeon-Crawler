@@ -9,13 +9,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import com.jfeather.Level.LevelInstance;
-import com.jfeather.Main.GameWindow;
-import com.jfeather.Main.Inventory;
-import com.jfeather.Main.TitleText;
 import com.jfeather.Player.PlayerInstance;
 import com.jfeather.Player.Character;
 
@@ -34,11 +32,12 @@ public class GameInstance extends JPanel implements KeyListener {
 	public final KeyListener KL = this;
 	private Character character;
 	private LevelInstance level;
+	private int width, height;
 	
 	public GameInstance(Character c) {
 		character = c;
 		initialize();
-		
+
 		timer = new Timer(frames, new Listener());
 		timer.start();
 	}
@@ -48,8 +47,13 @@ public class GameInstance extends JPanel implements KeyListener {
 		Dimension dim = new Dimension(640, 380);
 		setPreferredSize(dim);
 		setDoubleBuffered(true);
-		player = new PlayerInstance(character, (int)(dim.getWidth() / 2), (int)(dim.getHeight() / 2));
-		level = new LevelInstance(1, character);
+		width = (int)(dim.getWidth());
+		height = (int)(dim.getHeight());
+
+		player = new PlayerInstance(character, width / 2, height / 2);
+		
+		level = new LevelInstance(1, player);
+		level.setCoords((width / 2) - level.getWidth() / 2, (height / 2) - level.getHeight() / 2);
 	}
 
 	public void setFPS(int newFPS) {
@@ -68,6 +72,7 @@ public class GameInstance extends JPanel implements KeyListener {
 	
 	public void draw(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
+		g2d.drawImage(level.getSprite(), level.getX(), level.getY(), this);
 		g2d.drawImage(player.getImage(), player.getX(), player.getY(), this);
 	}
 	
@@ -80,19 +85,22 @@ public class GameInstance extends JPanel implements KeyListener {
 	public void keyPressed(KeyEvent e) {
 		// TODO Find out why this isn't detecting
 		player.keyPressed(e, character.getAgility());
+		level.keyPressed(e, character.getAgility());
 	}
 	
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Same as previous
 		player.keyReleased(e);
+		level.keyReleased(e);
 	}
 	
 	private class Listener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			player.move();
+			player.updateSprite();
+			level.move();
 			repaint();
 		}
 		
