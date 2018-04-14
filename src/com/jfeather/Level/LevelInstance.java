@@ -241,8 +241,9 @@ public class LevelInstance {
     	int ogX = player.getX();
     	int ogY = player.getY();
     	
-    	System.out.println(finalX + " " + ogX + " " + dx);
-    	System.out.println(finalY + " " + ogY + " " + dy);
+    	//System.out.println(finalX + " " + ogX + " " + dx);
+    	//System.out.println(finalY + " " + ogY + " " + dy);
+    	
     	new Thread() {
     		public void run() {
     			moveable = false;

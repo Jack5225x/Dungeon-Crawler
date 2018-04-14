@@ -9,6 +9,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -19,7 +21,7 @@ import com.jfeather.Player.PlayerInstance;
 import com.jfeather.Player.Character;
 
 
-public class GameInstance extends JPanel implements KeyListener {
+public class GameInstance extends JPanel implements KeyListener, MouseListener {
 	
 		
 	/**
@@ -31,6 +33,7 @@ public class GameInstance extends JPanel implements KeyListener {
 	private Timer timer;
 	private PlayerInstance player;
 	public final KeyListener KL = this;
+	public final MouseListener ML = this;
 	private Character character;
 	private LevelInstance level;
 	private int width, height;
@@ -105,6 +108,42 @@ public class GameInstance extends JPanel implements KeyListener {
 			level.move(getGraphics());
 			repaint();
 		}
+		
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		int mouseX = (int) (e.getLocationOnScreen().getX() - getLocationOnScreen().getX());
+		int mouseY = (int) (e.getLocationOnScreen().getY() - getLocationOnScreen().getY());
+		Line line = new Line(player.getX() + player.getWidth() / 2, player.getY() + player.getHeight() / 2, mouseX, mouseY);
+		//line.debug();
+		line.printMatrix(line.genPoints(5));
+		System.out.println(line.getQuadrant());
+		System.out.println(line.getAngleFromX());
+	}	
+
+	@Override
+	public void mouseEntered(MouseEvent arg0) {
+		// Won't be used
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent arg0) {
+		// Won't be used
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent arg0) {
+		// Won't be used
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
+		// Won't be used
 		
 	}
 

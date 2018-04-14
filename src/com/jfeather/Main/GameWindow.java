@@ -58,21 +58,20 @@ public class GameWindow extends JFrame {
 		setResizable(false);
 		
 		Character jack = new Character("Jack");
-		jack.setAgility(200);
+		//jack.setAgility(200);
 		GameInstance instance = new GameInstance(jack);
 		add(instance);
 		addKeyListener(instance.KL);
+		addMouseListener(instance.ML);
 		instance.setFPS(60);
 		/*
-		
-		WeaponsGen rwg = new WeaponsGen();
 		Inventory inv = createInv(jack, 10);
 		
 		for (int i = 0; i < 10; i++) {
-			Weapon testSword = rwg.genWeapon(jack, "sword");
+			Weapon testSword = WeaponsGen.genWeapon(jack, "sword");
 			inv.addItem(testSword);
 		}
-		
+		/*
 		Thread title = new Thread() {
 			@Override
 			public void run() {

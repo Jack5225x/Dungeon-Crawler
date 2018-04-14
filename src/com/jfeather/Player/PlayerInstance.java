@@ -30,8 +30,7 @@ public class PlayerInstance {
 	}
 	
 	public void initialize() {
-		ImageIcon icon = new ImageIcon("Sprites/Character/CharacterUp.png");
-		sprite = icon.getImage();
+		sprite = createImage("Sprites/Character/CharacterUp.png");
 		
 		w = sprite.getWidth(null);
 		h = sprite.getHeight(null);
@@ -233,19 +232,19 @@ public class PlayerInstance {
     public void updateSprite() {
     	// Round 2 baby
     	if (left && !right && !down && !up) {
-    		sprite = gif("Sprites/Character/CharacterLeft.png");
+    		sprite = createImage("Sprites/Character/CharacterLeft.png");
     		facing = DIR_LEFT;
     	} else {
     		if (!left && right && !down && !up) {
-        		sprite = gif("Sprites/Character/CharacterRight.png");
+        		sprite = createImage("Sprites/Character/CharacterRight.png");
         		facing = DIR_RIGHT;
     		} else {
     			if (!left && !right && down && !up) {
-    	    		sprite = gif("Sprites/Character/CharacterDown.png");
+    	    		sprite = createImage("Sprites/Character/CharacterDown.png");
     	    		facing = DIR_DOWN;
     			} else {
     				if (!left && !right && !down && up) {
-    		    		sprite = gif("Sprites/Character/CharacterUp.png");
+    		    		sprite = createImage("Sprites/Character/CharacterUp.png");
     		    		facing = DIR_UP;
     				} else {
     					if (left && !right && down && !up) {
@@ -271,7 +270,7 @@ public class PlayerInstance {
     	}
     }
     
-	public Image gif(String path) {
+	public Image createImage(String path) {
 		// This also works for pngs, but it is the best way (i think) to use gifs, pngs can be done other ways but this works for both
 		URL url = null;
 		try {
@@ -281,7 +280,6 @@ public class PlayerInstance {
 			ex.printStackTrace();
 		}
 		return (new ImageIcon(url)).getImage();
-
 	}
 	
 	public Character getCharacter() {

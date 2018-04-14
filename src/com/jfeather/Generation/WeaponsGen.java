@@ -9,25 +9,25 @@ import com.jfeather.Items.*;
 import com.jfeather.Player.Character;
 public class WeaponsGen {
 	
-	private String[] preConstructions = {"The ", ""};
-	private String[] basePreAdjectives = {"Mighty", "Strong" ,"Steadfast", "Crystal", "Shiny", "Angelic", "Demonic", "Adorned", "Void"};
-	private String[] legendaryDivinePreAdjectives = {"Rainbow", "Godly", "Ancient", "Divine", "Legendary", "Infinity", "Quantum", "Tachyonic"};
-	private String[] basePostAdjectives = {"Avarice", "Swiftness", "Strength", "Destruction", "Darkness", "Brightness"};
-	private String[] baseEntities = {"Jester", "Behemoth", "Giant", "Sentinel", "Beholder", "Peasant"};
-	private String[] legendaryDivinePostAdjectives = {"Might", "Magic", "Infinity", "the Void", "Impossibility", "Prisms", "Illusions", "Aether"};
-	private String[] legendaryDivineEntities = {"Gods", "King", "Ancients", "Morning Star", "Meteor", "McDonald's Breakfast Artisans", "Mr. Gudbrandsen's Ex-wife", "Mr. Gudbrandsen"};
+	private static String[] preConstructions = {"The ", ""};
+	private static String[] basePreAdjectives = {"Mighty", "Strong" ,"Steadfast", "Crystal", "Shiny", "Angelic", "Demonic", "Adorned", "Void"};
+	private static String[] legendaryDivinePreAdjectives = {"Rainbow", "Godly", "Ancient", "Divine", "Legendary", "Infinity", "Quantum", "Tachyonic"};
+	private static String[] basePostAdjectives = {"Avarice", "Swiftness", "Strength", "Destruction", "Darkness", "Brightness"};
+	private static String[] baseEntities = {"Jester", "Behemoth", "Giant", "Sentinel", "Beholder", "Peasant"};
+	private static String[] legendaryDivinePostAdjectives = {"Might", "Magic", "Infinity", "the Void", "Impossibility", "Prisms", "Illusions", "Aether"};
+	private static String[] legendaryDivineEntities = {"Gods", "King", "Ancients", "Morning Star", "Meteor", "McDonald's Breakfast Artisans", "Mr. Gudbrandsen's Ex-wife", "Mr. Gudbrandsen"};
 
 	// Weapon types and names
-	private String[] swordBaseNames = {"Sword", "Scimitar", "Blade", "Katana", "Greatsword", "Saber", "Rapier", "Longsword"};
-	private String[] daggerBaseNames = {"Blade", "Dagger", "Shortsword"};
-	private String[] hammerBaseNames = {"Hammer", "Mallet", "Mace"};
-	private String[] wandBaseNames = {"Wand", "Catalyst"};
-	private String[] staffBaseNames = {"Staff"};
-	private String[] bowBaseNames = {"Bow", "Longbow"};
-	private String[] crossbowBaseNames = {"Crossbow"};
+	private static String[] swordBaseNames = {"Sword", "Scimitar", "Blade", "Katana", "Greatsword", "Saber", "Rapier", "Longsword"};
+	private static String[] daggerBaseNames = {"Blade", "Dagger", "Shortsword"};
+	private static String[] hammerBaseNames = {"Hammer", "Mallet", "Mace"};
+	private static String[] wandBaseNames = {"Wand", "Catalyst"};
+	private static String[] staffBaseNames = {"Staff"};
+	private static String[] bowBaseNames = {"Bow", "Longbow"};
+	private static String[] crossbowBaseNames = {"Crossbow"};
 	
 	// Weapon materials based on rarity
-	private String[][] matsMelee = {
+	private static String[][] matsMelee = {
 			{"pig iron", "aluminum", "stone", "tin", "lead", "copper"},
 			{"steel", "iron", "bronze", "manganite"},
 			{"cobalt", "black iron", "mithril"},
@@ -37,29 +37,29 @@ public class WeaponsGen {
 			{"adamantium", "vibranium", "ethereum", "neutronium", "electronium"},
 	};
 	
-	private String[] matsRanged = {"maple", "oak", "cherry"};
+	private static String[] matsRanged = {"maple", "oak", "cherry"};
 	
 	// Description arrays
-	private String[][] descrPhrasesEntity = {
+	private static String[][] descrPhrasesEntity = {
 			{"Forged for ", "Crafted for ", "Made by "},
 			{"very strong.", "very reliable.", "quite old", "seemingly new"}
 	};
 	
-	private String[][] descrPhrasesAdjective = {
+	private static String[][] descrPhrasesAdjective = {
 			{"is rivaled by no other.", "is unmatched by any other common weapon.", "holds up even to the most exquisite weapons."},
 	};
 	
-	private String[][] descrPhrasesType = {
+	private static String[][] descrPhrasesType = {
 			{" forged from ", " made of ", " crafted from "},
 			{". Seems pretty sturdy.", ". Looks strong enough.", ". Should hold up in battle."}
 	};
 
-	private String[][] descrLegendaryDivine  = {
+	private static String[][] descrLegendaryDivine  = {
 			{"was recovered from an ancient tomb.", "was found alongside a forgotten king.", "defeated hordes of enemies in a lost past.", "was wielded by an old god.", "causes any who wield it to be controlled by a mystical energy.", "summons the might of ungodly forces.", "has proved to be too powerful for even the mightiest kings to wield."},
 			{"Wielded by the", "Forged by the", "Summoned by the"}
 	};
 	
-	public Weapon genWeapon(Character c, String weaponType) {
+	public static Weapon genWeapon(Character c, String weaponType) {
 		Random rand = new Random();
 		
 		String spritesFolder = weaponType.substring(0, 1).toUpperCase() + weaponType.substring(1, weaponType.length()).toLowerCase() + "s/";
@@ -128,7 +128,7 @@ public class WeaponsGen {
 		return sword;
 	}
 	
-	public ImageIcon genSprite(String folderName, int rarity) {
+	public static ImageIcon genSprite(String folderName, int rarity) {
 		Random rng = new Random();
 		File[] arr = null;
 		int index;
@@ -154,7 +154,7 @@ public class WeaponsGen {
 		return new ImageIcon(arr[index].getPath());
 	}
 	
-	public int genRarity() {
+	public static int genRarity() {
 		Random rng = new Random();
 		int rarity = 0;
 		int rar = rng.nextInt(1000);
@@ -173,7 +173,7 @@ public class WeaponsGen {
 		return rarity;
 	}
 	
-	public String[] genName(String weaponType, int rarity) {
+	public static String[] genName(String weaponType, int rarity) {
 		Random rng = new Random();
 		String[] arr = {};
 		String[] preAdjectives, postAdjectives, entities;
@@ -261,7 +261,7 @@ public class WeaponsGen {
 		return name;
 	}
 	
-	public String genDescr(String[] nameComponents, String weaponType, int rarity) {
+	public static String genDescr(String[] nameComponents, String weaponType, int rarity) {
 		// name[0] = the actual name
 		// name[1] = the type of weapon
 		// name[2] = entity
