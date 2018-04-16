@@ -165,33 +165,33 @@ public class Inventory extends JPanel implements MouseListener {
 	
 	// This set of methods adds a specific item to a specific spot in the inventory
 	public void addItemToSlot(Weapon weapon, int slot) {
-		slots[slot].setIcon(weapon.sprite);
-		slots[slot].setToolTipText(weapon.toolTip);
+		slots[slot].setIcon(weapon.getSprite());
+		slots[slot].setToolTipText(weapon.getToolTip());
 		items[slot] = new Item(weapon);
 	}
 	
 	public void addItemToSlot(StandardConsumable consumable, int slot) {
-		slots[slot].setIcon(consumable.sprite);
-		slots[slot].setToolTipText(consumable.toolTip);
+		slots[slot].setIcon(consumable.getSprite());
+		slots[slot].setToolTipText(consumable.getToolTip());
 		items[slot] = new Item(consumable);
 	}
 	
 	public void addItemToSlot(UniqueConsumable consumable, int slot) {
-		slots[slot].setIcon(consumable.sprite);
-		slots[slot].setToolTipText(consumable.toolTip);
+		slots[slot].setIcon(consumable.getSprite());
+		slots[slot].setToolTipText(consumable.getToolTip());
 		items[slot] = new Item(consumable);
 	}
 	
 	public void addItemToSlot(Armor armor, int slot) {
-		slots[slot].setIcon(armor.sprite);
-		slots[slot].setToolTipText(armor.toolTip);
+		slots[slot].setIcon(armor.getSprite());
+		slots[slot].setToolTipText(armor.getToolTip());
 		items[slot] = new Item(armor);
 	}
 	
 	
 	public void addItemToSlot(Helmet helmet, int slot) {
-		slots[slot].setIcon(helmet.sprite);
-		slots[slot].setToolTipText(helmet.toolTip);
+		slots[slot].setIcon(helmet.getSprite());
+		slots[slot].setToolTipText(helmet.getToolTip());
 		items[slot] = new Item(helmet);
 	}
 	
@@ -199,14 +199,14 @@ public class Inventory extends JPanel implements MouseListener {
 	public void addItem(Weapon weapon) {
 		int index = -1;
 		for (int i = 0; i < MAX_SLOTS; i++) {
-			if (items[i].name.equals("null")) {
+			if (items[i].getName().equals("null")) {
 				index = i;
 				break;
 			}
 		}
 		if (index != -1) {
-			slots[index].setIcon(weapon.sprite);
-			slots[index].setToolTipText(weapon.toolTip);
+			slots[index].setIcon(weapon.getSprite());
+			slots[index].setToolTipText(weapon.getToolTip());
 			items[index] = new Item(weapon);
 		}
 	}
@@ -214,14 +214,14 @@ public class Inventory extends JPanel implements MouseListener {
 	public void addItem(StandardConsumable consumable) {
 		int index = -1;
 		for (int i = 0; i < MAX_SLOTS; i++) {
-			if (items[i].name.equals("null")) {
+			if (items[i].getName().equals("null")) {
 				index = i;
 				break;
 			}
 		}
 		if (index != -1) {
-			slots[index].setIcon(consumable.sprite);
-			slots[index].setToolTipText(consumable.toolTip);
+			slots[index].setIcon(consumable.getSprite());
+			slots[index].setToolTipText(consumable.getToolTip());
 			items[index] = new Item(consumable);
 		}
 	}
@@ -229,14 +229,14 @@ public class Inventory extends JPanel implements MouseListener {
 	public void addItem(UniqueConsumable consumable) {
 		int index = -1;
 		for (int i = 0; i < MAX_SLOTS; i++) {
-			if (items[i].name.equals("null")) {
+			if (items[i].getName().equals("null")) {
 				index = i;
 				break;
 			}
 		}
 		if (index != -1) {
-			slots[index].setIcon(consumable.sprite);
-			slots[index].setToolTipText(consumable.toolTip);
+			slots[index].setIcon(consumable.getSprite());
+			slots[index].setToolTipText(consumable.getToolTip());
 			items[index] = new Item(consumable);
 		}
 	}
@@ -244,14 +244,14 @@ public class Inventory extends JPanel implements MouseListener {
 	public void addItem(Armor armor) {
 		int index = -1;
 		for (int i = 0; i < MAX_SLOTS; i++) {
-			if (items[i].name.equals("null")) {
+			if (items[i].getName().equals("null")) {
 				index = i;
 				break;
 			}
 		}
 		if (index != -1) {
-			slots[index].setIcon(armor.sprite);
-			slots[index].setToolTipText(armor.toolTip);
+			slots[index].setIcon(armor.getSprite());
+			slots[index].setToolTipText(armor.getToolTip());
 			items[index] = new Item(armor);
 		}
 	}
@@ -259,14 +259,14 @@ public class Inventory extends JPanel implements MouseListener {
 	public void addItem(Helmet helmet) {
 		int index = -1;
 		for (int i = 0; i < MAX_SLOTS; i++) {
-			if (items[i].name.equals("null")) {
+			if (items[i].getName().equals("null")) {
 				index = i;
 				break;
 			}
 		}
 		if (index != -1) {
-			slots[index].setIcon(helmet.sprite);
-			slots[index].setToolTipText(helmet.toolTip);
+			slots[index].setIcon(helmet.getSprite());
+			slots[index].setToolTipText(helmet.getToolTip());
 			items[index] = new Item(helmet);
 		}
 	}
@@ -336,32 +336,34 @@ public class Inventory extends JPanel implements MouseListener {
 				assigned2 = true;
 			}
 		}
-		if ((slot2 == MAX_SLOTS && items[slot1].itemType == 4) || (slot2 == MAX_SLOTS + 1 && items[slot1].itemType == 3) || (slot2 == MAX_SLOTS + 2 && items[slot1].itemType == 0))
+		if ((slot2 == MAX_SLOTS && items[slot1].getItemType() == 4) || (slot2 == MAX_SLOTS + 1 && items[slot1].getItemType() == 3) || (slot2 == MAX_SLOTS + 2 && items[slot1].getItemType() == 0))
 			switchItems(slot1, slot2);
-		if (assigned1 && assigned2 && slots[slot1].isVisible() && slots[slot2].isVisible() && slot1 != slot2 && !(items[slot1].name.equals("null")) && slot2 < 10) {
+		if (assigned1 && assigned2 && slots[slot1].isVisible() && slots[slot2].isVisible() && slot1 != slot2 && !(items[slot1].getName().equals("null")) && slot2 < 10) {
 			switchItems(slot1, slot2);
 		}
-		if (items[MAX_SLOTS + 2].name.equals("null"))
+		if (items[MAX_SLOTS + 2].getName().equals("null"))
 			slots[MAX_SLOTS + 2].setToolTipText("Place your active weapon here");
-		if (items[MAX_SLOTS + 1].name.equals("null"))
+		if (items[MAX_SLOTS + 1].getName().equals("null"))
 			slots[MAX_SLOTS + 1].setToolTipText("Place your armor weapon here");
-		if (items[MAX_SLOTS].name.equals("null"))
+		if (items[MAX_SLOTS].getName().equals("null"))
 			slots[MAX_SLOTS].setToolTipText("Place your active helmet here");
 		
 		for (int i = 0; i < MAX_SLOTS; i++) {
-			if (items[i].name.equals("null"))
+			if (items[i].getName().equals("null"))
 				slots[i].setToolTipText("Empty Slot");
 		}
-
+		character.setActiveWeapon(items[MAX_SLOTS + 2].toWeapon());
+		character.setActiveArmor(items[MAX_SLOTS + 1].toArmor());
+		character.setActiveHelmet(items[MAX_SLOTS].toHelmet());
 		
 	}
 	
 	public void updateStats() {
-		totalStrength = items[MAX_SLOTS].strength + items[MAX_SLOTS + 1].strength + items[MAX_SLOTS + 2].strength + character.getStrength();
-		totalIntelligence = items[MAX_SLOTS].intelligence + items[MAX_SLOTS + 1].intelligence + items[MAX_SLOTS + 2].intelligence + character.getIntelligence();
-		totalDefense = items[MAX_SLOTS].defense + items[MAX_SLOTS + 1].defense + items[MAX_SLOTS + 2].defense + character.getDefense();
-		totalAgility = items[MAX_SLOTS].agility + items[MAX_SLOTS + 1].agility + items[MAX_SLOTS + 2].agility + character.getAgility();
-		totalLuck = items[MAX_SLOTS].luck + items[MAX_SLOTS + 1].luck + items[MAX_SLOTS + 2].luck + character.getLuck();
+		totalStrength = items[MAX_SLOTS].getStrength() + items[MAX_SLOTS + 1].getStrength() + items[MAX_SLOTS + 2].getStrength() + character.getStrength();
+		totalIntelligence = items[MAX_SLOTS].getIntelligence() + items[MAX_SLOTS + 1].getIntelligence() + items[MAX_SLOTS + 2].getIntelligence() + character.getIntelligence();
+		totalDefense = items[MAX_SLOTS].getDefense() + items[MAX_SLOTS + 1].getDefense() + items[MAX_SLOTS + 2].getDefense() + character.getDefense();
+		totalAgility = items[MAX_SLOTS].getAgility() + items[MAX_SLOTS + 1].getAgility() + items[MAX_SLOTS + 2].getAgility() + character.getAgility();
+		totalLuck = items[MAX_SLOTS].getLuck() + items[MAX_SLOTS + 1].getLuck() + items[MAX_SLOTS + 2].getLuck() + character.getLuck();
 		healthBar.setBounds(290, 75, (character.getHealth() / character.getMaxHealth()) * 181, 25);
 		manaBar.setBounds(manaBar.getX(), manaBar.getY(), (character.getMana() / character.getMaxMana()) * 181, 25);
 		healthBar.setToolTipText("<html>Health: <font color='red'>"+character.getHealth() + "</font>/<font color='red'>" + character.getMaxHealth());

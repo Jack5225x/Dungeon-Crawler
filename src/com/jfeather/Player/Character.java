@@ -4,11 +4,19 @@ import java.util.Random;
 
 import javax.swing.ImageIcon;
 
+import com.jfeather.Items.Armor;
+import com.jfeather.Items.Helmet;
+import com.jfeather.Items.Weapon;
+
 public class Character {
 
 	private int level, health, maxHealth, mana, maxMana, intelligence, strength, defense, agility, luck;
 	private String name;
 	private ImageIcon sprite;
+	private boolean isInvulnerable;
+	private Weapon activeWeapon;
+	private Armor activeArmor;
+	private Helmet activeHelmet;
 	
 	public Character(String charName) {
 		name = charName;
@@ -23,6 +31,7 @@ public class Character {
 		defense = 0;
 		agility = 1;
 		luck = 1;
+		isInvulnerable = false;
 	}
 	
 	public void levelUp() {
@@ -213,6 +222,38 @@ public class Character {
 	
 	public void addMana(int manaIncrement) {
 		mana += manaIncrement;
+	}
+	
+	public void setInvulnerable(boolean trueOrFalse) {
+		isInvulnerable = trueOrFalse;
+	}
+	
+	public boolean isInvulnerable() {
+		return isInvulnerable;
+	}
+	
+	public void setActiveWeapon(Weapon weapon) {
+		activeWeapon = weapon;
+	}
+	
+	public void setActiveArmor(Armor armor) {
+		activeArmor = armor;
+	}
+	
+	public void setActiveHelmet(Helmet helmet) {
+		activeHelmet = helmet;
+	}
+	
+	public Weapon getActiveWeapon() {
+		return activeWeapon;
+	}
+	
+	public Armor getActiveArmor() {
+		return activeArmor;
+	}
+	
+	public Helmet getActiveHelmet() {
+		return activeHelmet;
 	}
 
 }

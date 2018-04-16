@@ -2,18 +2,29 @@ package com.jfeather.Items;
 
 import javax.swing.ImageIcon;
 
+import com.jfeather.Game.Line;
 import com.jfeather.Items.DescrWrap;
 public class Weapon {
 	
-	public int damage, strength, intelligence, speed, rarity, itemType, agility, luck;
-	public ImageIcon sprite;
-	public String name, toolTip, descr;
+	public static String SWORD = "sword";
+	public static String DAGGER = "dagger";
+	public static String WAND = "wand";
+	public static String STAFF = "staff";
+	public static String BOW = "bow";
+	public static String HAMMER = "hammer";
+	public static String CROSSBOW = "crossbow";
 	
-	public Weapon(String itemName, String itemDescr, int itemRarity, int itemDamage, int itemSpeed, int itemStrength, int itemIntelligence, int itemAgility, int itemLuck, ImageIcon itemSprite) {
+	private int damage, strength, intelligence, speed, rarity, itemType, agility, luck;
+	private double range;
+	private ImageIcon sprite;
+	private String name, toolTip, descr;
+	
+	public Weapon(String itemName, String itemDescr, int itemRarity, int itemDamage, int itemSpeed, double itemRange, int itemStrength, int itemIntelligence, int itemAgility, int itemLuck, ImageIcon itemSprite) {
 		strength = itemStrength;
 		intelligence = itemIntelligence;
 		damage = itemDamage;
 		speed = itemSpeed;
+		range = itemRange;
 		agility = itemAgility;
 		luck = itemLuck;
 		rarity = itemRarity;
@@ -53,4 +64,56 @@ public class Weapon {
 		System.out.println("Description (Formatted): "+DescrWrap.descrWrap(sword.descr, name));
 	}
 	
+	public int getDamage() {
+		return damage;
+	}
+	
+	public int getStrength() {
+		return strength;
+	}
+	
+	public int getIntelligence() {
+		return intelligence;
+	}
+	
+	public int getAgility() {
+		return agility;
+	}
+	
+	public int getLuck() {
+		return luck;
+	}
+	
+	public int getSpeed() {
+		return speed;
+	}
+	
+	public double getRange() {
+		return range;
+	}
+	
+	public int getRarity() {
+		return rarity;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public String getDescr() {
+		return descr;
+	}
+	
+	public String getToolTip() {
+		return toolTip;
+	}
+	
+	public ImageIcon getSprite() {
+		return sprite;
+	}
+	
+	public void shoot(int xo, int yo, int xf, int yf) {
+		Line path = new Line(xo, yo, xf, yf);
+		int[][] arr = path.genPoints(range);
+	}
 }

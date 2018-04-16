@@ -246,6 +246,7 @@ public class LevelInstance {
     	
     	new Thread() {
     		public void run() {
+    			character.setInvulnerable(true);
     			moveable = false;
     			int k = 0;
     			if (dx < 0)
@@ -264,11 +265,13 @@ public class LevelInstance {
 					}
     			}
     			moveable = true;
+    			character.setInvulnerable(false);
     		}
     	}.start();
     	
     	new Thread() {
     		public void run() {
+    			character.setInvulnerable(true);
     			moveable = false;
     			int k = 0;
     			if (dy < 0)
@@ -287,6 +290,7 @@ public class LevelInstance {
 					}
     			}
     			moveable = true;
+    			character.setInvulnerable(false);
     		}
     	}.start();
 

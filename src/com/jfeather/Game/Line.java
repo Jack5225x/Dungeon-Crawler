@@ -65,8 +65,12 @@ public class Line {
 	public int getAngleFromX() {
 		int angle = 0;
 		if (getSlope() == VERTICAL) {
-			angle = 90;
+			if (yf > yo)
+				angle = 90;
+			if (yo < yf)
+				angle = 270;
 			quadrant = -1;
+			return angle;
 		}
 		if (getSlope() > 0 && xf > xo) {
 			angle = (int) Math.toDegrees(Math.atan(getYLength() / getXLength()));
@@ -85,8 +89,12 @@ public class Line {
 			quadrant = 3;
 		}
 		if (getSlope() == 0) {
-			angle = 0;
+			if (xf > xo)
+				angle = 0;
+			if (xo > xf)
+				angle = 180;
 			quadrant = 0;
+			return angle;
 		}
 		return 360 - angle;
 	}
@@ -115,25 +123,24 @@ public class Line {
 		return quadrant;
 	}
 	
-	public int[][] genPoints(int range) {
+	public int[][] genPoints(double range) {
 		int[][] arr = new int[POINTS][2];
-		int dx, dy;
+		double dx, dy;
 		switch (quadrant) {
 			case -1:
 				// Vertical line
 				dy = (range * RANGE_TO_PIXEL) / POINTS;
-				if (yf < yo)
+				if (yf > yo)
 					dy *= -1;
 				for (int i = 0, k = 0; k < arr.length; k++, i += dy) {
 					arr[k][0] = (int) xo;
 					arr[k][1] = (int) yo + i;
 				}
-
 				break;
 			case 0:
 				// Horizontal line
 				dx = (range * RANGE_TO_PIXEL) / POINTS;
-				if (xf < xo)
+				if (getAngleFromX() == 180)
 					dx *= -1;
 				for (int i = 0, k = 0; k < arr.length; k++, i += dx) {
 					arr[k][0] = (int) xo + i;
@@ -141,16 +148,19 @@ public class Line {
 				}
 				break;
 			case 1:
-				dx = (int) (range * RANGE_TO_PIXEL * Math.cos(Math.toRadians(getAngleFromX())) / POINTS);
+				dx = (range * RANGE_TO_PIXEL * Math.cos(Math.toRadians(getAngleFromX())) / POINTS);
 				for (int i = 0, k = 0; k < arr.length; k++, i += dx) {
 					arr[k][0] = (int) xo + i;
 					arr[k][1] = (int) (yo + y(i));
 				}
 				break;
 			case 2:
-				
+				dx = (range * RANGE_TO_PIXEL * Math.sin(Math.toRadians(getAngleFromX())) / POINTS);
+				for (int i = 0, k = 0; k < arr.length; k++, i += dx) {
+					arr[k][0] = (int) xo - i;
+					arr[k][1] = (int) (yo + y(i));
+				}
 				break;
-				
 			case 3:
 				
 				break;

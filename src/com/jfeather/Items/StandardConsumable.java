@@ -4,9 +4,9 @@ import javax.swing.ImageIcon;
 
 public class StandardConsumable {
 	
-	public int consumableType, potency;
-	public ImageIcon sprite;
-	public String toolTip, name;
+	private int consumableType, potency;
+	private ImageIcon sprite;
+	private String toolTip, name;
 	
 	public StandardConsumable(int itemConsumableType, int itemPotency) {
 		consumableType = itemConsumableType;
@@ -51,4 +51,25 @@ public class StandardConsumable {
 		name = typeName;
 		toolTip = "<html> <b><font color='"+color+"'>"+typeName+"</font><br>Potency: <font color='red'>"+potency+"</font><i>"+descr;
 	}
+	
+	public int getConsumableType() {
+		return consumableType;
+	}
+	
+	public int getPotency() {
+		return potency;
+	}
+		
+	public ImageIcon getSprite() {
+		return sprite;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public String getToolTip() {
+		return toolTip;
+	}
+
 }
