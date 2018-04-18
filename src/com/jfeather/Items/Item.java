@@ -7,7 +7,7 @@ public class Item {
 	private int damage, speed, rarity, itemType, consumableType, potency, defense, effectType, strength, intelligence, luck, agility;
 	private double range;
 	private String name, descr, toolTip;
-	private ImageIcon sprite;
+	private ImageIcon sprite, projectile;
 	
 	public Item(Weapon weapon) {
 		itemType = 0;
@@ -22,6 +22,7 @@ public class Item {
 		descr = weapon.getDescr();
 		toolTip = weapon.getToolTip();
 		sprite = weapon.getSprite();
+		projectile = weapon.getProjectile();
 	}
 	
 	public Item(StandardConsumable consumable) {
@@ -74,15 +75,21 @@ public class Item {
 	}
 	
 	public Weapon toWeapon() {
-		return new Weapon(name, descr, rarity, damage, speed, range, strength, intelligence, agility, luck, sprite);
+		if (!name.equals("null"))
+			return new Weapon(name, descr, rarity, damage, speed, range, strength, intelligence, agility, luck, sprite, projectile);
+		return null;
 	}
 	
 	public Armor toArmor() {
-		return new Armor(name, descr, rarity, defense, strength, intelligence, agility, luck, sprite);
+		if (!name.equals("null"))
+			return new Armor(name, descr, rarity, defense, strength, intelligence, agility, luck, sprite);
+		return null;
 	}
 	
 	public Helmet toHelmet() {
-		return new Helmet(name, descr, rarity, defense, strength, intelligence, agility, luck, sprite);
+		if (!name.equals("null"))
+			return new Helmet(name, descr, rarity, defense, strength, intelligence, agility, luck, sprite);
+		return null;
 	}
 	
 	public int getDamage() {

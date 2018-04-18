@@ -125,7 +125,7 @@ public class WeaponsGen {
 		int damage = rand.nextInt(c.getLevel()) + ((rarity + 1) * c.getLevel()) * 2;
 		double range = genRange(weaponType);
 		
-		Weapon sword =  new Weapon(name, descr, rarity, damage, speed, range, strength, intelligence, agility, luck, genSprite("Sprites/Items/Weapons/" + spritesFolder, rarity));	
+		Weapon sword =  new Weapon(name, descr, rarity, damage, speed, range, strength, intelligence, agility, luck, genSprite("Sprites/Items/Weapons/" + spritesFolder, rarity), genProjectile("Sprites/Items/Weapons/" + spritesFolder, rarity));	
 		return sword;
 	}
 	
@@ -148,11 +148,38 @@ public class WeaponsGen {
 			}
 			if (arr.length != 0) {
 				index = rng.nextInt(arr.length);
-				if (!(arr[index].getName().equals("Legendary")) && !(arr[index].getName().equals("Divine")) && !(arr[index].getName().equals(".directory")))
+				if (!(arr[index].getName().equals("Legendary")) && !(arr[index].getName().equals("Divine")) && !(arr[index].getName().equals(".directory")) && !(arr[index].getName().equals("Projectiles")))
 					break;
 			}
 		}
 		return new ImageIcon(arr[index].getPath());
+	}
+	
+	public static ImageIcon genProjectile(String folderName, int rarity) {
+		Random rng = new Random();
+		File[] arr = null;
+		int index;
+		while (true) {
+			if (rarity < 5) {
+				File folder = new File(folderName + "Projectiles/");
+				arr = folder.listFiles();
+			}
+			if (rarity == 5) {
+				File folder = new File(folderName + "Legendary/Projectiles/");
+				arr = folder.listFiles();
+			}
+			if (rarity == 6) {
+				File folder = new File(folderName + "Divine/Projectiles/");
+				arr = folder.listFiles();
+			}
+			if (arr.length != 0) {
+				index = rng.nextInt(arr.length);
+				if (!(arr[index].getName().equals("Legendary")) && !(arr[index].getName().equals("Divine")) && !(arr[index].getName().equals(".directory")) && !(arr[index].getName().equals("Projectiles")))
+					break;
+			}
+		}
+		return new ImageIcon(arr[index].getPath());
+
 	}
 	
 	public static int genRarity() {

@@ -116,11 +116,14 @@ public class GameInstance extends JPanel implements KeyListener, MouseListener {
 		// TODO Auto-generated method stub
 		int mouseX = (int) (e.getLocationOnScreen().getX() - getLocationOnScreen().getX());
 		int mouseY = (int) (e.getLocationOnScreen().getY() - getLocationOnScreen().getY());
-		Line line = new Line(player.getX() + player.getWidth() / 2, player.getY() + player.getHeight() / 2, mouseX, mouseY);
-		//line.debug();
-		line.printMatrix(line.genPoints(5));
-		//System.out.println(line.getQuadrant());
-		System.out.println(line.getAngleFromX());
+		if (e.getButton() == MouseEvent.BUTTON1) {
+			Line line = new Line(player.getX() + player.getWidth() / 2, player.getY() + player.getHeight() / 2, mouseX, mouseY);
+			//line.debug();
+			line.printMatrix(line.genPoints(5));
+			//System.out.println(line.getQuadrant());
+			System.out.println(line.getAngleFromX());
+			//character.getActiveWeapon().shoot(player.getX(), player.getY(), mouseX, mouseY, this);
+		}
 	}	
 
 	@Override
@@ -136,13 +139,13 @@ public class GameInstance extends JPanel implements KeyListener, MouseListener {
 	}
 
 	@Override
-	public void mousePressed(MouseEvent arg0) {
+	public void mousePressed(MouseEvent e) {
 		// Won't be used
-		
+		// TODO: Convert the clicked method to a press/release with a constant update
 	}
 
 	@Override
-	public void mouseReleased(MouseEvent arg0) {
+	public void mouseReleased(MouseEvent e) {
 		// Won't be used
 		
 	}

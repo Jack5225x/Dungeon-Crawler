@@ -125,16 +125,16 @@ public class Line {
 	
 	public int[][] genPoints(double range) {
 		int[][] arr = new int[POINTS][2];
-		double dx, dy;
+		double dx, dy, i = 0;
 		switch (quadrant) {
 			case -1:
 				// Vertical line
 				dy = (range * RANGE_TO_PIXEL) / POINTS;
 				if (yf > yo)
 					dy *= -1;
-				for (int i = 0, k = 0; k < arr.length; k++, i += dy) {
+				for (int k = 0; k < arr.length; k++, i += dy) {
 					arr[k][0] = (int) xo;
-					arr[k][1] = (int) yo + i;
+					arr[k][1] = (int) (yo + i);
 				}
 				break;
 			case 0:
@@ -142,30 +142,40 @@ public class Line {
 				dx = (range * RANGE_TO_PIXEL) / POINTS;
 				if (getAngleFromX() == 180)
 					dx *= -1;
-				for (int i = 0, k = 0; k < arr.length; k++, i += dx) {
-					arr[k][0] = (int) xo + i;
+				for (int k = 0; k < arr.length; k++, i += dx) {
+					arr[k][0] = (int) (xo + i);
 					arr[k][1] = (int) yo;
 				}
 				break;
 			case 1:
 				dx = (range * RANGE_TO_PIXEL * Math.cos(Math.toRadians(getAngleFromX())) / POINTS);
-				for (int i = 0, k = 0; k < arr.length; k++, i += dx) {
-					arr[k][0] = (int) xo + i;
-					arr[k][1] = (int) (yo + y(i));
+				System.out.println(dx);
+				System.out.println(range * RANGE_TO_PIXEL * Math.cos(Math.toRadians(getAngleFromX())));
+				for (int k = 0; k < arr.length; k++, i += dx) {
+					arr[k][0] = (int) (xo + i);
+					arr[k][1] = (int) y(arr[k][0]);
 				}
 				break;
 			case 2:
-				dx = (range * RANGE_TO_PIXEL * Math.sin(Math.toRadians(getAngleFromX())) / POINTS);
-				for (int i = 0, k = 0; k < arr.length; k++, i += dx) {
-					arr[k][0] = (int) xo - i;
-					arr[k][1] = (int) (yo + y(i));
+				dx = (range * RANGE_TO_PIXEL * Math.sin(Math.toRadians(90 - getAngleFromX())) / POINTS);
+				for (int k = 0; k < arr.length; k++, i += dx) {
+					arr[k][0] = (int) (xo - i);
+					arr[k][1] = (int) (y(arr[k][0]));
 				}
 				break;
 			case 3:
-				
+				dx = (range * RANGE_TO_PIXEL * Math.cos(Math.toRadians(180 - getAngleFromX())) / POINTS);
+				for (int k = 0; k < arr.length; k++, i += dx) {
+					arr[k][0] = (int) (xo - i);
+					arr[k][1] = (int) (y(arr[k][0]));
+				}
 				break;
 			case 4:
-				
+				dx = (range * RANGE_TO_PIXEL * Math.sin(Math.toRadians(270 - getAngleFromX())) / POINTS);
+				for (int k = 0; k < arr.length; k++, i += dx) {
+					arr[k][0] = (int) (xo - i);
+					arr[k][1] = (int) (y(arr[k][0]));
+				}
 				break;
 		}
 		return arr;

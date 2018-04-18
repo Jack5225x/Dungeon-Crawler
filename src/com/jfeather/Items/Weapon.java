@@ -1,6 +1,11 @@
 package com.jfeather.Items;
 
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import com.jfeather.Game.Line;
 import com.jfeather.Items.DescrWrap;
@@ -16,10 +21,10 @@ public class Weapon {
 	
 	private int damage, strength, intelligence, speed, rarity, itemType, agility, luck;
 	private double range;
-	private ImageIcon sprite;
+	private ImageIcon sprite, projectile;
 	private String name, toolTip, descr;
 	
-	public Weapon(String itemName, String itemDescr, int itemRarity, int itemDamage, int itemSpeed, double itemRange, int itemStrength, int itemIntelligence, int itemAgility, int itemLuck, ImageIcon itemSprite) {
+	public Weapon(String itemName, String itemDescr, int itemRarity, int itemDamage, int itemSpeed, double itemRange, int itemStrength, int itemIntelligence, int itemAgility, int itemLuck, ImageIcon itemSprite, ImageIcon itemProjectile) {
 		strength = itemStrength;
 		intelligence = itemIntelligence;
 		damage = itemDamage;
@@ -29,6 +34,7 @@ public class Weapon {
 		luck = itemLuck;
 		rarity = itemRarity;
 		sprite = itemSprite;
+		projectile = itemProjectile;
 		itemType = 0;
 		name = itemName;
 		descr = itemDescr;
@@ -112,8 +118,30 @@ public class Weapon {
 		return sprite;
 	}
 	
-	public void shoot(int xo, int yo, int xf, int yf) {
-		Line path = new Line(xo, yo, xf, yf);
-		int[][] arr = path.genPoints(range);
+	public ImageIcon getProjectile() {
+		return projectile;
+	}
+	
+	public void shoot(int xo, int yo, int xf, int yf, JPanel dialog) {
+		if (name != null) {
+			Line path = new Line(xo, yo, xf, yf);
+			int[][] arr = path.genPoints(range);
+			JLabel[] labels = new JLabel[arr.length];
+			new Thread() {
+				public void run() {
+					for (int i = 0; i < arr.length; i++) {
+						labels[i] = new JLabel(projectile);
+						dialog.add(labels[i]);
+						labels[i].setBounds(arr[i][0], arr[i][1], projectile.getIconWidth(), projectile.getIconHeight());
+						try {
+							Thread.sleep(100);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+						labels[i].setVisible(false);
+					}
+				}
+			}.start();
+		}
 	}
 }

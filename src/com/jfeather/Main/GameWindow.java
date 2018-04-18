@@ -11,14 +11,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JToolTip;
 import javax.swing.border.EmptyBorder;
 
 import com.jfeather.Exceptions.*;
@@ -59,19 +53,20 @@ public class GameWindow extends JFrame {
 		
 		Character jack = new Character("Jack");
 		//jack.setAgility(200);
+		/*
 		GameInstance instance = new GameInstance(jack);
 		add(instance);
 		addKeyListener(instance.KL);
 		addMouseListener(instance.ML);
 		instance.setFPS(60);
-		/*
+		*/
 		Inventory inv = createInv(jack, 10);
 		
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 9; i++) {
 			Weapon testSword = WeaponsGen.genWeapon(jack, "sword");
 			inv.addItem(testSword);
 		}
-		/*
+		
 		Thread title = new Thread() {
 			@Override
 			public void run() {
@@ -103,7 +98,7 @@ public class GameWindow extends JFrame {
 		//createInstance(jack);
 		inv.setUpdate(true);
 		//inv.setUpdateInterval(1000);
-		*/
+		//*/
 	}
 	
 	public Inventory createInv(Character c, int capacity) {
