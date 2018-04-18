@@ -53,15 +53,17 @@ public class GameWindow extends JFrame {
 		
 		Character jack = new Character("Jack");
 		//jack.setAgility(200);
-		/*
+		
 		GameInstance instance = new GameInstance(jack);
 		add(instance);
 		addKeyListener(instance.KL);
 		addMouseListener(instance.ML);
 		instance.setFPS(60);
-		*/
+		jack.setActiveWeapon(WeaponsGen.genWeapon(jack, Weapon.SWORD));
+		System.out.println(jack.getActiveWeapon().getRange());
+		/*
 		Inventory inv = createInv(jack, 10);
-		
+				
 		for (int i = 0; i < 9; i++) {
 			Weapon testSword = WeaponsGen.genWeapon(jack, "sword");
 			inv.addItem(testSword);
@@ -98,7 +100,7 @@ public class GameWindow extends JFrame {
 		//createInstance(jack);
 		inv.setUpdate(true);
 		//inv.setUpdateInterval(1000);
-		//*/
+		*/
 	}
 	
 	public Inventory createInv(Character c, int capacity) {

@@ -88,7 +88,6 @@ public class GameInstance extends JPanel implements KeyListener, MouseListener {
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
-		// TODO Find out why this isn't detecting
 		player.keyPressed(e, character.getAgility());
 		level.keyPressed(e, character.getAgility(), getGraphics());
 	}
@@ -107,6 +106,7 @@ public class GameInstance extends JPanel implements KeyListener, MouseListener {
 			player.updateSprite();
 			level.move(getGraphics());
 			repaint();
+			character.getActiveWeapon().updateShoot();
 		}
 		
 	}
@@ -114,16 +114,17 @@ public class GameInstance extends JPanel implements KeyListener, MouseListener {
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
+		/*
 		int mouseX = (int) (e.getLocationOnScreen().getX() - getLocationOnScreen().getX());
 		int mouseY = (int) (e.getLocationOnScreen().getY() - getLocationOnScreen().getY());
 		if (e.getButton() == MouseEvent.BUTTON1) {
-			Line line = new Line(player.getX() + player.getWidth() / 2, player.getY() + player.getHeight() / 2, mouseX, mouseY);
+			//Line line = new Line(player.getX() + player.getWidth() / 2, player.getY() + player.getHeight() / 2, mouseX, mouseY);
 			//line.debug();
-			line.printMatrix(line.genPoints(5));
+			//line.printMatrix(line.genPoints(5));
 			//System.out.println(line.getQuadrant());
-			System.out.println(line.getAngleFromX());
-			//character.getActiveWeapon().shoot(player.getX(), player.getY(), mouseX, mouseY, this);
-		}
+			//System.out.println(line.getAngleFromX());
+			character.getActiveWeapon().shoot(player.getX(), player.getY(), mouseX, mouseY, this);
+		}*/
 	}	
 
 	@Override
@@ -142,12 +143,15 @@ public class GameInstance extends JPanel implements KeyListener, MouseListener {
 	public void mousePressed(MouseEvent e) {
 		// Won't be used
 		// TODO: Convert the clicked method to a press/release with a constant update
+		int mouseX = (int) (e.getLocationOnScreen().getX() - getLocationOnScreen().getX());
+		int mouseY = (int) (e.getLocationOnScreen().getY() - getLocationOnScreen().getY());
+		character.getActiveWeapon().mousePressed(e, mouseX, mouseY, this);
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		// Won't be used
-		
+		character.getActiveWeapon().mouseReleased();
 	}
 
 }

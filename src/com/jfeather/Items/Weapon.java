@@ -2,6 +2,7 @@ package com.jfeather.Items;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -9,6 +10,7 @@ import javax.swing.JPanel;
 
 import com.jfeather.Game.Line;
 import com.jfeather.Items.DescrWrap;
+import com.jfeather.Player.PlayerInstance;
 public class Weapon {
 	
 	public static String SWORD = "sword";
@@ -23,6 +25,10 @@ public class Weapon {
 	private double range;
 	private ImageIcon sprite, projectile;
 	private String name, toolTip, descr;
+	private boolean shooting;
+	private int characterX, characterY;
+	private int mouseX, mouseY;
+	private JPanel dialog;
 	
 	public Weapon(String itemName, String itemDescr, int itemRarity, int itemDamage, int itemSpeed, double itemRange, int itemStrength, int itemIntelligence, int itemAgility, int itemLuck, ImageIcon itemSprite, ImageIcon itemProjectile) {
 		strength = itemStrength;
@@ -122,9 +128,15 @@ public class Weapon {
 		return projectile;
 	}
 	
+	public void getPlayerCoords(PlayerInstance player) {
+		characterX = player.getX();
+		characterY = player.getY();
+	}
+	
 	public void shoot(int xo, int yo, int xf, int yf, JPanel dialog) {
 		if (name != null) {
 			Line path = new Line(xo, yo, xf, yf);
+			//path.printMatrix(path.genPoints(range));
 			int[][] arr = path.genPoints(range);
 			JLabel[] labels = new JLabel[arr.length];
 			new Thread() {
@@ -132,16 +144,37 @@ public class Weapon {
 					for (int i = 0; i < arr.length; i++) {
 						labels[i] = new JLabel(projectile);
 						dialog.add(labels[i]);
-						labels[i].setBounds(arr[i][0], arr[i][1], projectile.getIconWidth(), projectile.getIconHeight());
+						System.out.println(arr[i][0] + " " + arr[i][1]);
+						if (arr[i][0] > 0 && arr[i][1] > 0)
+							labels[i].setBounds(arr[i][0], arr[i][1], projectile.getIconWidth(), projectile.getIconHeight());
+						labels[i].setVisible(true);
 						try {
-							Thread.sleep(100);
+							Thread.sleep((int) (speed * 2.5));
+							//labels[i].setVisible(false);
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
-						labels[i].setVisible(false);
 					}
 				}
 			}.start();
 		}
+	}
+	
+	public void updateShoot() {
+		// A method that will be run continuously that will reference shoot at certain times
+		if (shooting) {
+			shoot(characterX, characterY, mouseX, mouseY, dialog);
+		}
+	}
+	
+	public void mousePressed(MouseEvent e, int mouseLocX, int mouseLocY, JPanel dialog) {
+		shooting = true;
+		mouseX = mouseLocX;
+		mouseY = mouseLocY;
+		this.dialog = dialog;
+	}
+	
+	public void mouseReleased() {
+		shooting = false;
 	}
 }

@@ -158,7 +158,7 @@ public class Line {
 				break;
 			case 2:
 				dx = (range * RANGE_TO_PIXEL * Math.sin(Math.toRadians(90 - getAngleFromX())) / POINTS);
-				for (int k = 0; k < arr.length; k++, i += dx) {
+				for (int k = 0; k < arr.length; k++, i -= dx) {
 					arr[k][0] = (int) (xo - i);
 					arr[k][1] = (int) (y(arr[k][0]));
 				}
