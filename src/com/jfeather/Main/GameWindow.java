@@ -58,9 +58,9 @@ public class GameWindow extends JFrame {
 		add(instance);
 		addKeyListener(instance.KL);
 		addMouseListener(instance.ML);
+		addMouseMotionListener(instance.MML);
 		instance.setFPS(60);
 		jack.setActiveWeapon(WeaponsGen.genWeapon(jack, Weapon.SWORD));
-		System.out.println(jack.getActiveWeapon().getRange());
 		/*
 		Inventory inv = createInv(jack, 10);
 				

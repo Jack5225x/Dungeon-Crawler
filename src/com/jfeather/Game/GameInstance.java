@@ -11,6 +11,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -21,7 +22,7 @@ import com.jfeather.Player.PlayerInstance;
 import com.jfeather.Player.Character;
 
 
-public class GameInstance extends JPanel implements KeyListener, MouseListener {
+public class GameInstance extends JPanel implements KeyListener, MouseListener, MouseMotionListener {
 	
 		
 	/**
@@ -34,9 +35,11 @@ public class GameInstance extends JPanel implements KeyListener, MouseListener {
 	private PlayerInstance player;
 	public final KeyListener KL = this;
 	public final MouseListener ML = this;
+	public final MouseMotionListener MML = this;
 	private Character character;
 	private LevelInstance level;
 	private int width, height;
+	private volatile int mouseX, mouseY;
 	
 	public GameInstance(Character c) {
 		character = c;
@@ -48,6 +51,7 @@ public class GameInstance extends JPanel implements KeyListener, MouseListener {
 	
 	public void initialize() {
 		addKeyListener(this);
+		// The only reason you need a separate, named dimension is to define width and height below
 		Dimension dim = new Dimension(640, 380);
 		setPreferredSize(dim);
 		setDoubleBuffered(true);
@@ -62,6 +66,8 @@ public class GameInstance extends JPanel implements KeyListener, MouseListener {
 	}
 
 	public void setFPS(int newFPS) {
+		// This isn't true fps, because it changes the speed of the game as well, but it functions pretty much the same
+		// Maybe this will be referenced in some settings menu (if that gets made)
 		timer.stop();
 		frames = 1000 / newFPS;
 		timer = new Timer(frames, new Listener());
@@ -70,6 +76,7 @@ public class GameInstance extends JPanel implements KeyListener, MouseListener {
 	
 	@Override
 	public void paintComponent(Graphics g) {
+		// Gets called by the super class by using repaint() in the action event below
 		super.paintComponent(g);
 		draw(g);
 		Toolkit.getDefaultToolkit().sync();
@@ -94,7 +101,6 @@ public class GameInstance extends JPanel implements KeyListener, MouseListener {
 	
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO Same as previous
 		player.keyReleased(e);
 		level.keyReleased(e);
 	}
@@ -103,6 +109,7 @@ public class GameInstance extends JPanel implements KeyListener, MouseListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			// This method is run continuously on the timer made above
 			player.updateSprite();
 			level.move(getGraphics());
 			repaint();
@@ -113,45 +120,57 @@ public class GameInstance extends JPanel implements KeyListener, MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-		/*
-		int mouseX = (int) (e.getLocationOnScreen().getX() - getLocationOnScreen().getX());
-		int mouseY = (int) (e.getLocationOnScreen().getY() - getLocationOnScreen().getY());
-		if (e.getButton() == MouseEvent.BUTTON1) {
-			//Line line = new Line(player.getX() + player.getWidth() / 2, player.getY() + player.getHeight() / 2, mouseX, mouseY);
-			//line.debug();
-			//line.printMatrix(line.genPoints(5));
-			//System.out.println(line.getQuadrant());
-			//System.out.println(line.getAngleFromX());
-			character.getActiveWeapon().shoot(player.getX(), player.getY(), mouseX, mouseY, this);
-		}*/
+		// Won't be used
 	}	
 
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
 		// Won't be used
-		
 	}
 
 	@Override
 	public void mouseExited(MouseEvent arg0) {
 		// Won't be used
-		
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// Won't be used
-		// TODO: Convert the clicked method to a press/release with a constant update
-		int mouseX = (int) (e.getLocationOnScreen().getX() - getLocationOnScreen().getX());
-		int mouseY = (int) (e.getLocationOnScreen().getY() - getLocationOnScreen().getY());
+		// Initialize the weapon stuff and shoot after
+		mouseX = (int) (e.getLocationOnScreen().getX() - getLocationOnScreen().getX());
+		mouseY = (int) (e.getLocationOnScreen().getY() - getLocationOnScreen().getY());
+		character.getActiveWeapon().setPlayerCoords(player);
 		character.getActiveWeapon().mousePressed(e, mouseX, mouseY, this);
+	}
+	
+	public int getMouseX() {
+		return mouseX;
+	}
+	
+	public int getMouseY() {
+		return mouseY;
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// Won't be used
+		// Stop the shooting
 		character.getActiveWeapon().mouseReleased();
+	}
+	
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		// Update info for when the mouse is held down
+		mouseX = (int) (e.getLocationOnScreen().getX() - getLocationOnScreen().getX());
+		mouseY = (int) (e.getLocationOnScreen().getY() - getLocationOnScreen().getY());
+		character.getActiveWeapon().setMouseX(mouseX);
+		character.getActiveWeapon().setMouseY(mouseY);
+		character.getActiveWeapon().setPlayerCoords(player);
+		//System.out.println(mouseX + "  " + mouseY);
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent arg0) {
+		// Won't be used
+		
 	}
 
 }

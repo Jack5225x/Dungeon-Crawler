@@ -25,7 +25,7 @@ public class Weapon {
 	private double range;
 	private ImageIcon sprite, projectile;
 	private String name, toolTip, descr;
-	private boolean shooting;
+	private boolean click, shootReady = true;
 	private int characterX, characterY;
 	private int mouseX, mouseY;
 	private JPanel dialog;
@@ -128,7 +128,7 @@ public class Weapon {
 		return projectile;
 	}
 	
-	public void getPlayerCoords(PlayerInstance player) {
+	public void setPlayerCoords(PlayerInstance player) {
 		characterX = player.getX();
 		characterY = player.getY();
 	}
@@ -141,16 +141,17 @@ public class Weapon {
 			JLabel[] labels = new JLabel[arr.length];
 			new Thread() {
 				public void run() {
+					// Create a label for each position the projectile will be in during its path
 					for (int i = 0; i < arr.length; i++) {
 						labels[i] = new JLabel(projectile);
 						dialog.add(labels[i]);
-						System.out.println(arr[i][0] + " " + arr[i][1]);
+						//System.out.println(arr[i][0] + " " + arr[i][1]);
 						if (arr[i][0] > 0 && arr[i][1] > 0)
 							labels[i].setBounds(arr[i][0], arr[i][1], projectile.getIconWidth(), projectile.getIconHeight());
 						labels[i].setVisible(true);
 						try {
 							Thread.sleep((int) (speed * 2.5));
-							//labels[i].setVisible(false);
+							labels[i].setVisible(false);
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
@@ -162,19 +163,46 @@ public class Weapon {
 	
 	public void updateShoot() {
 		// A method that will be run continuously that will reference shoot at certain times
-		if (shooting) {
+		if (click && shootReady) {
+			//System.out.println(characterX + " " + characterY);
 			shoot(characterX, characterY, mouseX, mouseY, dialog);
+			new Thread() {
+				public void run() {
+					shootReady = false;
+					try {
+						// TODO Make this properly scale with speed or something
+						// It sorta does this now, but it can certainly be improved
+						Thread.sleep(1000 / speed);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					// Reset the cooldown
+					shootReady = true;
+				}
+			}.start();
 		}
 	}
 	
 	public void mousePressed(MouseEvent e, int mouseLocX, int mouseLocY, JPanel dialog) {
-		shooting = true;
+		click = true;
 		mouseX = mouseLocX;
 		mouseY = mouseLocY;
 		this.dialog = dialog;
 	}
 	
 	public void mouseReleased() {
-		shooting = false;
+		click = false;
+	}
+	
+	public boolean getClick() {
+		return click;
+	}
+	
+	public void setMouseX(int x) {
+		mouseX = x;
+	}
+	
+	public void setMouseY(int y) {
+		mouseY = y;
 	}
 }

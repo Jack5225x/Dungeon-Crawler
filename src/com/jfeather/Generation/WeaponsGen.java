@@ -124,7 +124,6 @@ public class WeaponsGen {
 		
 		int damage = rand.nextInt(c.getLevel()) + ((rarity + 1) * c.getLevel()) * 2;
 		double range = genRange(weaponType);
-		System.out.println(range);
 		Weapon sword =  new Weapon(name, descr, rarity, damage, speed, range, strength, intelligence, agility, luck, genSprite("Sprites/Items/Weapons/" + spritesFolder, rarity), genProjectile("Sprites/Items/Weapons/" + spritesFolder, rarity));	
 		return sword;
 	}
@@ -340,29 +339,29 @@ public class WeaponsGen {
 		double min = 0, max = 0;
 		switch (weaponType) {
 			case "sword":
-				max = 5;
-				min = 2.5;
+				max = 3.5;
+				min = 1;
 				break;
 			case "dagger":
-				max = 8;
-				min = 4;
+				max = 6;
+				min = 2.5;
 				break;
 			case "hammer":
 				max = 4;
 				min = 1.5;
 				break;
 			case "wand":
-				max = 13;
-				min = 7;
+				max = 10;
+				min = 5;
 				break;
 			case "staff":
-				max = 10;
-				min = 6;
+				max = 8;
+				min = 5.5;
 				break;
 			case "bow":
 			case "crossbow":
-				max = 11;
-				min = 5;
+				max = 10;
+				min = 6.5;
 				break;
 		}
 		Random rng = new Random();
