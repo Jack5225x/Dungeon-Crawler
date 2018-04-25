@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.ImageIcon;
 
 import com.jfeather.Game.GameInstance;
+import com.jfeather.Items.Weapon;
 import com.jfeather.Player.Character;
 import com.jfeather.Player.PlayerInstance;
 
@@ -24,15 +25,17 @@ public class LevelInstance {
 	private int rollCooldown;
 	private boolean isOffset = false;
 	private boolean moveable = true;
+	private Weapon weapon;
 	
 	public LevelInstance(int floorNumber, PlayerInstance p, GameInstance i) {
 		floor = floorNumber;
 		player = p;
 		instance = i;
+		character = player.getCharacter();
+		weapon = character.getActiveWeapon();
 		a = 0;
 		character = player.getCharacter();
 		sprite = (new ImageIcon("Sprites/Level/TestLevel.png")).getImage();
-		
 	}
 
 	public int getFloor() {
@@ -157,11 +160,20 @@ public class LevelInstance {
 	public void move(Graphics g) {
 		x += dx;
 		y += dy;
+		//moveShots();
 		
-		a += da;
+		//a += da;
 		//rotate(g, sprite, a);
 		if (rollReady && roll)
 			roll();
+	}
+	
+	private void moveShots() {
+		int[][] arr = weapon.getArr();
+		for (int i = 0; i < arr.length; i++) {
+			arr[i][0] += dx;
+			arr[i][1] += dy;
+		}
 	}
 	
     private void roll() {
@@ -254,8 +266,8 @@ public class LevelInstance {
     			else
     				k = 1;
     			while (x != finalX && k != 0) {
-    				if (!approaching(finalX, ogX, x))
-    					k = -k;
+    				//if (!approaching(finalX, ogX, x))
+    					//k = -k;
     				x += k;
     				try {
 						Thread.sleep(2);
@@ -279,8 +291,8 @@ public class LevelInstance {
     			else
     				k = 1;
     			while (y != finalY) {
-    				if (!approaching(finalY, ogY, y))
-    					k = -k;
+    				//if (!approaching(finalY, ogY, y))
+    					//k = -k;
     				y += k;
     				try {
 						Thread.sleep(2);

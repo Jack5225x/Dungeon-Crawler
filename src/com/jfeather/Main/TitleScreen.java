@@ -42,7 +42,7 @@ public class TitleScreen implements MouseListener {
 		
 		// Add the background
 		// This will eventually be a looped gif, but for now a png works
-		title = new JLabel(gif("Sprites/TitleScreen/TitleScreenFinal.png"));
+		title = new JLabel(gif("Sprites/TitleScreen/NewTitleScreenBackground.png"));
 		dialog.add(title);
 		title.addMouseListener(this);
 		
@@ -75,6 +75,7 @@ public class TitleScreen implements MouseListener {
 			if (start.isWithin(e)) {
 				dispose();
 				//SaveSelect ss = new SaveSelect(dialog);
+				// TODO make this able to transition to save screen easily
 			}
 			if (exit.isWithin(e)) {
 				// Close the window
@@ -153,7 +154,7 @@ public class TitleScreen implements MouseListener {
 			titleButtons();
 			
 			// Add the animated picture
-			titleGif = new JLabel(gif("Sprites/TitleScreen/TitleScreenFinal.png"));
+			titleGif = new JLabel(gif("Sprites/TitleScreen/NewTitleScreenBackground.gif"));
 			dialog.add(titleGif);
 			
 			// Remove the static picture

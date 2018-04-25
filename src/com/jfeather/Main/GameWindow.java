@@ -20,6 +20,7 @@ import com.jfeather.Game.GameInstance;
 import com.jfeather.Generation.*;
 import com.jfeather.Items.*;
 import com.jfeather.Player.Character;
+import com.jfeather.Player.SaveSelect;
 
 public class GameWindow extends JFrame {
 	
@@ -63,13 +64,13 @@ public class GameWindow extends JFrame {
 		jack.setActiveWeapon(WeaponsGen.genWeapon(jack, Weapon.SWORD));
 		/*
 		Inventory inv = createInv(jack, 10);
-				
+		
 		for (int i = 0; i < 9; i++) {
-			Weapon testSword = WeaponsGen.genWeapon(jack, "sword");
+			Weapon testSword = WeaponsGen.genWeapon(jack, Weapon.SWORD);
 			inv.addItem(testSword);
 		}
-		
-		Thread title = new Thread() {
+		/*
+		/*Thread title = new Thread() {
 			@Override
 			public void run() {
 				ts = new TitleScreen(contentPane);
@@ -77,6 +78,9 @@ public class GameWindow extends JFrame {
 			}
 		};
 		title.start();
+		*/
+		//SaveSelect ss = new SaveSelect(contentPane);
+		
 		
 		new Thread () {
 			@Override
@@ -98,9 +102,9 @@ public class GameWindow extends JFrame {
 		//th.stop();
 		//Character jack = new Character("Jack");
 		//createInstance(jack);
-		inv.setUpdate(true);
+		//inv.setUpdate(true);
 		//inv.setUpdateInterval(1000);
-		*/
+		
 	}
 	
 	public Inventory createInv(Character c, int capacity) {
@@ -108,6 +112,7 @@ public class GameWindow extends JFrame {
 		try {
 			inv = new Inventory(c, capacity);
 			contentPane.add(inv.dialog, BorderLayout.SOUTH);
+			// This has to be here to initialize the tooltips, because otherwise they are only done when you click
 			for (int i = 0; i < capacity; i++) {
 				inv.slots[i].setToolTipText("Empty Slot");
 			}

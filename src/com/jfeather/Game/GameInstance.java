@@ -17,7 +17,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+import com.jfeather.Exceptions.UnsupportedThemeException;
+import com.jfeather.Generation.LevelGen;
 import com.jfeather.Level.LevelInstance;
+import com.jfeather.Level.Obstacle;
+import com.jfeather.Level.Theme;
 import com.jfeather.Player.PlayerInstance;
 import com.jfeather.Player.Character;
 
@@ -25,17 +29,16 @@ import com.jfeather.Player.Character;
 public class GameInstance extends JPanel implements KeyListener, MouseListener, MouseMotionListener {
 	
 		
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+	
+	// These are defined so they can referenced in the GameWindow class
+	public final KeyListener KL = this;
+	public final MouseListener ML = this;
+	public final MouseMotionListener MML = this;
 	
 	private int frames = 33;
 	private Timer timer;
 	private PlayerInstance player;
-	public final KeyListener KL = this;
-	public final MouseListener ML = this;
-	public final MouseMotionListener MML = this;
 	private Character character;
 	private LevelInstance level;
 	private int width, height;
@@ -45,14 +48,19 @@ public class GameInstance extends JPanel implements KeyListener, MouseListener, 
 		character = c;
 		initialize();
 
+		// Start the overarching game loop that refreshes the screen
+		// Listener is defined below to repaint and do other various things
 		timer = new Timer(frames, new Listener());
 		timer.start();
+		//Obstacle rockTest = new Obstacle("Sprites/Level/Rock.png");
+		//rockTest.addAt(this, 50, 50);
+
 	}
 	
 	public void initialize() {
 		addKeyListener(this);
 		// The only reason you need a separate, named dimension is to define width and height below
-		Dimension dim = new Dimension(640, 380);
+		Dimension dim = new Dimension(640, 340);
 		setPreferredSize(dim);
 		setDoubleBuffered(true);
 		setBackground(Color.BLACK);
@@ -61,8 +69,15 @@ public class GameInstance extends JPanel implements KeyListener, MouseListener, 
 
 		player = new PlayerInstance(character, width / 2, (int)(height * .5));
 		
-		level = new LevelInstance(1, player, this);
-		level.setCoords((width / 2) - level.getWidth() / 2, (int)(height * .5) - level.getHeight() / 2);
+		//level = new LevelInstance(1, player, this);
+		try {
+			level = LevelGen.genHalls(1, player, this, new Theme(Theme.RAINBOW));
+		} catch (UnsupportedThemeException e) {
+			e.printStackTrace();
+		}
+		
+		//level.setCoords((width / 2) - level.getWidth() / 2, (int)(height * .5) - level.getHeight() / 2);
+		level.setCoords((player.getX() / 2) - level.getWidth() / 2, (int)(player.getY() * .5) - level.getHeight() / 2);
 	}
 
 	public void setFPS(int newFPS) {
@@ -114,6 +129,7 @@ public class GameInstance extends JPanel implements KeyListener, MouseListener, 
 			level.move(getGraphics());
 			repaint();
 			character.getActiveWeapon().updateShoot();
+			
 		}
 		
 	}

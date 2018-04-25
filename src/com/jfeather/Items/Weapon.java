@@ -1,7 +1,5 @@
 package com.jfeather.Items;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 
 import javax.swing.ImageIcon;
@@ -21,7 +19,7 @@ public class Weapon {
 	public static String HAMMER = "hammer";
 	public static String CROSSBOW = "crossbow";
 	
-	private int damage, strength, intelligence, speed, rarity, itemType, agility, luck;
+	private int damage, strength, intelligence, speed, rarity, agility, luck;
 	private double range;
 	private ImageIcon sprite, projectile;
 	private String name, toolTip, descr;
@@ -29,6 +27,7 @@ public class Weapon {
 	private int characterX, characterY;
 	private int mouseX, mouseY;
 	private JPanel dialog;
+	private volatile int[][] arr;
 	
 	public Weapon(String itemName, String itemDescr, int itemRarity, int itemDamage, int itemSpeed, double itemRange, int itemStrength, int itemIntelligence, int itemAgility, int itemLuck, ImageIcon itemSprite, ImageIcon itemProjectile) {
 		strength = itemStrength;
@@ -41,7 +40,6 @@ public class Weapon {
 		rarity = itemRarity;
 		sprite = itemSprite;
 		projectile = itemProjectile;
-		itemType = 0;
 		name = itemName;
 		descr = itemDescr;
 		String rarityColor = "";
@@ -137,7 +135,9 @@ public class Weapon {
 		if (name != null) {
 			Line path = new Line(xo, yo, xf, yf);
 			//path.printMatrix(path.genPoints(range));
-			int[][] arr = path.genPoints(range);
+			arr = path.genPoints(range);
+			path.printMatrix(arr);
+			System.out.println();
 			JLabel[] labels = new JLabel[arr.length];
 			new Thread() {
 				public void run() {
@@ -151,7 +151,7 @@ public class Weapon {
 						labels[i].setVisible(true);
 						try {
 							Thread.sleep((int) (speed * 2.5));
-							labels[i].setVisible(false);
+							//labels[i].setVisible(false);
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
@@ -204,5 +204,13 @@ public class Weapon {
 	
 	public void setMouseY(int y) {
 		mouseY = y;
+	}
+	
+	public void setArr(int[][] newArr) {
+		arr = newArr;
+	}
+	
+	public int[][] getArr() {
+		return arr;
 	}
 }

@@ -13,8 +13,9 @@ public class Theme {
 	public static String DUNGEON = "Dungeon";
 	public static String HALLS = "Halls";
 	public static String CAVE = "Cave";
+	public static String RAINBOW = "Rainbow";
 	
-	private static String[] themes = {FOREST, OCEAN, VOLCANO, MOUNTAIN, FIELD, BEACH, DUNGEON, HALLS, CAVE};
+	private static String[] themes = {FOREST, OCEAN, VOLCANO, MOUNTAIN, FIELD, BEACH, DUNGEON, HALLS, CAVE, RAINBOW};
 	
 	private String folderPath;
 	
@@ -24,6 +25,7 @@ public class Theme {
 		else {
 			// Actual code goes here
 			folderPath = "Sprites/Level/" + themeName + "/";
+			
 		}
 	}
 	

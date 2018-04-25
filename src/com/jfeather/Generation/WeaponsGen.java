@@ -9,6 +9,7 @@ import com.jfeather.Items.*;
 import com.jfeather.Player.Character;
 public class WeaponsGen {
 	
+	// These can be changed and updated and the rest of the code will adjust dynamically, so go wild
 	private static String[] preConstructions = {"The ", ""};
 	private static String[] basePreAdjectives = {"Mighty", "Strong" ,"Steadfast", "Crystal", "Shiny", "Angelic", "Demonic", "Adorned", "Void"};
 	private static String[] legendaryDivinePreAdjectives = {"Rainbow", "Godly", "Ancient", "Divine", "Legendary", "Infinity", "Quantum", "Tachyonic"};
@@ -18,6 +19,7 @@ public class WeaponsGen {
 	private static String[] legendaryDivineEntities = {"Gods", "King", "Ancients", "Morning Star", "Meteor", "McDonald's Breakfast Artisans", "Mr. Gudbrandsen's Ex-wife", "Mr. Gudbrandsen"};
 
 	// Weapon types and names
+	// Same deal with this set, and any other
 	private static String[] swordBaseNames = {"Sword", "Scimitar", "Blade", "Katana", "Greatsword", "Saber", "Rapier", "Longsword"};
 	private static String[] daggerBaseNames = {"Blade", "Dagger", "Shortsword"};
 	private static String[] hammerBaseNames = {"Hammer", "Mallet", "Mace"};
@@ -40,6 +42,7 @@ public class WeaponsGen {
 	private static String[] matsRanged = {"maple", "oak", "cherry"};
 	
 	// Description arrays
+	// TODO have some more varied phrases here, they're all kinda the same
 	private static String[][] descrPhrasesEntity = {
 			{"Forged for ", "Crafted for ", "Made by "},
 			{"very strong.", "very reliable.", "quite old", "seemingly new"}
@@ -340,7 +343,7 @@ public class WeaponsGen {
 		switch (weaponType) {
 			case "sword":
 				max = 3.5;
-				min = 1;
+				min = 1.5;
 				break;
 			case "dagger":
 				max = 6;

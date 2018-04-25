@@ -15,7 +15,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-
 import com.jfeather.Exceptions.*;
 import com.jfeather.Items.*;
 import com.jfeather.Player.Character;
