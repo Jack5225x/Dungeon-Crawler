@@ -5,6 +5,11 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.swing.ImageIcon;
 
@@ -20,6 +25,9 @@ public class LevelInstance {
 	private PlayerInstance player;
 	private GameInstance instance;
 	private Image sprite;
+	private HashMap<Integer, Image> sprites;
+	private HashMap<Integer, ArrayList<Integer>> spriteLocations;
+	private int mapCount;
 	private int x, y, a, dx, dy, da;
 	private boolean left, right, down, up, roll, rollReady = true;
 	private int rollCooldown;
@@ -36,6 +44,10 @@ public class LevelInstance {
 		a = 0;
 		character = player.getCharacter();
 		sprite = (new ImageIcon("Sprites/Level/TestLevel.png")).getImage();
+		mapCount = 0;
+		sprites = new HashMap<Integer, Image>();
+		spriteLocations = new HashMap<Integer, ArrayList<Integer>>();
+		setCoords((player.getX() / 2) - getWidth() / 2, (int)(player.getY() * .5) - getHeight() / 2);
 	}
 
 	public int getFloor() {
@@ -81,6 +93,48 @@ public class LevelInstance {
 	public void setCoords(int newX, int newY) {
 		x = newX;
 		y = newY;
+	}
+		
+	public ArrayList<Integer> getCoords() {
+		return new ArrayList<Integer> (Arrays.asList(x, y));
+	}
+	
+	public void addImage(Image newSprite, int xCoord, int yCoord) {
+		sprites.put(mapCount, newSprite);
+		spriteLocations.put(mapCount, new ArrayList<Integer> (Arrays.asList(xCoord, yCoord)));
+		mapCount++;
+	}
+	
+	public void addImage(Image newSprite, ArrayList<Integer> list) {
+		sprites.put(mapCount, newSprite);
+		spriteLocations.put(mapCount, list);
+		mapCount++;
+	}
+	
+	public void addImage(Image newSprite) {
+		sprites.put(mapCount, newSprite);
+		spriteLocations.put(mapCount, getCoords());
+		mapCount++;
+	}
+	
+	public int getMapCount() {
+		return mapCount;
+	}
+	
+	public HashMap<Integer, Image> getSpriteMap() {
+		return sprites;
+	}
+	
+	public void setSpriteMap(HashMap<Integer, Image> map) {
+		sprites = map;
+	}
+	
+	public HashMap<Integer, ArrayList<Integer>> getSpriteLocations() {
+		return spriteLocations;
+	}
+	
+	public void setSpriteLocationMap(HashMap<Integer, ArrayList<Integer>> map) {
+		spriteLocations = map;
 	}
 	
     public void keyPressed(KeyEvent e, int speed, Graphics g) {
@@ -158,12 +212,17 @@ public class LevelInstance {
     }
 	
 	public void move(Graphics g) {
+		// Old stuff
 		x += dx;
 		y += dy;
 		//moveShots();
 		
-		//a += da;
-		//rotate(g, sprite, a);
+		Iterator it = spriteLocations.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry<Integer, ArrayList<Integer>> next = (Map.Entry<Integer, ArrayList<Integer>>) it.next();
+			next.setValue(new ArrayList<Integer> (Arrays.asList(next.getValue().get(0) + dx, next.getValue().get(1) + dy)));
+		} 
+		
 		if (rollReady && roll)
 			roll();
 	}
@@ -354,5 +413,19 @@ public class LevelInstance {
     		return true;
     	return false;
     }
+    
+    public void repaintLevel(Graphics2D g2d) {
+    	Iterator it = sprites.entrySet().iterator();
+    	Iterator it2 = spriteLocations.entrySet().iterator();
+    	while (it.hasNext()) {
+    		Map.Entry<Integer, Image> nextImage = (Map.Entry<Integer, Image>) it.next();
+    		Map.Entry<Integer, ArrayList<Integer>> nextPoint = (Map.Entry<Integer, ArrayList<Integer>>) it2.next();
+    		int x = nextPoint.getValue().get(0);
+    		int y = nextPoint.getValue().get(1);
+    		Image image = nextImage.getValue();
+    		g2d.drawImage(image, x, y, null);
+    	}
+    }
+    
     
 }

@@ -71,13 +71,13 @@ public class GameInstance extends JPanel implements KeyListener, MouseListener, 
 		
 		//level = new LevelInstance(1, player, this);
 		try {
-			level = LevelGen.genHalls(1, player, this, new Theme(Theme.RAINBOW));
+			level = LevelGen.genRoom(1, player, this, new Theme(Theme.RAINBOW));
 		} catch (UnsupportedThemeException e) {
 			e.printStackTrace();
 		}
 		
 		//level.setCoords((width / 2) - level.getWidth() / 2, (int)(height * .5) - level.getHeight() / 2);
-		level.setCoords((player.getX() / 2) - level.getWidth() / 2, (int)(player.getY() * .5) - level.getHeight() / 2);
+		//level.setCoords((player.getX() / 2) - level.getWidth() / 2, (int)(player.getY() * .5) - level.getHeight() / 2);
 	}
 
 	public void setFPS(int newFPS) {
@@ -99,6 +99,7 @@ public class GameInstance extends JPanel implements KeyListener, MouseListener, 
 	
 	public void draw(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
+		level.repaintLevel(g2d);
 		g2d.drawImage(level.getSprite(), level.getX(), level.getY(), this);
 		g2d.drawImage(player.getImage(), player.getX(), player.getY(), this);
 	}

@@ -134,10 +134,8 @@ public class Weapon {
 	public void shoot(int xo, int yo, int xf, int yf, JPanel dialog) {
 		if (name != null) {
 			Line path = new Line(xo, yo, xf, yf);
-			//path.printMatrix(path.genPoints(range));
 			arr = path.genPoints(range);
-			path.printMatrix(arr);
-			System.out.println();
+			//path.printMatrix(arr);
 			JLabel[] labels = new JLabel[arr.length];
 			new Thread() {
 				public void run() {
@@ -151,7 +149,7 @@ public class Weapon {
 						labels[i].setVisible(true);
 						try {
 							Thread.sleep((int) (speed * 2.5));
-							//labels[i].setVisible(false);
+							labels[i].setVisible(false);
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}

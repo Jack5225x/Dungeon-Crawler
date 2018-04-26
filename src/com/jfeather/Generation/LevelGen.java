@@ -44,7 +44,7 @@ public class LevelGen {
 			lengthCurr += 48;
 			widthCurr = 0;
 		}
-		instance.setSprite(image);
+		instance.addImage(image, instance.getCoords());
 		instance.setFloor(floorNumber);
 		return instance;
 	}
@@ -80,18 +80,21 @@ public class LevelGen {
 				lengthCurr += 48;
 				widthCurr = 0;
 			}
-		}
-		// Longest pathway will be 10 tiles long
-		BufferedImage finalMap = new BufferedImage((sum(roomBounds[0]) * 48 /*+ numberOfRooms * 10 * 48*/), (sum(roomBounds[1]) * 48 /*+ numberOfRooms * 10 * 48*/), BufferedImage.TYPE_INT_ARGB);
-		
-		// Draw the first room in the center
-		Graphics2D g2 = (Graphics2D) finalMap.getGraphics();
-		g2.drawImage(rooms[0], (finalMap.getWidth() / 2), (finalMap.getHeight() / 2), null);
+		}		
 		
 		// Generate the bridge lengths
 		int[] bridgeLengths = new int[numberOfRooms];
 		for (int i = 0; i < numberOfRooms; i++)
-			bridgeLengths[i] = rng.nextInt(5) + 6;
+			bridgeLengths[i] = rng.nextInt(5) + 3;
+
+		// Longest pathway will be 10 tiles long
+		BufferedImage finalMap = new BufferedImage((sum(roomBounds[0]) + sum(bridgeLengths)) * 48, (sum(roomBounds[1]) + sum(bridgeLengths)) * 48, BufferedImage.TYPE_INT_ARGB);
+		
+		//System.out.println(finalMap.getWidth() + " " + finalMap.getHeight());
+		
+		// Draw the first room in the center
+		Graphics2D g2 = (Graphics2D) finalMap.getGraphics();
+		g2.drawImage(rooms[0], (finalMap.getWidth() / 2), (finalMap.getHeight() / 2), null);
 		
 		// Initialize the updating coordinates
 		int currentX = (finalMap.getWidth() / 2);
@@ -138,9 +141,20 @@ public class LevelGen {
 			// Make sure that the path doesn't overlap the previous one
 			while (true) {
 				side[k] = rng.nextInt(4);
-				if (!(side[k - 1] == 0 && side[k] == 1) && !(side[k - 1] == 1 && side[k] == 0) && !(side[k - 1] == 2 && side[k] == 3) && !(side[k - 1] == 3 && side[k] == 2)) {
-					break;
-				}
+				if (k >= 2) {
+					// Make sure it doesn't approach itself and overlap
+					if (!(side[k - 2] == 3 && side[k - 1] != 3 && side[k] ==  2)
+							&& !(side[k - 2] == 2 && side[k - 1] != 2 && side[k] ==  3)
+							&& !(side[k - 2] == 0 && side[k - 1] != 0 && side[k] ==  1)
+							&& !(side[k - 2] == 1 && side[k - 1] != 1 && side[k] ==  0)
+							&& !(side[k - 1] == 0 && side[k] == 1) && !(side[k - 1] == 1 && side[k] == 0) && !(side[k - 1] == 2 && side[k] == 3) && !(side[k - 1] == 3 && side[k] == 2))
+						break;
+				} else {
+					// Make sure it doesn't go backwards
+					if (!(side[k - 1] == 0 && side[k] == 1) && !(side[k - 1] == 1 && side[k] == 0) && !(side[k - 1] == 2 && side[k] == 3) && !(side[k - 1] == 3 && side[k] == 2)) {
+						break;
+					}
+				} 			
 			}
 			
 			// Draw the new room, and update coords as required
@@ -223,7 +237,6 @@ public class LevelGen {
 			break;
 		}
 		genRoomTile(theme);
-		
 		LevelInstance instance = new LevelInstance(floorNumber, p, ins);
 		instance.setSprite(finalMap);
 		instance.setFloor(floorNumber);
@@ -269,8 +282,10 @@ public class LevelGen {
 			return new ImageIcon("Sprites/Level/InvalidTile.png").getImage();
 		while (true) {
 			int i = rng.nextInt(arr.length);
-			if (!arr[i].getName().equals(".directory"))
+			if (!arr[i].getName().equals(".directory")) {
+				System.out.println(arr[i].getName());
 				return new ImageIcon(arr[i].getPath()).getImage();
+			}
 		}
 	}
 	
