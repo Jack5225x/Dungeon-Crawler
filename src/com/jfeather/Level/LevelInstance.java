@@ -217,14 +217,17 @@ public class LevelInstance {
 		y += dy;
 		//moveShots();
 		
+		addIncrementsToMap(dx, dy);
+		if (rollReady && roll)
+			roll();
+	}
+	
+	public void addIncrementsToMap(int dx, int dy) {
 		Iterator it = spriteLocations.entrySet().iterator();
 		while (it.hasNext()) {
 			Map.Entry<Integer, ArrayList<Integer>> next = (Map.Entry<Integer, ArrayList<Integer>>) it.next();
 			next.setValue(new ArrayList<Integer> (Arrays.asList(next.getValue().get(0) + dx, next.getValue().get(1) + dy)));
 		} 
-		
-		if (rollReady && roll)
-			roll();
 	}
 	
 	private void moveShots() {
@@ -307,13 +310,15 @@ public class LevelInstance {
     		}
     	}
     	
-    	int finalX = x + dx;
-    	int finalY = y + dy;
-    	int ogX = player.getX();
-    	int ogY = player.getY();
+    	int finalX = spriteLocations.get(0).get(0) + dx;
+    	int finalY = spriteLocations.get(0).get(1) + dy;
+    	int ogX = spriteLocations.get(0).get(0);
+    	int ogY = spriteLocations.get(0).get(1);
     	
-    	//System.out.println(finalX + " " + ogX + " " + dx);
-    	//System.out.println(finalY + " " + ogY + " " + dy);
+    	System.out.println(finalX + " " + ogX + " " + dx);
+    	System.out.println(finalY + " " + ogY + " " + dy);
+    	
+    	// TODO make this not throw you to infinity sometimes when you roll, idk why?
     	
     	new Thread() {
     		public void run() {
@@ -324,10 +329,11 @@ public class LevelInstance {
     				k = -1;
     			else
     				k = 1;
-    			while (x != finalX && k != 0) {
-    				//if (!approaching(finalX, ogX, x))
+    			while (spriteLocations.get(0).get(0) != finalX && k != 0) {
+    				//if (!approaching(finalX, ogX, spriteLocations.get(0).get(0)))
     					//k = -k;
-    				x += k;
+    					//break;
+    				addIncrementsToMap(k, 0);
     				try {
 						Thread.sleep(2);
 					} catch (InterruptedException e) {
@@ -349,10 +355,11 @@ public class LevelInstance {
     				k = -1;
     			else
     				k = 1;
-    			while (y != finalY) {
-    				//if (!approaching(finalY, ogY, y))
+    			while (spriteLocations.get(0).get(1) != finalY && k != 0) {
+    				//if (!approaching(finalY, ogY, spriteLocations.get(0).get(1)))
     					//k = -k;
-    				y += k;
+    					//break;
+    				addIncrementsToMap(0, k);
     				try {
 						Thread.sleep(2);
 					} catch (InterruptedException e) {

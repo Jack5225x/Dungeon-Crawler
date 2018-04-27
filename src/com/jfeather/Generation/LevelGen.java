@@ -16,6 +16,10 @@ import com.jfeather.Player.PlayerInstance;
 
 public class LevelGen {
 	
+	private static final int MIN_PATH_LENGTH = 3;
+	private static final int MAX_PATH_LENGTH = 8;
+	private static final int PATH_WIDTH = 3;
+	
 	//TODO write several basic templates to base the levels around, probably in txt format using unicode stuff
 	
 	// Very basic method to generate a rectangle room with a varying theme
@@ -50,12 +54,13 @@ public class LevelGen {
 	}
 	
 	public static LevelInstance genHalls(int floorNumber, PlayerInstance p, GameInstance ins, Theme theme) {
+		LevelInstance instance = new LevelInstance(floorNumber, p, ins);
+		
 		int numberOfRooms = (int) (floorNumber * .5 + 10);
 		BufferedImage[] rooms = new BufferedImage[numberOfRooms];
 		int[][] roomBounds = new int[2][numberOfRooms];
 		Random rng = new Random();
 		
-		// TODO Make the tiles for each room different, maybe path tiles too
 		for (int k = 0; k < numberOfRooms; k++) {
 			roomBounds[0][k]= rng.nextInt(7) + 8;
 			roomBounds[1][k] = rng.nextInt(7) + 8;
@@ -85,20 +90,14 @@ public class LevelGen {
 		// Generate the bridge lengths
 		int[] bridgeLengths = new int[numberOfRooms];
 		for (int i = 0; i < numberOfRooms; i++)
-			bridgeLengths[i] = rng.nextInt(5) + 3;
-
-		// Longest pathway will be 10 tiles long
-		BufferedImage finalMap = new BufferedImage((sum(roomBounds[0]) + sum(bridgeLengths)) * 48, (sum(roomBounds[1]) + sum(bridgeLengths)) * 48, BufferedImage.TYPE_INT_ARGB);
-		
-		//System.out.println(finalMap.getWidth() + " " + finalMap.getHeight());
-		
+			bridgeLengths[i] = rng.nextInt(MAX_PATH_LENGTH - MIN_PATH_LENGTH) + MIN_PATH_LENGTH;
+				
 		// Draw the first room in the center
-		Graphics2D g2 = (Graphics2D) finalMap.getGraphics();
-		g2.drawImage(rooms[0], (finalMap.getWidth() / 2), (finalMap.getHeight() / 2), null);
+		instance.addImage(rooms[0]);
 		
 		// Initialize the updating coordinates
-		int currentX = (finalMap.getWidth() / 2);
-		int currentY = (finalMap.getHeight() / 2);
+		int currentX = instance.getX();
+		int currentY = instance.getY();
 		
 		// Generate the path tile (is the same for every path, unlike floor tiles)
 		Image pathTile = genPathTile(theme);
@@ -111,30 +110,31 @@ public class LevelGen {
 		switch (side[0]) {
 			case 0:
 				// Up
-				path = drawPath(3, bridgeLengths[0], pathTile);
+				path = drawPath(PATH_WIDTH, bridgeLengths[0], pathTile);
 				currentX += (rooms[0].getWidth() / 2) - 48;
 				currentY -= path.getHeight(null);
 				break;
 			case 1:
 				// Down
-				path = drawPath(3, bridgeLengths[0], pathTile);
+				path = drawPath(PATH_WIDTH, bridgeLengths[0], pathTile);
 				currentX += (rooms[0].getWidth() / 2) - 48;
 				currentY += rooms[0].getHeight();
 				break;
 			case 2:
 				// Left
-				path = drawPath(bridgeLengths[0], 3, pathTile);
+				path = drawPath(bridgeLengths[0], PATH_WIDTH, pathTile);
 				currentX -= path.getWidth(null);
 				currentY += (rooms[0].getHeight() / 2) - 48;
 				break;
 			case 3:
 				// Right
-				path = drawPath(bridgeLengths[0], 3, pathTile);
+				path = drawPath(bridgeLengths[0], PATH_WIDTH, pathTile);
 				currentX += rooms[0].getWidth();
 				currentY += (rooms[0].getHeight() / 2) - 48;
 				break;
 		}
-		g2.drawImage(path, currentX, currentY, null);
+		//g2.drawImage(path, currentX, currentY, null);
+		instance.addImage(path, currentX, currentY);
 		
 		// Make the pathways, starting from the second one
 		for (int k = 1; k < numberOfRooms; k++) {
@@ -180,8 +180,7 @@ public class LevelGen {
 					currentY -= rooms[k].getHeight() / 2;
 					break;
 			}
-			g2.drawImage(rooms[k], currentX, currentY, null);
-			
+			instance.addImage(rooms[k], currentX, currentY);
 			
 			// Draw the new pathway
 			switch (side[k]) {
@@ -210,7 +209,7 @@ public class LevelGen {
 					currentY += (rooms[k].getHeight() / 2) - 48;
 					break;
 			}
-			g2.drawImage(path, currentX, currentY, null);
+			instance.addImage(path, currentX, currentY);
 		}
 		
 		// TODO draw the final boss room at the end of each level
@@ -237,8 +236,6 @@ public class LevelGen {
 			break;
 		}
 		genRoomTile(theme);
-		LevelInstance instance = new LevelInstance(floorNumber, p, ins);
-		instance.setSprite(finalMap);
 		instance.setFloor(floorNumber);
 		return instance;
 	}

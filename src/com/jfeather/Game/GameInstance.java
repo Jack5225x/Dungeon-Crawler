@@ -71,7 +71,7 @@ public class GameInstance extends JPanel implements KeyListener, MouseListener, 
 		
 		//level = new LevelInstance(1, player, this);
 		try {
-			level = LevelGen.genRoom(1, player, this, new Theme(Theme.RAINBOW));
+			level = LevelGen.genHalls(100, player, this, new Theme(Theme.RAINBOW));
 		} catch (UnsupportedThemeException e) {
 			e.printStackTrace();
 		}
