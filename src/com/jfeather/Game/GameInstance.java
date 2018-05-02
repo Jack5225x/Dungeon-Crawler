@@ -43,6 +43,7 @@ public class GameInstance extends JPanel implements KeyListener, MouseListener, 
 	private LevelInstance level;
 	private int width, height;
 	private volatile int mouseX, mouseY;
+	private int floor;
 	
 	public GameInstance(Character c) {
 		character = c;
@@ -71,7 +72,7 @@ public class GameInstance extends JPanel implements KeyListener, MouseListener, 
 		
 		//level = new LevelInstance(1, player, this);
 		try {
-			level = LevelGen.genHalls(100, player, this, new Theme(Theme.RAINBOW));
+			level = LevelGen.genHalls(floor = 1, player, this, new Theme(Theme.RAINBOW));
 		} catch (UnsupportedThemeException e) {
 			e.printStackTrace();
 		}
@@ -155,8 +156,12 @@ public class GameInstance extends JPanel implements KeyListener, MouseListener, 
 		// Initialize the weapon stuff and shoot after
 		mouseX = (int) (e.getLocationOnScreen().getX() - getLocationOnScreen().getX());
 		mouseY = (int) (e.getLocationOnScreen().getY() - getLocationOnScreen().getY());
-		character.getActiveWeapon().setPlayerCoords(player);
-		character.getActiveWeapon().mousePressed(e, mouseX, mouseY, this);
+		try {
+			character.getActiveWeapon().setPlayerCoords(player);
+			character.getActiveWeapon().mousePressed(e, mouseX, mouseY, this);
+		} catch (NullPointerException ex) {
+			// Don't really care about exception handling here
+		}
 	}
 	
 	public int getMouseX() {
@@ -170,7 +175,11 @@ public class GameInstance extends JPanel implements KeyListener, MouseListener, 
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		// Stop the shooting
-		character.getActiveWeapon().mouseReleased();
+		try {
+			character.getActiveWeapon().mouseReleased();
+		} catch (NullPointerException ex) {
+			// Don't care about exceptions
+		}
 	}
 	
 	@Override
@@ -178,9 +187,13 @@ public class GameInstance extends JPanel implements KeyListener, MouseListener, 
 		// Update info for when the mouse is held down
 		mouseX = (int) (e.getLocationOnScreen().getX() - getLocationOnScreen().getX());
 		mouseY = (int) (e.getLocationOnScreen().getY() - getLocationOnScreen().getY());
-		character.getActiveWeapon().setMouseX(mouseX);
-		character.getActiveWeapon().setMouseY(mouseY);
-		character.getActiveWeapon().setPlayerCoords(player);
+		try {
+			character.getActiveWeapon().setMouseX(mouseX);
+			character.getActiveWeapon().setMouseY(mouseY);
+			character.getActiveWeapon().setPlayerCoords(player);
+		} catch (NullPointerException ex) {
+			// Don't care
+		}
 		//System.out.println(mouseX + "  " + mouseY);
 	}
 

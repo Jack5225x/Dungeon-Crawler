@@ -127,8 +127,8 @@ public class Weapon {
 	}
 	
 	public void setPlayerCoords(PlayerInstance player) {
-		characterX = player.getX();
-		characterY = player.getY();
+		characterX = player.getX() + player.getWidth() / 2;
+		characterY = player.getY() + player.getHeight() / 2;
 	}
 	
 	public void shoot(int xo, int yo, int xf, int yf, JPanel dialog) {
@@ -149,7 +149,7 @@ public class Weapon {
 						labels[i].setVisible(true);
 						try {
 							Thread.sleep((int) (speed * 2.5));
-							labels[i].setVisible(false);
+							//labels[i].setVisible(false);
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}

@@ -29,6 +29,8 @@ public class GameWindow extends JFrame {
 	public static GameWindow frame;
 	public GameInstance instance;
 	public volatile TitleScreen ts;
+	public static String TITLE = "Dungeon Dash";
+	// TODO: credit to cheesy for the title
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -49,22 +51,25 @@ public class GameWindow extends JFrame {
 		contentPane = new JPanel();
 		contentPane.setLayout(new BorderLayout());
 		setContentPane(contentPane);
-		setTitle("Game");
+		setTitle(TITLE);
 		setResizable(false);
 		
 		Character jack = new Character("Jack");
 		jack.setAgility(200);
-			
+		//Inventory inv = createInv(jack, 10);
+		
 		GameInstance instance = new GameInstance(jack);
 		add(instance);
 		addKeyListener(instance.KL);
+		//inv.addKeyListener(instance.KL);
 		addMouseListener(instance.ML);
+		//inv.addMouseListener(instance.ML);
 		addMouseMotionListener(instance.MML);
+		//inv.addMouseMotionListener(instance.MML);
 		instance.setFPS(60);
 		jack.setActiveWeapon(WeaponsGen.genWeapon(jack, Weapon.SWORD));
+		
 		/*
-		Inventory inv = createInv(jack, 10);
-
 		for (int i = 0; i < 9; i++) {
 			Weapon testSword = WeaponsGen.genWeapon(jack, Weapon.SWORD);
 			inv.addItem(testSword);
@@ -80,7 +85,6 @@ public class GameWindow extends JFrame {
 		title.start();
 		*/
 		
-		
 		new Thread () {
 			@Override
 			public void run() {
@@ -92,9 +96,6 @@ public class GameWindow extends JFrame {
 						e.printStackTrace();
 					}
 					//jack.subtractHealth(1);
-					while (true) {
-						
-					}
 				}
 			}
 		}.start();

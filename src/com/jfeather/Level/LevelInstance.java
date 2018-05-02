@@ -1,8 +1,10 @@
 package com.jfeather.Level;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Robot;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -34,20 +36,31 @@ public class LevelInstance {
 	private boolean isOffset = false;
 	private boolean moveable = true;
 	private Weapon weapon;
+	private Robot bot;
+	private Color background;
+	private Theme theme;
 	
-	public LevelInstance(int floorNumber, PlayerInstance p, GameInstance i) {
+	public LevelInstance(int floorNumber, PlayerInstance p, GameInstance i, Theme newTheme) {
 		floor = floorNumber;
 		player = p;
 		instance = i;
 		character = player.getCharacter();
 		weapon = character.getActiveWeapon();
 		a = 0;
+		theme = newTheme;
 		character = player.getCharacter();
 		sprite = (new ImageIcon("Sprites/Level/TestLevel.png")).getImage();
 		mapCount = 0;
 		sprites = new HashMap<Integer, Image>();
 		spriteLocations = new HashMap<Integer, ArrayList<Integer>>();
 		setCoords((player.getX() / 2) - getWidth() / 2, (int)(player.getY() * .5) - getHeight() / 2);
+		background = theme.getBackground();
+		
+		try {
+			bot = new Robot();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public int getFloor() {
@@ -181,22 +194,26 @@ public class LevelInstance {
         int key = e.getKeyCode();
         if (key == 65) {
         	// A
-            dx = 0;
+        	if (!right)
+        		dx = 0;
             left = false;
         }
         if (key == 68) {
         	// D
-            dx = 0;
+        	if (!left)
+        		dx = 0;
             right = false;
         }
         if (key == 87) {
         	// W
-            dy = 0;
+        	if (!down)
+        		dy = 0;
             up = false;
         }
         if (key == 83) {
         	// S
-            dy = 0;
+        	if (!up)
+        		dy = 0;
             down = false;
         }
         if (key == 81)
@@ -212,14 +229,17 @@ public class LevelInstance {
     }
 	
 	public void move(Graphics g) {
-		// Old stuff
-		x += dx;
-		y += dy;
-		//moveShots();
-		
-		addIncrementsToMap(dx, dy);
-		if (rollReady && roll)
-			roll();
+		// TODO: make actual bounds
+		//if (!isOutOfBounds()) {
+			// Old stuff
+			x += dx;
+			y += dy;
+			//moveShots();
+			
+			addIncrementsToMap(dx, dy);
+			if (rollReady && roll)
+				roll();
+		//}
 	}
 	
 	public void addIncrementsToMap(int dx, int dy) {
@@ -227,7 +247,7 @@ public class LevelInstance {
 		while (it.hasNext()) {
 			Map.Entry<Integer, ArrayList<Integer>> next = (Map.Entry<Integer, ArrayList<Integer>>) it.next();
 			next.setValue(new ArrayList<Integer> (Arrays.asList(next.getValue().get(0) + dx, next.getValue().get(1) + dy)));
-		} 
+		}
 	}
 	
 	private void moveShots() {
@@ -236,6 +256,45 @@ public class LevelInstance {
 			arr[i][0] += dx;
 			arr[i][1] += dy;
 		}
+	}
+	
+	private boolean isOutOfBounds() {
+		// TODO: Fix this
+		int dir = player.getDirection();
+		int x = 0, y = 0;
+		switch (dir) {
+			case 0:
+				// Left
+				x = player.getX();
+				y = player.getY() + player.getHeight() / 2;
+				//System.out.println("Left");
+				break;
+			case 1:
+				// Right
+				x = player.getX() + player.getWidth();
+				y = player.getY() + player.getHeight() / 2;
+				//System.out.println("Right");
+				break;
+			case 2:
+				// Up
+				x = player.getX() + player.getWidth() / 2;
+				y = player.getY();
+				//System.out.println("Up");
+				break;
+			case 3:
+				// Down
+				x = player.getX() + player.getWidth() / 2;
+				y = player.getY() + player.getHeight();
+				//System.out.println("Down");
+				break;
+		}
+		//System.out.println(x + "  " + y);
+		//System.out.println(player.getX() + " " + player.getY());
+		Color pixel = bot.getPixelColor(x, y);
+		//System.out.println(pixel);
+		if (pixel.getRed() == background.getRed() && pixel.getBlue() == background.getBlue() && pixel.getGreen() == background.getGreen())
+			return true;
+		return false;
 	}
 	
     private void roll() {

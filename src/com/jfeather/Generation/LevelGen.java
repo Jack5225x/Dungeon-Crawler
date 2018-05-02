@@ -27,7 +27,7 @@ public class LevelGen {
 		Random rng = new Random();
 		int width = rng.nextInt(10) + 5;
 		int length = rng.nextInt(10) + 5;
-		LevelInstance instance = new LevelInstance(floorNumber, p, ins);
+		LevelInstance instance = new LevelInstance(floorNumber, p, ins, theme);
 		Image[][] tiles = new Image[width][length];
 		BufferedImage image = new BufferedImage(width * 48, length * 48, BufferedImage.TYPE_INT_ARGB);
 		Image roomTile = genRoomTile(theme);
@@ -54,8 +54,8 @@ public class LevelGen {
 	}
 	
 	public static LevelInstance genHalls(int floorNumber, PlayerInstance p, GameInstance ins, Theme theme) {
-		LevelInstance instance = new LevelInstance(floorNumber, p, ins);
-		
+		LevelInstance instance = new LevelInstance(floorNumber, p, ins, theme);
+		ins.setBackground(theme.getBackground());
 		int numberOfRooms = (int) (floorNumber * .5 + 10);
 		BufferedImage[] rooms = new BufferedImage[numberOfRooms];
 		int[][] roomBounds = new int[2][numberOfRooms];
