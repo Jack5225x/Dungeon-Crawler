@@ -15,23 +15,28 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-
 import com.jfeather.Exceptions.*;
 import com.jfeather.Items.*;
 import com.jfeather.Player.Character;
 
 public class Inventory extends JPanel implements MouseListener {
-
+	
+	public Character character;
 	private static final long serialVersionUID = 1L;
 	public JPanel dialog = new JPanel();
 	public JButton[] slots;
 	public Item[] items;
+	public JLabel healthBar, manaBar;
 	public JButton armorSlot, weaponSlot, helmetSlot, statsButton;
 	public final int MAX_SLOTS = 10;
 	public int weaponSlotIndex, armorSlotIndex, helmetSlotIndex, capacity;
 	public int[][] slotLocations = {{10, 20}, {10, 80}, {65, 20}, {65, 80}, {120, 20}, {120, 80}, {175, 20}, {175, 80}, {230, 20}, {230, 80}, {540, 20} ,{540, 80}, {485, 50}};
+	private int totalStrength, totalDefense, totalAgility, totalLuck, totalIntelligence;
+	private volatile boolean update = false;
+	private int updateInterval = 200;
 	
 	public Inventory(Character c, int inventoryCapacity) throws InventoryCapacityException {
+		character = c;
 		capacity = inventoryCapacity;
 		if (inventoryCapacity > MAX_SLOTS)
 			throw new InventoryCapacityException();
@@ -104,6 +109,15 @@ public class Inventory extends JPanel implements MouseListener {
 			dialog.add(leftBorder);
 			*/
 			
+			// Add the health and mana bars
+			healthBar = new JLabel(new ImageIcon("Sprites/Inventory/HealthBar.png"));
+			healthBar.setBounds(290, 75, 181, 25);
+			dialog.add(healthBar);
+
+			manaBar = new JLabel(new ImageIcon("Sprites/Inventory/ManaBar.png"));
+			manaBar.setBounds(290, 105, 181, 25);
+			dialog.add(manaBar);
+			
 			// For some reason this is needed to fix the other buttons
 			// Don't change below this line (unless you're better at coding than I am, which is probably not going to happen since I'm the only one working on this :( )
 			JButton fix = new JButton();
@@ -111,27 +125,38 @@ public class Inventory extends JPanel implements MouseListener {
 			fix.setVisible(false);
 			fix.setEnabled(false);
 			
+			new Thread() {
+				@Override
+				public void run() {
+					while (true) {
+						if (update) {
+							try {
+								Thread.sleep(updateInterval);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							updateStats();
+						}
+					}
+				}
+			}.start();
+			
 		}
 		
 		statsButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent ex) {
-				int totalStrength = items[MAX_SLOTS].strength + items[MAX_SLOTS + 1].strength + items[MAX_SLOTS + 2].strength + c.strength;
-				int totalInt = items[MAX_SLOTS].intelligence + items[MAX_SLOTS + 1].intelligence + items[MAX_SLOTS + 2].intelligence + c.intelligence;
-				int totalDef = items[MAX_SLOTS].defense + items[MAX_SLOTS + 1].defense + items[MAX_SLOTS + 2].defense + c.defense;
-				int totalAgility = items[MAX_SLOTS].agility + items[MAX_SLOTS + 1].agility + items[MAX_SLOTS + 2].agility + c.agility;
-				int totalLuck = items[MAX_SLOTS].luck + items[MAX_SLOTS + 1].luck + items[MAX_SLOTS + 2].luck + c.luck;
-
 				
-				String stats = "<html><b>Character Name: </font><font color='red'>"+c.name+"</font>"
-						+ "<br><b>Level: </font><font color='orange'>"+c.level+"</font>"
-						+ "<br><b>Strength: </font><font color='yellow'>"+totalStrength+"     </font>"
-						+ "<b><br>Intelligence: </font><font color='yellow'>"+totalInt+"</font>"
-						+ "<br><b>Defense: </font><font color='green'>"+totalDef+"</font>"
-						+ "<br><b>Health: </font><font color='blue'>"+c.health+"     </font>"
-						+ "<b><br>Mana: </font><font color='purple'>"+c.mana+"</font>"
+				String stats = "<html><b>Character Name: </font><font color='blue'>"+c.getName()+"</font>"
+						+ "<br><b>Level: </font><font color='green'>"+c.getLevel()+"</font>"
+						+ "<br><b>Strength: </font><font color='red'>"+totalStrength+"     </font>"
+						+ "<b><br>Intelligence: </font><font color='red'>"+totalIntelligence+"</font>"
+						+ "<br><b>Defense: </font><font color='red'>"+totalDefense+"</font>"
+						+ "<br><b>Health: </font><font color='red'>"+c.getHealth()+"</font>/<font color='red'>"+c.getMaxHealth() + "</font>"
+						+ "<b><br>Mana: </font><font color='red'>"+c.getMana()+"</font>/<font color='red'>"+c.getMaxMana() + "</font>"
 						+ "<br><b>Agility: </font><font color='red'>"+totalAgility+"</font>"
-						+ "<br><b>Luck: </font><font color='orange'>"+totalLuck+"</font>";
+						+ "<br><b>Luck: </font><font color='red'>"+totalLuck+"</font>";
 				JOptionPane.showMessageDialog(null, stats, "Stats", JOptionPane.PLAIN_MESSAGE);
 			}
 		});
@@ -139,33 +164,33 @@ public class Inventory extends JPanel implements MouseListener {
 	
 	// This set of methods adds a specific item to a specific spot in the inventory
 	public void addItemToSlot(Weapon weapon, int slot) {
-		slots[slot].setIcon(weapon.sprite);
-		slots[slot].setToolTipText(weapon.toolTip);
+		slots[slot].setIcon(weapon.getSprite());
+		slots[slot].setToolTipText(weapon.getToolTip());
 		items[slot] = new Item(weapon);
 	}
 	
 	public void addItemToSlot(StandardConsumable consumable, int slot) {
-		slots[slot].setIcon(consumable.sprite);
-		slots[slot].setToolTipText(consumable.toolTip);
+		slots[slot].setIcon(consumable.getSprite());
+		slots[slot].setToolTipText(consumable.getToolTip());
 		items[slot] = new Item(consumable);
 	}
 	
 	public void addItemToSlot(UniqueConsumable consumable, int slot) {
-		slots[slot].setIcon(consumable.sprite);
-		slots[slot].setToolTipText(consumable.toolTip);
+		slots[slot].setIcon(consumable.getSprite());
+		slots[slot].setToolTipText(consumable.getToolTip());
 		items[slot] = new Item(consumable);
 	}
 	
 	public void addItemToSlot(Armor armor, int slot) {
-		slots[slot].setIcon(armor.sprite);
-		slots[slot].setToolTipText(armor.toolTip);
+		slots[slot].setIcon(armor.getSprite());
+		slots[slot].setToolTipText(armor.getToolTip());
 		items[slot] = new Item(armor);
 	}
 	
 	
 	public void addItemToSlot(Helmet helmet, int slot) {
-		slots[slot].setIcon(helmet.sprite);
-		slots[slot].setToolTipText(helmet.toolTip);
+		slots[slot].setIcon(helmet.getSprite());
+		slots[slot].setToolTipText(helmet.getToolTip());
 		items[slot] = new Item(helmet);
 	}
 	
@@ -173,14 +198,14 @@ public class Inventory extends JPanel implements MouseListener {
 	public void addItem(Weapon weapon) {
 		int index = -1;
 		for (int i = 0; i < MAX_SLOTS; i++) {
-			if (items[i].name.equals("null")) {
+			if (items[i].getName().equals("null")) {
 				index = i;
 				break;
 			}
 		}
 		if (index != -1) {
-			slots[index].setIcon(weapon.sprite);
-			slots[index].setToolTipText(weapon.toolTip);
+			slots[index].setIcon(weapon.getSprite());
+			slots[index].setToolTipText(weapon.getToolTip());
 			items[index] = new Item(weapon);
 		}
 	}
@@ -188,14 +213,14 @@ public class Inventory extends JPanel implements MouseListener {
 	public void addItem(StandardConsumable consumable) {
 		int index = -1;
 		for (int i = 0; i < MAX_SLOTS; i++) {
-			if (items[i].name.equals("null")) {
+			if (items[i].getName().equals("null")) {
 				index = i;
 				break;
 			}
 		}
 		if (index != -1) {
-			slots[index].setIcon(consumable.sprite);
-			slots[index].setToolTipText(consumable.toolTip);
+			slots[index].setIcon(consumable.getSprite());
+			slots[index].setToolTipText(consumable.getToolTip());
 			items[index] = new Item(consumable);
 		}
 	}
@@ -203,14 +228,14 @@ public class Inventory extends JPanel implements MouseListener {
 	public void addItem(UniqueConsumable consumable) {
 		int index = -1;
 		for (int i = 0; i < MAX_SLOTS; i++) {
-			if (items[i].name.equals("null")) {
+			if (items[i].getName().equals("null")) {
 				index = i;
 				break;
 			}
 		}
 		if (index != -1) {
-			slots[index].setIcon(consumable.sprite);
-			slots[index].setToolTipText(consumable.toolTip);
+			slots[index].setIcon(consumable.getSprite());
+			slots[index].setToolTipText(consumable.getToolTip());
 			items[index] = new Item(consumable);
 		}
 	}
@@ -218,14 +243,14 @@ public class Inventory extends JPanel implements MouseListener {
 	public void addItem(Armor armor) {
 		int index = -1;
 		for (int i = 0; i < MAX_SLOTS; i++) {
-			if (items[i].name.equals("null")) {
+			if (items[i].getName().equals("null")) {
 				index = i;
 				break;
 			}
 		}
 		if (index != -1) {
-			slots[index].setIcon(armor.sprite);
-			slots[index].setToolTipText(armor.toolTip);
+			slots[index].setIcon(armor.getSprite());
+			slots[index].setToolTipText(armor.getToolTip());
 			items[index] = new Item(armor);
 		}
 	}
@@ -233,14 +258,14 @@ public class Inventory extends JPanel implements MouseListener {
 	public void addItem(Helmet helmet) {
 		int index = -1;
 		for (int i = 0; i < MAX_SLOTS; i++) {
-			if (items[i].name.equals("null")) {
+			if (items[i].getName().equals("null")) {
 				index = i;
 				break;
 			}
 		}
 		if (index != -1) {
-			slots[index].setIcon(helmet.sprite);
-			slots[index].setToolTipText(helmet.toolTip);
+			slots[index].setIcon(helmet.getSprite());
+			slots[index].setToolTipText(helmet.getToolTip());
 			items[index] = new Item(helmet);
 		}
 	}
@@ -310,23 +335,66 @@ public class Inventory extends JPanel implements MouseListener {
 				assigned2 = true;
 			}
 		}
-		if ((slot2 == MAX_SLOTS && items[slot1].itemType == 4) || (slot2 == MAX_SLOTS + 1 && items[slot1].itemType == 3) || (slot2 == MAX_SLOTS + 2 && items[slot1].itemType == 0))
+		if ((slot2 == MAX_SLOTS && items[slot1].getItemType() == 4) || (slot2 == MAX_SLOTS + 1 && items[slot1].getItemType() == 3) || (slot2 == MAX_SLOTS + 2 && items[slot1].getItemType() == 0))
 			switchItems(slot1, slot2);
-		if (assigned1 && assigned2 && slots[slot1].isVisible() && slots[slot2].isVisible() && slot1 != slot2 && !(items[slot1].name.equals("null")) && slot2 < 10) {
+		if (assigned1 && assigned2 && slots[slot1].isVisible() && slots[slot2].isVisible() && slot1 != slot2 && !(items[slot1].getName().equals("null")) && slot2 < 10) {
 			switchItems(slot1, slot2);
 		}
-		if (items[MAX_SLOTS + 2].name.equals("null"))
+		if (items[MAX_SLOTS + 2].getName().equals("null"))
 			slots[MAX_SLOTS + 2].setToolTipText("Place your active weapon here");
-		if (items[MAX_SLOTS + 1].name.equals("null"))
+		if (items[MAX_SLOTS + 1].getName().equals("null"))
 			slots[MAX_SLOTS + 1].setToolTipText("Place your armor weapon here");
-		if (items[MAX_SLOTS].name.equals("null"))
+		if (items[MAX_SLOTS].getName().equals("null"))
 			slots[MAX_SLOTS].setToolTipText("Place your active helmet here");
 		
 		for (int i = 0; i < MAX_SLOTS; i++) {
-			if (items[i].name.equals("null"))
+			if (items[i].getName().equals("null"))
 				slots[i].setToolTipText("Empty Slot");
 		}
-
+		character.setActiveWeapon(items[MAX_SLOTS + 2].toWeapon());
+		character.setActiveArmor(items[MAX_SLOTS + 1].toArmor());
+		character.setActiveHelmet(items[MAX_SLOTS].toHelmet());
 		
 	}
+	
+	public void updateStats() {
+		totalStrength = items[MAX_SLOTS].getStrength() + items[MAX_SLOTS + 1].getStrength() + items[MAX_SLOTS + 2].getStrength() + character.getStrength();
+		totalIntelligence = items[MAX_SLOTS].getIntelligence() + items[MAX_SLOTS + 1].getIntelligence() + items[MAX_SLOTS + 2].getIntelligence() + character.getIntelligence();
+		totalDefense = items[MAX_SLOTS].getDefense() + items[MAX_SLOTS + 1].getDefense() + items[MAX_SLOTS + 2].getDefense() + character.getDefense();
+		totalAgility = items[MAX_SLOTS].getAgility() + items[MAX_SLOTS + 1].getAgility() + items[MAX_SLOTS + 2].getAgility() + character.getAgility();
+		totalLuck = items[MAX_SLOTS].getLuck() + items[MAX_SLOTS + 1].getLuck() + items[MAX_SLOTS + 2].getLuck() + character.getLuck();
+		healthBar.setBounds(290, 75, (character.getHealth() / character.getMaxHealth()) * 181, 25);
+		manaBar.setBounds(manaBar.getX(), manaBar.getY(), (character.getMana() / character.getMaxMana()) * 181, 25);
+		healthBar.setToolTipText("<html>Health: <font color='red'>"+character.getHealth() + "</font>/<font color='red'>" + character.getMaxHealth());
+		manaBar.setToolTipText("<html>Mana: <font color='red'>"+character.getMana() + "</font>/<font color='red'>" + character.getMaxMana());
+	}
+	
+	public void setUpdate(boolean state) {
+		update = state;
+	}
+	
+	public void setUpdateInterval(int newIntervalMillis) {
+		updateInterval = newIntervalMillis;
+	}
+	
+	public int getTotalStrength() {
+		return totalStrength;
+	}
+	
+	public int getTotalIntelligence() {
+		return totalIntelligence;
+	}
+	
+	public int getTotalDefense() {
+		return totalDefense;
+	}
+	
+	public int getTotalLuck() {
+		return totalLuck;
+	}
+	
+	public int getTotalAgility() {
+		return totalAgility;
+	}
+	
 }

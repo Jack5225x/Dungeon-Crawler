@@ -21,6 +21,9 @@ public class TitleScreen implements MouseListener {
 	public JPanel dialog;
 	public JLabel[] pointer; 
 	public boolean runGif = false;
+	private GameWindow gw = new GameWindow();
+	public MouseListener ml = this;
+	public TitleText start, startHighlighted, exit, exitHighlighted;
 	
 	public TitleScreen(JPanel dialogPanel) {
 		dialog = new JPanel();
@@ -33,13 +36,13 @@ public class TitleScreen implements MouseListener {
 			dialog.add(pointer[i]);
 			pointer[i].setVisible(false);
 		}
-		pointer[0].setBounds(400, 132, 60, 25);
+		pointer[0].setBounds(375, 132, 60, 25);
 		//pointer[1].setBounds(r);
-		pointer[2].setBounds(415, 247, 60, 25);
+		pointer[2].setBounds(395, 247, 60, 25);
 		
 		// Add the background
 		// This will eventually be a looped gif, but for now a png works
-		title = new JLabel(gif("Sprites/TitleScreen/TitleScreenBackground3.png"));
+		title = new JLabel(gif("Sprites/TitleScreen/NewTitleScreenBackground.png"));
 		dialog.add(title);
 		title.addMouseListener(this);
 		
@@ -47,10 +50,16 @@ public class TitleScreen implements MouseListener {
 		// If these aren't defined, the mouse listener will run into a NullPointerException because it will try and disable them or something, idk
 		startText = new JLabel();
 		startTextHighlighted = new JLabel();
-		
+				
 		exitText = new JLabel();
 		exitTextHighlighted = new JLabel();
 		
+		// Pseudo-initialize this to prevent NullPointer
+		start = new TitleText(dialog);
+		startHighlighted = new TitleText(dialog);
+		exit = new TitleText(dialog);
+		exitHighlighted = new TitleText(dialog);
+
 	}
 	
 	@Override
@@ -60,20 +69,17 @@ public class TitleScreen implements MouseListener {
 			runTitle();
 			runGif = true;
 		} else {
-			GameWindow gw = new GameWindow();
 			int x = (int) (e.getLocationOnScreen().getX() - dialog.getLocationOnScreen().getX());
 			int y = (int) (e.getLocationOnScreen().getY() - dialog.getLocationOnScreen().getY());
 			//If the button is over the start button
-			if ((x > startText.getX() && x < startText.getX() + startText.getWidth()) && (y > startText.getY() && y < startText.getY() + startText.getHeight())) {
-				//SaveSelect ss = new SaveSelect();
-				//JOptionPane.showMessageDialog(null, ss.dialog);
-				//GameInstance instance = new GameInstance(GameWindow.frame);
-				gw.done = true;
+			if (start.isWithin(e)) {
+				dispose();
+				//SaveSelect ss = new SaveSelect(dialog);
+				// TODO make this able to transition to save screen easily
 			}
-			if ((x > exitText.getX() && x < exitText.getX() + exitText.getWidth()) && (y > exitText.getY() && y < exitText.getY() + exitText.getHeight())) {
+			if (exit.isWithin(e)) {
 				// Close the window
 				try {
-					gw = new GameWindow();
 					gw.close();
 				} catch (Exception ex) {
 					ex.printStackTrace();
@@ -99,6 +105,17 @@ public class TitleScreen implements MouseListener {
 			exitTextHighlighted.setVisible(true);
 			pointer[2].setVisible(true);
 		}
+				
+		if (start.isWithin(e)) {
+			start.setVisible(false);
+			startHighlighted.setVisible(true);
+			pointer[0].setVisible(true);
+		}
+		if (exit.isWithin(e)) {
+			exit.setVisible(false);
+			exitHighlighted.setVisible(true);
+			pointer[2].setVisible(true);
+		}
 
 	}
 	@Override
@@ -111,6 +128,11 @@ public class TitleScreen implements MouseListener {
 		startText.setVisible(true);
 		exitText.setVisible(true);
 		pointer[2].setVisible(false);
+		start.setVisible(true);
+		startHighlighted.setVisible(false);
+		exit.setVisible(true);
+		exitHighlighted.setVisible(false);
+
 	}
 	@Override
 	public void mousePressed(MouseEvent e) {
@@ -132,7 +154,7 @@ public class TitleScreen implements MouseListener {
 			titleButtons();
 			
 			// Add the animated picture
-			titleGif = new JLabel(gif("Sprites/TitleScreen/TitleScreenBackground3.png"));
+			titleGif = new JLabel(gif("Sprites/TitleScreen/NewTitleScreenBackground.gif"));
 			dialog.add(titleGif);
 			
 			// Remove the static picture
@@ -147,31 +169,51 @@ public class TitleScreen implements MouseListener {
 		// Add the buttons on the title screen using a fancy animation
 		// Since the animations don't loop, they can be reused as the non-highlighted buttons
 		// This includes adding the mouse listeners to these components, so that the button detection works later
-
 		// Start Button
+		/*
 		startTextHighlighted = new JLabel(gif("Sprites/TitleScreen/TitleScreenStartTextHighlighted.png"));
 		dialog.add(startTextHighlighted);
 		startTextHighlighted.setBounds(465, 120, 110, 45);
-		startTextHighlighted.addMouseListener(this);
 		// Set the highlighted button to not be visible
 		startTextHighlighted.setVisible(false);
 		startText = new JLabel(gif("Sprites/TitleScreen/TitleScreenStartTextFadeIn.gif"));
 		dialog.add(startText);
 		startText.setBounds(465, 120, 110, 45);
-		startText.addMouseListener(this);
-					
+		
 		// Exit Button
 		exitTextHighlighted = new JLabel(gif("Sprites/TitleScreen/TitleScreenExitTextHighlighted.png"));
 		dialog.add(exitTextHighlighted);
 		exitTextHighlighted.setBounds(480, 235, 110, 45);
-		exitTextHighlighted.addMouseListener(this);
 		// Set the highlighted button to not be visible
 		exitTextHighlighted.setVisible(false);
 		exitText = new JLabel(gif("Sprites/TitleScreen/TitleScreenExitTextFadeIn.gif"));
 		dialog.add(exitText);
 		exitText.setBounds(480, 235, 110, 45);
-		exitText.addMouseListener(this);
-
+		*/
+		start = new TitleText(dialog, "Start", 445, 130, 24, TitleText.CYAN);
+		start.addMouseListener(this);
+		startHighlighted = new TitleText(dialog, "Start", 445, 129, 26, TitleText.BLUE);
+		startHighlighted.setVisible(false);
+		exit = new TitleText(dialog, "Exit", 465, 245, 24, TitleText.CYAN);
+		exit.addMouseListener(this);
+		exitHighlighted = new TitleText(dialog, "Exit", 465, 244, 26, TitleText.BLUE);
+		exitHighlighted.addMouseListener(this);
+		exitHighlighted.setVisible(false);
+		// Add the mouse listeners after the animation finishes so it doesn't interrupt it
+		new Thread() {
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(1100);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				//startTextHighlighted.addMouseListener(ml);
+				//startText.addMouseListener(ml);
+				//exitTextHighlighted.addMouseListener(ml);
+				//exitText.addMouseListener(ml);
+			}
+		}.start();
 	}
 	
 	public ImageIcon gif(String path) {
@@ -187,6 +229,19 @@ public class TitleScreen implements MouseListener {
 
 	}
 	
+	public void dispose() {
+		startText.setVisible(false);
+		exitText.setVisible(false);
+		startTextHighlighted.setVisible(false);
+		exitTextHighlighted.setVisible(false);
+		startText.removeMouseListener(ml);
+		exitText.removeMouseListener(ml);
+		pointer[0].setVisible(false);
+		pointer[1].setVisible(false);
+		pointer[2].setVisible(false);
+		titleGif.setVisible(false);
+		dialog.removeAll();
+	}
 }
 
 

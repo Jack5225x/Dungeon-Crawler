@@ -6,9 +6,9 @@ import javax.swing.ImageIcon;
 
 public class Helmet {
 
-	public int defense, rarity, agility, luck, intelligence, strength;
-	public ImageIcon sprite;
-	public String name, toolTip;
+	private int defense, rarity, agility, luck, intelligence, strength;
+	private ImageIcon sprite;
+	private String name, toolTip, descr;
 	
 	public Helmet(String itemName, String itemDescr, int itemRarity, int itemArmorRating, int itemStrength, int itemIntelligence, int itemAgility, int itemLuck, ImageIcon itemSprite) {
 		defense = itemArmorRating;
@@ -18,6 +18,7 @@ public class Helmet {
 		strength = itemStrength;
 		name = itemName;
 		sprite = itemSprite;
+		descr = itemDescr;
 		String descr = DescrWrap.descrWrap(itemDescr, name);
 		String rarityColor = "";
 		switch (itemRarity) {
@@ -44,5 +45,44 @@ public class Helmet {
 		toolTip = "<html> <b><font color='"+rarityColor+"'>"+name+"</font><br>Armor: <font color='red'>"+defense+"</font><br>"+stats+"<i>"+descr;
 	}
 
+	public int getDefense() {
+		return defense;
+	}
+	
+	public int getStrength() {
+		return strength;
+	}
+	
+	public int getIntelligence() {
+		return intelligence;
+	}
+	
+	public int getAgility() {
+		return agility;
+	}
+	
+	public int getLuck() {
+		return luck;
+	}
+		
+	public int getRarity() {
+		return rarity;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public String getDescr() {
+		return descr;
+	}
+	
+	public String getToolTip() {
+		return toolTip;
+	}
+	
+	public ImageIcon getSprite() {
+		return sprite;
+	}
 	
 }
