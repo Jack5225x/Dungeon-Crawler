@@ -28,12 +28,15 @@ public class Inventory extends JPanel implements MouseListener {
 	public Item[] items;
 	public JLabel healthBar, manaBar;
 	public JButton armorSlot, weaponSlot, helmetSlot, statsButton;
-	public final int MAX_SLOTS = 10;
+	public static final int MAX_SLOTS = 10;
 	public int weaponSlotIndex, armorSlotIndex, helmetSlotIndex, capacity;
 	public int[][] slotLocations = {{10, 20}, {10, 80}, {65, 20}, {65, 80}, {120, 20}, {120, 80}, {175, 20}, {175, 80}, {230, 20}, {230, 80}, {540, 20} ,{540, 80}, {485, 50}};
 	private int totalStrength, totalDefense, totalAgility, totalLuck, totalIntelligence;
 	private volatile boolean update = false;
-	private int updateInterval = 200;
+	private int updateInterval = 50;
+	public static final int WEAPON_SLOT = MAX_SLOTS + 2;
+	public static final int ARMOR_SLOTS = MAX_SLOTS + 1;
+	public static final int HELMET_SLOT = MAX_SLOTS;
 	
 	public Inventory(Character c, int inventoryCapacity) throws InventoryCapacityException {
 		character = c;
@@ -112,8 +115,8 @@ public class Inventory extends JPanel implements MouseListener {
 			// Add the health and mana bars
 			healthBar = new JLabel(new ImageIcon("Sprites/Inventory/HealthBar.png"));
 			healthBar.setBounds(290, 75, 181, 25);
-			dialog.add(healthBar);
-
+			dialog.add(healthBar);		
+					
 			manaBar = new JLabel(new ImageIcon("Sprites/Inventory/ManaBar.png"));
 			manaBar.setBounds(290, 105, 181, 25);
 			dialog.add(manaBar);
@@ -358,15 +361,22 @@ public class Inventory extends JPanel implements MouseListener {
 	}
 	
 	public void updateStats() {
-		totalStrength = items[MAX_SLOTS].getStrength() + items[MAX_SLOTS + 1].getStrength() + items[MAX_SLOTS + 2].getStrength() + character.getStrength();
-		totalIntelligence = items[MAX_SLOTS].getIntelligence() + items[MAX_SLOTS + 1].getIntelligence() + items[MAX_SLOTS + 2].getIntelligence() + character.getIntelligence();
-		totalDefense = items[MAX_SLOTS].getDefense() + items[MAX_SLOTS + 1].getDefense() + items[MAX_SLOTS + 2].getDefense() + character.getDefense();
-		totalAgility = items[MAX_SLOTS].getAgility() + items[MAX_SLOTS + 1].getAgility() + items[MAX_SLOTS + 2].getAgility() + character.getAgility();
-		totalLuck = items[MAX_SLOTS].getLuck() + items[MAX_SLOTS + 1].getLuck() + items[MAX_SLOTS + 2].getLuck() + character.getLuck();
-		healthBar.setBounds(290, 75, (character.getHealth() / character.getMaxHealth()) * 181, 25);
-		manaBar.setBounds(manaBar.getX(), manaBar.getY(), (character.getMana() / character.getMaxMana()) * 181, 25);
-		healthBar.setToolTipText("<html>Health: <font color='red'>"+character.getHealth() + "</font>/<font color='red'>" + character.getMaxHealth());
-		manaBar.setToolTipText("<html>Mana: <font color='red'>"+character.getMana() + "</font>/<font color='red'>" + character.getMaxMana());
+		if (character.getHealth() != 0) {
+			totalStrength = items[MAX_SLOTS].getStrength() + items[MAX_SLOTS + 1].getStrength() + items[MAX_SLOTS + 2].getStrength() + character.getStrength();
+			totalIntelligence = items[MAX_SLOTS].getIntelligence() + items[MAX_SLOTS + 1].getIntelligence() + items[MAX_SLOTS + 2].getIntelligence() + character.getIntelligence();
+			totalDefense = items[MAX_SLOTS].getDefense() + items[MAX_SLOTS + 1].getDefense() + items[MAX_SLOTS + 2].getDefense() + character.getDefense();
+			totalAgility = items[MAX_SLOTS].getAgility() + items[MAX_SLOTS + 1].getAgility() + items[MAX_SLOTS + 2].getAgility() + character.getAgility();
+			totalLuck = items[MAX_SLOTS].getLuck() + items[MAX_SLOTS + 1].getLuck() + items[MAX_SLOTS + 2].getLuck() + character.getLuck();
+			healthBar.setBounds(290, 75, (int)(((double)character.getHealth() / (double)character.getMaxHealth()) * 181), 25);
+			manaBar.setBounds(manaBar.getX(), manaBar.getY(), (int)(((double)character.getMana() / (double)character.getMaxMana()) * 181), 25);
+			healthBar.setToolTipText("<html>Health: <font color='red'>"+character.getHealth() + "</font>/<font color='red'>" + character.getMaxHealth());
+			manaBar.setToolTipText("<html>Mana: <font color='red'>"+character.getMana() + "</font>/<font color='red'>" + character.getMaxMana());
+		} else {
+			// What happens if you die
+			// TODO: ?
+			//instance.dispose();
+			System.out.println("Dead");
+		}
 	}
 	
 	public void setUpdate(boolean state) {
@@ -395,6 +405,26 @@ public class Inventory extends JPanel implements MouseListener {
 	
 	public int getTotalAgility() {
 		return totalAgility;
+	}
+	
+	// This method should be used in place of the method of the same name in Character
+	public void setActiveWeapon(Weapon weapon) {
+		character.setActiveWeapon(weapon);
+		addItemToSlot(weapon, WEAPON_SLOT);
+	}
+	
+	public void setSlots(int newCapacity) {
+		if (newCapacity > capacity) {
+			for (int i = capacity; i < newCapacity; i++) {
+				slots[i].setVisible(true);
+			}
+		} 
+		if (newCapacity < capacity){
+			for (int i = newCapacity; i < MAX_SLOTS; i++) {
+				slots[i].setVisible(false);
+			}
+		}
+		capacity = newCapacity;
 	}
 	
 }

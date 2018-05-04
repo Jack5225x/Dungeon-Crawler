@@ -130,8 +130,11 @@ public class GameInstance extends JPanel implements KeyListener, MouseListener, 
 			player.updateSprite();
 			level.move(getGraphics());
 			repaint();
-			character.getActiveWeapon().updateShoot();
-			
+			try {
+				character.getActiveWeapon().updateShoot();
+			} catch (NullPointerException ex) {
+				// Ignore the error
+			}
 		}
 		
 	}
@@ -202,5 +205,5 @@ public class GameInstance extends JPanel implements KeyListener, MouseListener, 
 		// Won't be used
 		
 	}
-
+	
 }

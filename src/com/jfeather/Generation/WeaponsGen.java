@@ -131,6 +131,77 @@ public class WeaponsGen {
 		return sword;
 	}
 	
+	public static Weapon genWeapon(Character c) {
+		String weaponType = genType();
+		Random rand = new Random();
+		
+		String spritesFolder = weaponType.substring(0, 1).toUpperCase() + weaponType.substring(1, weaponType.length()).toLowerCase() + "s/";
+		
+		int rar = rand.nextInt(1000 + c.getLevel() * 5);
+		String descr = "";
+		int rarity = 0;
+		if (rar > 750)
+			rarity = 1;
+		if (rar > 850)
+			rarity = 2;
+		if (rar > 900)
+			rarity = 3;
+		if (rar > 940)
+			rarity = 4;
+		if (rar > 970)
+			rarity = 5;
+		if (rar > 990)
+			rarity = 6;
+		
+		String[] nameComponents = genName(weaponType, rarity);
+		String name = nameComponents[0];
+		descr = genDescr(nameComponents, weaponType, rarity);
+		
+		int type = rand.nextInt(4);
+		int intelligence = 0, strength = 0, luck = 0, agility = 0, speed = 0;
+		
+		switch (type) {
+			case 0:
+				// Int
+				intelligence = rand.nextInt(c.getLevel() * 2) + (rarity + 1) * 2;
+				strength = 0;
+				agility = rand.nextInt((int)(c.getLevel() / 10 + 1) + 1);
+				luck = rand.nextInt((int)(c.getLevel() / 10 + 1) + 1);
+				speed = rand.nextInt(10) + 3;
+				break;
+			case 1:
+				// Str
+				strength = rand.nextInt(c.getLevel() * 2) + (rarity + 1) * 2;
+				intelligence = 0;
+				luck = rand.nextInt(c.getLevel() / 5 + 1) + (rarity + 1) * 2;
+				agility = rand.nextInt(c.getLevel() / 10 + 1) + (rarity + 1) * 2;
+				speed = rand.nextInt(6) + 3;
+				break;
+			case 2:
+				// Luck
+				strength = rand.nextInt(c.getLevel() / 2 + 1);
+				intelligence = rand.nextInt(c.getLevel() / 2 + 1);
+				luck = rand.nextInt(c.getLevel());
+				agility = rand.nextInt(c.getLevel() / 5 + 1) + (rarity + 1) * 2;
+				speed = rand.nextInt(12) + 3;
+				break;
+			case 3:
+				// Agi
+				strength = rand.nextInt(c.getLevel() / 2 + 1);
+				intelligence = rand.nextInt(c.getLevel() / 2 + 1);
+				agility = rand.nextInt(c.getLevel());
+				luck = rand.nextInt(c.getLevel() / 5 + 1) + (rarity + 1) * 2;
+				speed = rand.nextInt(10) + 6;
+				break;
+		}
+		
+		int damage = rand.nextInt(c.getLevel()) + ((rarity + 1) * c.getLevel()) * 2;
+		double range = genRange(weaponType);
+		Weapon sword =  new Weapon(name, descr, rarity, damage, speed, range, strength, intelligence, agility, luck, genSprite("Sprites/Items/Weapons/" + spritesFolder, rarity), genProjectile("Sprites/Items/Weapons/" + spritesFolder, rarity));	
+		return sword;
+	}
+
+	
 	public static ImageIcon genSprite(String folderName, int rarity) {
 		Random rng = new Random();
 		File[] arr = null;
@@ -369,5 +440,11 @@ public class WeaponsGen {
 		}
 		Random rng = new Random();
 		return (double) ((rng.nextInt((int) max * 10) + min * 10)) / 10;
+	}
+	
+	public static String genType() {
+		Random rng = new Random();
+		String[] arr = Weapon.TYPES;
+		return arr[rng.nextInt(arr.length)];
 	}
 }

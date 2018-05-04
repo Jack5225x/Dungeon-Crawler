@@ -29,8 +29,8 @@ public class GameWindow extends JFrame {
 	public static GameWindow frame;
 	public GameInstance instance;
 	public volatile TitleScreen ts;
-	public static String TITLE = "Dungeon Dash";
-	// TODO: credit to cheesy for the title
+	public static final String TITLE = "Dungeon Dash";
+	// TODO: credit to Cheesy for the title
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -47,7 +47,7 @@ public class GameWindow extends JFrame {
 	
 	public GameWindow() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 640, 480);
+		setBounds(100, 100, 640, 600);
 		contentPane = new JPanel();
 		contentPane.setLayout(new BorderLayout());
 		setContentPane(contentPane);
@@ -56,7 +56,6 @@ public class GameWindow extends JFrame {
 		
 		Character jack = new Character("Jack");
 		jack.setAgility(200);
-		//Inventory inv = createInv(jack, 10);
 		
 		GameInstance instance = new GameInstance(jack);
 		add(instance);
@@ -67,18 +66,26 @@ public class GameWindow extends JFrame {
 		addMouseMotionListener(instance.MML);
 		//inv.addMouseMotionListener(instance.MML);
 		instance.setFPS(60);
-		jack.setActiveWeapon(WeaponsGen.genWeapon(jack, Weapon.SWORD));
+		//jack.setActiveWeapon(WeaponsGen.genWeapon(jack, Weapon.BOW));
 		
+		Inventory inv = createInv(jack, 5);
+		inv.setActiveWeapon(WeaponsGen.genWeapon(jack, Weapon.WAND));
 		/*
-		for (int i = 0; i < 9; i++) {
-			Weapon testSword = WeaponsGen.genWeapon(jack, Weapon.SWORD);
+		for (int i = 0; i < 5; i++) {
+			Weapon testSword = WeaponsGen.genWeapon(jack, Weapon.WAND);
 			inv.addItem(testSword);
 		}
+		
+		for (int i = 5; i < 10; i++) {
+			Weapon testSword = WeaponsGen.genWeapon(jack, Weapon.BOW);
+			inv.addItem(testSword);
+		}
+		
 		/*
-		/*Thread title = new Thread() {
+		Thread title = new Thread() {
 			@Override
 			public void run() {
-				ts = new TitleScreen(contentPane);
+				ts = new TitleScreen(contentPane, jack);
 				pack();
 			}
 		};
@@ -90,17 +97,16 @@ public class GameWindow extends JFrame {
 			public void run() {
 				while (true) {
 					try {
-						Thread.sleep(500);
+						Thread.sleep(50);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					//jack.subtractHealth(1);
+					jack.subtractHealth(1);
 				}
 			}
 		}.start();
-		//inv.setUpdate(true);
-		//inv.setUpdateInterval(1000);
+		inv.setUpdate(true);
+		//inv.setUpdateInterval(40);
 		
 	}
 	
@@ -109,7 +115,7 @@ public class GameWindow extends JFrame {
 		try {
 			inv = new Inventory(c, capacity);
 			contentPane.add(inv.dialog, BorderLayout.SOUTH);
-			// This has to be here to initialize the tooltips, because otherwise they are only done when you click
+			// This has to be here to initialize the tool tips, because otherwise they are only initialized when you click
 			for (int i = 0; i < capacity; i++) {
 				inv.slots[i].setToolTipText("Empty Slot");
 			}
@@ -119,9 +125,9 @@ public class GameWindow extends JFrame {
 		}
 		return null;
 	}
-		
+	
 	public void close() {
 		frame.dispose();
 	}
-
+	
 }

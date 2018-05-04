@@ -19,6 +19,8 @@ public class Weapon {
 	public static String HAMMER = "hammer";
 	public static String CROSSBOW = "crossbow";
 	
+	public static String[] TYPES = {SWORD, DAGGER, WAND, STAFF, BOW, HAMMER, CROSSBOW};
+	
 	private int damage, strength, intelligence, speed, rarity, agility, luck;
 	private double range;
 	private ImageIcon sprite, projectile;
@@ -149,7 +151,7 @@ public class Weapon {
 						labels[i].setVisible(true);
 						try {
 							Thread.sleep((int) (speed * 2.5));
-							//labels[i].setVisible(false);
+							labels[i].setVisible(false);
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}

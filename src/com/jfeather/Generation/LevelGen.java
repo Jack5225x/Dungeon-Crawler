@@ -280,7 +280,7 @@ public class LevelGen {
 		while (true) {
 			int i = rng.nextInt(arr.length);
 			if (!arr[i].getName().equals(".directory")) {
-				System.out.println(arr[i].getName());
+				//System.out.println(arr[i].getName());
 				return new ImageIcon(arr[i].getPath()).getImage();
 			}
 		}
