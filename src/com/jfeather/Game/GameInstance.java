@@ -132,8 +132,8 @@ public class GameInstance extends JPanel implements KeyListener, MouseListener, 
 			repaint();
 			try {
 				character.getActiveWeapon().updateShoot();
-			} catch (NullPointerException ex) {
 				// Ignore the error
+			} catch (NullPointerException ex) {
 			}
 		}
 		

@@ -55,7 +55,7 @@ public class GameWindow extends JFrame {
 		setResizable(false);
 		
 		Character jack = new Character("Jack");
-		jack.setAgility(200);
+		//jack.setAgility(200);
 		
 		GameInstance instance = new GameInstance(jack);
 		add(instance);
@@ -69,7 +69,8 @@ public class GameWindow extends JFrame {
 		//jack.setActiveWeapon(WeaponsGen.genWeapon(jack, Weapon.BOW));
 		
 		Inventory inv = createInv(jack, 5);
-		inv.setActiveWeapon(WeaponsGen.genWeapon(jack, Weapon.WAND));
+		inv.setActiveWeapon(WeaponsGen.genWeapon(jack, Weapon.BOW));
+		
 		/*
 		for (int i = 0; i < 5; i++) {
 			Weapon testSword = WeaponsGen.genWeapon(jack, Weapon.WAND);
@@ -95,16 +96,17 @@ public class GameWindow extends JFrame {
 		new Thread () {
 			@Override
 			public void run() {
-				while (true) {
+				//while (true) {
 					try {
-						Thread.sleep(50);
+						Thread.sleep(1000);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
-					jack.subtractHealth(1);
-				}
+					//jack.subtractHealth(75);
+				//}
 			}
 		}.start();
+		
 		inv.setUpdate(true);
 		//inv.setUpdateInterval(40);
 		
@@ -114,7 +116,7 @@ public class GameWindow extends JFrame {
 		Inventory inv;
 		try {
 			inv = new Inventory(c, capacity);
-			contentPane.add(inv.dialog, BorderLayout.SOUTH);
+			contentPane.add(inv, BorderLayout.SOUTH);
 			// This has to be here to initialize the tool tips, because otherwise they are only initialized when you click
 			for (int i = 0; i < capacity; i++) {
 				inv.slots[i].setToolTipText("Empty Slot");

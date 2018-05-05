@@ -1,6 +1,7 @@
 package com.jfeather.Items;
 
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -30,6 +31,8 @@ public class Weapon {
 	private int mouseX, mouseY;
 	private JPanel dialog;
 	private volatile int[][] arr;
+	private volatile ArrayList<int[][]> shotPaths;
+	private volatile int shotCount;
 	
 	public Weapon(String itemName, String itemDescr, int itemRarity, int itemDamage, int itemSpeed, double itemRange, int itemStrength, int itemIntelligence, int itemAgility, int itemLuck, ImageIcon itemSprite, ImageIcon itemProjectile) {
 		strength = itemStrength;
@@ -45,6 +48,8 @@ public class Weapon {
 		name = itemName;
 		descr = itemDescr;
 		String rarityColor = "";
+		shotCount = 0;
+		shotPaths = new ArrayList<>();
 		switch (itemRarity) {
 			case 0: rarityColor = "black"; break;
 			case 1: rarityColor = "white"; break;
@@ -136,27 +141,29 @@ public class Weapon {
 	public void shoot(int xo, int yo, int xf, int yf, JPanel dialog) {
 		if (name != null) {
 			Line path = new Line(xo, yo, xf, yf);
-			arr = path.genPoints(range);
+			shotPaths.add(shotCount, path.genPoints(range));
 			//path.printMatrix(arr);
-			JLabel[] labels = new JLabel[arr.length];
+			JLabel[] labels = new JLabel[shotPaths.get(shotCount).length];
 			new Thread() {
 				public void run() {
 					// Create a label for each position the projectile will be in during its path
-					for (int i = 0; i < arr.length; i++) {
+					for (int i = 0; i < shotPaths.get(shotCount).length; i++) {
 						labels[i] = new JLabel(projectile);
 						dialog.add(labels[i]);
 						//System.out.println(arr[i][0] + " " + arr[i][1]);
-						if (arr[i][0] > 0 && arr[i][1] > 0)
-							labels[i].setBounds(arr[i][0], arr[i][1], projectile.getIconWidth(), projectile.getIconHeight());
+						if (shotPaths.get(shotCount)[i][0] > 0 && shotPaths.get(shotCount)[i][1] > 0)
+							labels[i].setBounds(shotPaths.get(shotCount)[i][0], shotPaths.get(shotCount)[i][1], projectile.getIconWidth(), projectile.getIconHeight());
 						labels[i].setVisible(true);
 						try {
 							Thread.sleep((int) (speed * 2.5));
-							labels[i].setVisible(false);
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
+						//labels[i].setVisible(false);
 					}
+					shotCount++;
 				}
+				
 			}.start();
 		}
 	}
