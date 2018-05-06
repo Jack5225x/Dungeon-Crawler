@@ -1,5 +1,6 @@
 package com.jfeather.Items;
 
+import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
@@ -50,6 +51,7 @@ public class Weapon {
 		String rarityColor = "";
 		shotCount = 0;
 		shotPaths = new ArrayList<>();
+		System.out.println("initialized");
 		switch (itemRarity) {
 			case 0: rarityColor = "black"; break;
 			case 1: rarityColor = "white"; break;
@@ -143,25 +145,28 @@ public class Weapon {
 			Line path = new Line(xo, yo, xf, yf);
 			shotPaths.add(shotCount, path.genPoints(range));
 			//path.printMatrix(arr);
-			JLabel[] labels = new JLabel[shotPaths.get(shotCount).length];
+			Graphics2D g2d = (Graphics2D) dialog.getGraphics();
+			int index = shotCount;
+			shotCount++;
+			//JLabel[] labels = new JLabel[shotPaths.get(shotCount).length];
 			new Thread() {
 				public void run() {
 					// Create a label for each position the projectile will be in during its path
-					for (int i = 0; i < shotPaths.get(shotCount).length; i++) {
-						labels[i] = new JLabel(projectile);
-						dialog.add(labels[i]);
+					for (int i = 0; i < shotPaths.get(index).length; i++) {
+						g2d.drawImage(projectile.getImage(), shotPaths.get(index)[i][0], shotPaths.get(index)[i][1], null);
+						//labels[i] = new JLabel(projectile);
+						//dialog.add(labels[i]);
 						//System.out.println(arr[i][0] + " " + arr[i][1]);
-						if (shotPaths.get(shotCount)[i][0] > 0 && shotPaths.get(shotCount)[i][1] > 0)
-							labels[i].setBounds(shotPaths.get(shotCount)[i][0], shotPaths.get(shotCount)[i][1], projectile.getIconWidth(), projectile.getIconHeight());
-						labels[i].setVisible(true);
+						//if (shotPaths.get(shotCount)[i][0] > 0 && shotPaths.get(shotCount)[i][1] > 0)
+							//labels[i].setBounds(shotPaths.get(shotCount)[i][0], shotPaths.get(shotCount)[i][1], projectile.getIconWidth(), projectile.getIconHeight());
+						//labels[i].setVisible(true);
 						try {
-							Thread.sleep((int) (speed * 2.5));
+							Thread.sleep((int) (speed * 1.5));
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
 						//labels[i].setVisible(false);
 					}
-					shotCount++;
 				}
 				
 			}.start();
@@ -214,10 +219,12 @@ public class Weapon {
 	}
 	
 	public void setArr(int[][] newArr) {
-		arr = newArr;
+		shotPaths.set(shotCount, newArr);
 	}
 	
 	public int[][] getArr() {
-		return arr;
+		if (shotPaths.get(shotCount) != null)
+			return shotPaths.get(shotCount);
+		return new int[1][2];
 	}
 }

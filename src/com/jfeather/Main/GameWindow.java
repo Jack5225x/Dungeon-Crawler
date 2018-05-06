@@ -1,6 +1,7 @@
 package com.jfeather.Main;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
@@ -53,11 +54,13 @@ public class GameWindow extends JFrame {
 		setContentPane(contentPane);
 		setTitle(TITLE);
 		setResizable(false);
+		setBackground(new Color(255, 0, 0));
 		
 		Character jack = new Character("Jack");
 		//jack.setAgility(200);
 		
 		GameInstance instance = new GameInstance(jack);
+		//add(instance, BorderLayout.NORTH);
 		add(instance);
 		addKeyListener(instance.KL);
 		//inv.addKeyListener(instance.KL);
@@ -69,8 +72,8 @@ public class GameWindow extends JFrame {
 		//jack.setActiveWeapon(WeaponsGen.genWeapon(jack, Weapon.BOW));
 		
 		Inventory inv = createInv(jack, 5);
-		inv.setActiveWeapon(WeaponsGen.genWeapon(jack, Weapon.BOW));
-		
+		inv.setActiveWeapon(WeaponsGen.genWeapon(jack, Weapon.SWORD));
+
 		/*
 		for (int i = 0; i < 5; i++) {
 			Weapon testSword = WeaponsGen.genWeapon(jack, Weapon.WAND);
@@ -116,7 +119,7 @@ public class GameWindow extends JFrame {
 		Inventory inv;
 		try {
 			inv = new Inventory(c, capacity);
-			contentPane.add(inv, BorderLayout.SOUTH);
+			//add(inv, BorderLayout.SOUTH);
 			// This has to be here to initialize the tool tips, because otherwise they are only initialized when you click
 			for (int i = 0; i < capacity; i++) {
 				inv.slots[i].setToolTipText("Empty Slot");

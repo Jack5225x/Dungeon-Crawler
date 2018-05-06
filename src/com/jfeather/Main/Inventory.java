@@ -245,7 +245,6 @@ public class Inventory extends JPanel implements MouseListener {
 		items[slot] = new Item(armor);
 	}
 	
-	
 	public void addItemToSlot(Helmet helmet, int slot) {
 		slots[slot].setIcon(helmet.getSprite());
 		slots[slot].setToolTipText(helmet.getToolTip());
@@ -328,7 +327,6 @@ public class Inventory extends JPanel implements MouseListener {
 		}
 	}
 
-
 	public void removeItem(int slot) {
 		slots[slot].setIcon(null);
 		slots[slot].setToolTipText("Empty Slot");
@@ -347,18 +345,15 @@ public class Inventory extends JPanel implements MouseListener {
 		items[slot2] = tempItem;
 	}
 
-
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		
 	}
 
-
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
 		
 	}
-
 
 	@Override
 	public void mouseExited(MouseEvent arg0) {
@@ -412,7 +407,6 @@ public class Inventory extends JPanel implements MouseListener {
 		character.setActiveWeapon(items[MAX_SLOTS + 2].toWeapon());
 		character.setActiveArmor(items[MAX_SLOTS + 1].toArmor());
 		character.setActiveHelmet(items[MAX_SLOTS].toHelmet());
-		
 	}
 	
 	public void updateStats() {
@@ -421,6 +415,8 @@ public class Inventory extends JPanel implements MouseListener {
 			totalIntelligence = items[MAX_SLOTS].getIntelligence() + items[MAX_SLOTS + 1].getIntelligence() + items[MAX_SLOTS + 2].getIntelligence() + character.getIntelligence();
 			totalDefense = items[MAX_SLOTS].getDefense() + items[MAX_SLOTS + 1].getDefense() + items[MAX_SLOTS + 2].getDefense() + character.getDefense();
 			totalAgility = items[MAX_SLOTS].getAgility() + items[MAX_SLOTS + 1].getAgility() + items[MAX_SLOTS + 2].getAgility() + character.getAgility();
+			
+			// TODO: make this be cropped, because right now, when your health decreases, it just moves it bar to the left sorta
 			totalLuck = items[MAX_SLOTS].getLuck() + items[MAX_SLOTS + 1].getLuck() + items[MAX_SLOTS + 2].getLuck() + character.getLuck();
 			healthBar.setBounds(290, 75, (int)(((double)character.getHealth() / (double)character.getMaxHealth()) * 181), 25);
 			manaBar.setBounds(manaBar.getX(), manaBar.getY(), (int)(((double)character.getMana() / (double)character.getMaxMana()) * 181), 25);

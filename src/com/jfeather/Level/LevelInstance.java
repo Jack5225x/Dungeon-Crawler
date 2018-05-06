@@ -234,7 +234,7 @@ public class LevelInstance {
 			// Old stuff
 			x += dx;
 			y += dy;
-			//moveShots();
+			moveShots();
 			
 			addIncrementsToMap(dx, dy);
 			if (rollReady && roll)
@@ -251,10 +251,16 @@ public class LevelInstance {
 	}
 	
 	private void moveShots() {
-		int[][] arr = weapon.getArr();
-		for (int i = 0; i < arr.length; i++) {
-			arr[i][0] += dx;
-			arr[i][1] += dy;
+		weapon = character.getActiveWeapon();
+		if (weapon != null) {
+			int[][] arr = weapon.getArr();
+			System.out.println(arr.length);
+			for (int i = 0; i < arr.length; i++) {
+				arr[i][0] += dx;
+				arr[i][1] += dy;
+			}
+			weapon.setArr(arr);
+			System.out.println("moved");
 		}
 	}
 	
