@@ -12,7 +12,7 @@ public class PlayerInstance {
 	private int dx, dy, x, y, w, h, angle, da;
 	private boolean right = false, left = false, up = false, down = false, roll = false;
 	private Image sprite;
-	private int rollCooldown = 2500;
+	private int rollCooldown = 1500;
 	private boolean rollReady = true;
 	private Character character;
 	private int facing;

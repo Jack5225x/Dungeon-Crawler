@@ -39,11 +39,13 @@ public class Inventory extends JPanel implements MouseListener {
 	private boolean showStats;
 	private JLabel statsLine1, statsLine2, statsLine3;
 	private TitleText statsName;
+	private int manaTimer;
 	
 	public Inventory(Character c, int inventoryCapacity) throws InventoryCapacityException {
 		character = c;
 		capacity = inventoryCapacity;
 		showStats = false;
+		manaTimer = 0;
 		if (inventoryCapacity > MAX_SLOTS)
 			throw new InventoryCapacityException();
 		else {
@@ -411,6 +413,13 @@ public class Inventory extends JPanel implements MouseListener {
 	
 	public void updateStats() {
 		if (character.getHealth() != 0) {
+			manaTimer++;
+			// Auto regen mana
+			if (character.getMana() < character.getMaxMana() && manaTimer > 8) {
+				character.addMana(1);
+				manaTimer = 0;
+			}
+			
 			totalStrength = items[MAX_SLOTS].getStrength() + items[MAX_SLOTS + 1].getStrength() + items[MAX_SLOTS + 2].getStrength() + character.getStrength();
 			totalIntelligence = items[MAX_SLOTS].getIntelligence() + items[MAX_SLOTS + 1].getIntelligence() + items[MAX_SLOTS + 2].getIntelligence() + character.getIntelligence();
 			totalDefense = items[MAX_SLOTS].getDefense() + items[MAX_SLOTS + 1].getDefense() + items[MAX_SLOTS + 2].getDefense() + character.getDefense();

@@ -39,6 +39,7 @@ public class LevelInstance {
 	private Robot bot;
 	private Color background;
 	private Theme theme;
+	private static final int ROLL_COST = 25;
 	
 	public LevelInstance(int floorNumber, PlayerInstance p, GameInstance i, Theme newTheme) {
 		floor = floorNumber;
@@ -234,10 +235,10 @@ public class LevelInstance {
 			// Old stuff
 			x += dx;
 			y += dy;
-			moveShots();
+			//moveShots();
 			
 			addIncrementsToMap(dx, dy);
-			if (rollReady && roll)
+			if (rollReady && roll && character.getMana() > ROLL_COST)
 				roll();
 		//}
 	}
@@ -349,6 +350,7 @@ public class LevelInstance {
     		    						dx = (int)(-d / root);
     		    						dy = (int)(d / root);
     								} else {
+    									// If the player is standing still, roll in the direction they are looking
     									if (player.getDirection() == PlayerInstance.DIR_RIGHT) {
     										dx = -d;
     										dy = 0;
@@ -402,7 +404,6 @@ public class LevelInstance {
     				try {
 						Thread.sleep(2);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
     			}
@@ -428,7 +429,6 @@ public class LevelInstance {
     				try {
 						Thread.sleep(2);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
     			}
@@ -439,10 +439,10 @@ public class LevelInstance {
 
     	
     	// Activate the cooldown
-    	if (character.getAgility() < 150)
-    		rollCooldown = 2500 - character.getAgility() * 10;
+    	if (character.getAgility() < 100)
+    		rollCooldown = 1500 - character.getAgility() * 10;
     	else
-    		rollCooldown = 750;
+    		rollCooldown = 500;
     	rollReady = false;
     	new Thread() {
     		@Override
@@ -450,16 +450,17 @@ public class LevelInstance {
     			try {
 					Thread.sleep(rollCooldown);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
     			rollReady = true;
     		}
     	}.start();
     	dy = 0;
-    	dx = 0;
+    	dx = 0; 
+    	character.subtractMana(ROLL_COST);
     }
     
+    // Deprecated Method (more or less)
     public void toggleOffset() {
     	isOffset = !isOffset;
     	if (isOffset) {
@@ -471,6 +472,7 @@ public class LevelInstance {
     	}
     }
     
+    // Deprecated Method
     public void rotate(Graphics g, Image image, int angle) {
     	Graphics2D g2d = (Graphics2D) g.create();
     	g2d.rotate(Math.toRadians(angle), player.getX(), player.getY());

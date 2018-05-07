@@ -51,7 +51,6 @@ public class Weapon {
 		String rarityColor = "";
 		shotCount = 0;
 		shotPaths = new ArrayList<>();
-		System.out.println("initialized");
 		switch (itemRarity) {
 			case 0: rarityColor = "black"; break;
 			case 1: rarityColor = "white"; break;
@@ -107,6 +106,10 @@ public class Weapon {
 		return speed;
 	}
 	
+	public void setSpeed(int newSpeed) {
+		speed = newSpeed;
+	}
+	
 	public double getRange() {
 		return range;
 	}
@@ -145,27 +148,22 @@ public class Weapon {
 			Line path = new Line(xo, yo, xf, yf);
 			shotPaths.add(shotCount, path.genPoints(range));
 			//path.printMatrix(arr);
+			
 			Graphics2D g2d = (Graphics2D) dialog.getGraphics();
 			int index = shotCount;
 			shotCount++;
-			//JLabel[] labels = new JLabel[shotPaths.get(shotCount).length];
 			new Thread() {
 				public void run() {
 					// Create a label for each position the projectile will be in during its path
 					for (int i = 0; i < shotPaths.get(index).length; i++) {
 						g2d.drawImage(projectile.getImage(), shotPaths.get(index)[i][0], shotPaths.get(index)[i][1], null);
-						//labels[i] = new JLabel(projectile);
-						//dialog.add(labels[i]);
-						//System.out.println(arr[i][0] + " " + arr[i][1]);
-						//if (shotPaths.get(shotCount)[i][0] > 0 && shotPaths.get(shotCount)[i][1] > 0)
-							//labels[i].setBounds(shotPaths.get(shotCount)[i][0], shotPaths.get(shotCount)[i][1], projectile.getIconWidth(), projectile.getIconHeight());
-						//labels[i].setVisible(true);
 						try {
 							Thread.sleep((int) (speed * 1.5));
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
-						//labels[i].setVisible(false);
+						// Pretty sure its just luck that makes this work
+						// i.e. you don't have to delete the projectiles because they just get written over
 					}
 				}
 				
@@ -182,7 +180,7 @@ public class Weapon {
 				public void run() {
 					shootReady = false;
 					try {
-						// TODO Make this properly scale with speed or something
+						// TODO: Make this properly scale with speed or something
 						// It sorta does this now, but it can certainly be improved
 						Thread.sleep(1000 / speed);
 					} catch (InterruptedException e) {

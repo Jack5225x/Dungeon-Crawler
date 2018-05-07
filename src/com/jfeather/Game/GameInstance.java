@@ -26,7 +26,7 @@ import com.jfeather.Player.PlayerInstance;
 import com.jfeather.Player.Character;
 
 
-public class GameInstance extends JPanel implements KeyListener, MouseListener, MouseMotionListener {
+public class GameInstance extends JPanel implements MouseListener, MouseMotionListener, KeyListener {
 	
 		
 	private static final long serialVersionUID = 1L;
@@ -59,20 +59,19 @@ public class GameInstance extends JPanel implements KeyListener, MouseListener, 
 	}
 	
 	public void initialize() {
-		addKeyListener(this);
+		//addKeyListener(this);
+		
 		// The only reason you need a separate, named dimension is to define width and height below
 		Dimension dim = new Dimension(640, 340);
 		setPreferredSize(dim);
 		setDoubleBuffered(true);
-		setBackground(Color.BLACK);
 		width = (int)(dim.getWidth());
 		height = (int)(dim.getHeight());
-
+		requestFocus();
 		player = new PlayerInstance(character, width / 2, (int)(height * .5));
 		
-		//level = new LevelInstance(1, player, this);
 		try {
-			level = LevelGen.genHalls(floor = 1, player, this, new Theme(Theme.RAINBOW));
+			level = LevelGen.genHalls(floor = 1, player, this, new Theme(Theme.OCEAN));
 		} catch (UnsupportedThemeException e) {
 			e.printStackTrace();
 		}

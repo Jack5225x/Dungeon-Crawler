@@ -48,22 +48,23 @@ public class GameWindow extends JFrame {
 	
 	public GameWindow() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 640, 600);
+		setBounds(100, 100, 640, 520);
 		contentPane = new JPanel();
 		contentPane.setLayout(new BorderLayout());
 		setContentPane(contentPane);
 		setTitle(TITLE);
 		setResizable(false);
-		setBackground(new Color(255, 0, 0));
+		setBackground(new Color(0, 0, 0));
 		
 		Character jack = new Character("Jack");
 		//jack.setAgility(200);
-		
+		Inventory inv = createInv(jack, 5);
+
 		GameInstance instance = new GameInstance(jack);
 		//add(instance, BorderLayout.NORTH);
 		add(instance);
 		addKeyListener(instance.KL);
-		//inv.addKeyListener(instance.KL);
+		inv.addKeyListener(instance.KL);
 		addMouseListener(instance.ML);
 		//inv.addMouseListener(instance.ML);
 		addMouseMotionListener(instance.MML);
@@ -71,9 +72,8 @@ public class GameWindow extends JFrame {
 		instance.setFPS(60);
 		//jack.setActiveWeapon(WeaponsGen.genWeapon(jack, Weapon.BOW));
 		
-		Inventory inv = createInv(jack, 5);
-		inv.setActiveWeapon(WeaponsGen.genWeapon(jack, Weapon.SWORD));
-
+		Weapon test = WeaponsGen.genWeapon(jack, Weapon.BOW);
+		inv.setActiveWeapon(test);
 		/*
 		for (int i = 0; i < 5; i++) {
 			Weapon testSword = WeaponsGen.genWeapon(jack, Weapon.WAND);
@@ -105,7 +105,7 @@ public class GameWindow extends JFrame {
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
-					//jack.subtractHealth(75);
+					//jack.subtractMana(50);
 				//}
 			}
 		}.start();
@@ -119,7 +119,8 @@ public class GameWindow extends JFrame {
 		Inventory inv;
 		try {
 			inv = new Inventory(c, capacity);
-			//add(inv, BorderLayout.SOUTH);
+			add(inv, BorderLayout.SOUTH);
+			//add(inv);
 			// This has to be here to initialize the tool tips, because otherwise they are only initialized when you click
 			for (int i = 0; i < capacity; i++) {
 				inv.slots[i].setToolTipText("Empty Slot");
