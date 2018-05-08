@@ -2,6 +2,7 @@ package com.jfeather.Items;
 
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
@@ -150,13 +151,17 @@ public class Weapon {
 			//path.printMatrix(arr);
 			
 			Graphics2D g2d = (Graphics2D) dialog.getGraphics();
+			double angle = Math.toRadians(path.getAngleFromX());
+			
 			int index = shotCount;
 			shotCount++;
 			new Thread() {
 				public void run() {
 					// Create a label for each position the projectile will be in during its path
 					for (int i = 0; i < shotPaths.get(index).length; i++) {
-						g2d.drawImage(projectile.getImage(), shotPaths.get(index)[i][0], shotPaths.get(index)[i][1], null);
+				    	AffineTransform tx = AffineTransform.getRotateInstance(Math.PI / 2  - angle, shotPaths.get(index)[i][0] + sprite.getIconWidth() / 2, shotPaths.get(index)[i][1] + sprite.getIconHeight() / 2);
+						g2d.setTransform(tx);
+				    	g2d.drawImage(projectile.getImage(), shotPaths.get(index)[i][0], shotPaths.get(index)[i][1], null);
 						try {
 							Thread.sleep((int) (speed * 1.5));
 						} catch (InterruptedException e) {

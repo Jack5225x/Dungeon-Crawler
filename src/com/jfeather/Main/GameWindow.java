@@ -31,6 +31,8 @@ public class GameWindow extends JFrame {
 	public static GameWindow frame;
 	public GameInstance instance;
 	public volatile TitleScreen ts;
+	private Inventory inv;
+	private Character character;
 	public static final String TITLE = "Dungeon Dash";
 	// TODO: credit to Cheesy for the title
 	
@@ -50,7 +52,7 @@ public class GameWindow extends JFrame {
 	
 	public GameWindow() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 640, 530);
+		setBounds(100, 100, 640, 520);
 		contentPane = new JPanel();
 		contentPane.setLayout(new BorderLayout());
 		setContentPane(contentPane);
@@ -59,33 +61,19 @@ public class GameWindow extends JFrame {
 		setBackground(new Color(0, 0, 0));
 		
 		Character jack = new Character("Jack");
-		//jack.setAgility(200);
-		Inventory inv = createInv(jack, 5);
+		/*
 
 		GameInstance instance = new GameInstance(jack);
 		add(instance, BorderLayout.NORTH);
-		//add(instance);
-		contentPane.addKeyListener(instance.KL);
-		addKeyListener(instance.KL);
-		//inv.addKeyListener(instance.KL);
 		addMouseListener(instance.ML);
-		//inv.addMouseListener(instance.ML);
 		addMouseMotionListener(instance.MML);
-		//inv.addMouseMotionListener(instance.MML);
 		instance.setFPS(60);
-		//jack.setActiveWeapon(WeaponsGen.genWeapon(jack, Weapon.BOW));
 		
 		Weapon test = WeaponsGen.genWeapon(jack);
 		inv.setActiveWeapon(test);
 		
-		//instance.setRequestFocusEnabled(true);
-		//inv.setRequestFocusEnabled(false);
 		instance.requestFocus();
-		System.out.println(instance.hasFocus());
-
-		JPanel panel = new JPanel();
-		panel.setPreferredSize(new Dimension());
-		//add(panel);
+		
 		/*
 		for (int i = 0; i < 5; i++) {
 			Weapon testSword = WeaponsGen.genWeapon(jack, Weapon.WAND);
@@ -96,8 +84,8 @@ public class GameWindow extends JFrame {
 			Weapon testSword = WeaponsGen.genWeapon(jack, Weapon.BOW);
 			inv.addItem(testSword);
 		}
+		*/
 		
-		/*
 		Thread title = new Thread() {
 			@Override
 			public void run() {
@@ -106,8 +94,8 @@ public class GameWindow extends JFrame {
 			}
 		};
 		title.start();
-		*/
 		
+		/*
 		new Thread () {
 			@Override
 			public void run() {
@@ -118,7 +106,7 @@ public class GameWindow extends JFrame {
 						e.printStackTrace();
 					}
 					//jack.setInvulnerable(true);
-					jack.subtractHealth(50);
+					//jack.subtractHealth(50);
 					try {
 						Thread.sleep(2000);
 					} catch (InterruptedException e) {
@@ -143,8 +131,8 @@ public class GameWindow extends JFrame {
 			}
 		}.start();
 
-		
-		inv.setUpdate(true);
+		*/
+		//inv.setUpdate(true);
 		//inv.setUpdateInterval(40);
 		
 	}
@@ -168,6 +156,15 @@ public class GameWindow extends JFrame {
 	
 	public void close() {
 		frame.dispose();
+	}
+	
+	public void beginGame() {
+		GameInstance instance = new GameInstance(character);
+		add(instance, BorderLayout.NORTH);
+		addMouseListener(instance.ML);
+		addMouseMotionListener(instance.MML);
+		instance.setFPS(60);
+		inv = createInv(character, 5);
 	}
 	
 }

@@ -13,8 +13,12 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
+import javax.swing.InputMap;
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 import javax.swing.Timer;
 
 import com.jfeather.Exceptions.UnsupportedThemeException;
@@ -26,7 +30,7 @@ import com.jfeather.Player.PlayerInstance;
 import com.jfeather.Player.Character;
 
 
-public class GameInstance extends JPanel implements MouseListener, MouseMotionListener, KeyListener {
+public class GameInstance extends JPanel implements MouseListener, MouseMotionListener {
 	
 		
 	private static final long serialVersionUID = 1L;
@@ -34,7 +38,18 @@ public class GameInstance extends JPanel implements MouseListener, MouseMotionLi
 	// These are defined so they can referenced in the GameWindow class
 	public final MouseListener ML = this;
 	public final MouseMotionListener MML = this;
-	public final KeyListener KL = this;
+	//public final KeyListener KL = this;
+	
+	public static final String MOVE_LEFT = "left";
+	public static final String MOVE_RIGHT = "right";
+	public static final String MOVE_UP = "up";
+	public static final String MOVE_DOWN = "down";
+	public static final String ROLL = "roll";
+	
+	public static final String RELEASE_UP = "r_up";
+	public static final String RELEASE_DOWN = "r_down";
+	public static final String RELEASE_LEFT = "r_left";
+	public static final String RELEASE_RIGHT = "r_right";
 	
 	private int frames = 33;
 	private Timer timer;
@@ -68,17 +83,53 @@ public class GameInstance extends JPanel implements MouseListener, MouseMotionLi
 		height = (int)(dim.getHeight());
 		requestFocus();
 		player = new PlayerInstance(character, width / 2, (int)(height * .5));
-		
+
 		try {
 			level = LevelGen.genHalls(floor = 1, player, this, new Theme(Theme.OCEAN));
 		} catch (UnsupportedThemeException e) {
 			e.printStackTrace();
 		}
-		
+		setupKeyBindings();
+
 		//level.setCoords((width / 2) - level.getWidth() / 2, (int)(height * .5) - level.getHeight() / 2);
 		//level.setCoords((player.getX() / 2) - level.getWidth() / 2, (int)(player.getY() * .5) - level.getHeight() / 2);
 	}
 
+	public void setupKeyBindings() {
+		// Lord have mercy
+		
+		// The press actions
+		getInputMap().put(KeyStroke.getKeyStroke("pressed W"), MOVE_UP);	
+		getActionMap().put(MOVE_UP, new Movement(level, PlayerInstance.DIR_UP));
+		
+		getInputMap().put(KeyStroke.getKeyStroke("pressed S"), MOVE_DOWN);	
+		getActionMap().put(MOVE_DOWN, new Movement(level, PlayerInstance.DIR_DOWN));
+
+		getInputMap().put(KeyStroke.getKeyStroke("pressed A"), MOVE_LEFT);	
+		getActionMap().put(MOVE_LEFT, new Movement(level, PlayerInstance.DIR_LEFT));
+
+		getInputMap().put(KeyStroke.getKeyStroke("pressed D"), MOVE_RIGHT);	
+		getActionMap().put(MOVE_RIGHT, new Movement(level, PlayerInstance.DIR_RIGHT));
+
+		// The release actions
+		getInputMap().put(KeyStroke.getKeyStroke("released W"), RELEASE_UP);	
+		getActionMap().put(RELEASE_UP, new Movement(level, Movement.DIR_UP_RELEASE));
+		
+		getInputMap().put(KeyStroke.getKeyStroke("released S"), RELEASE_DOWN);	
+		getActionMap().put(RELEASE_DOWN, new Movement(level, Movement.DIR_DOWN_RELEASE));
+
+		getInputMap().put(KeyStroke.getKeyStroke("released A"), RELEASE_LEFT);	
+		getActionMap().put(RELEASE_LEFT, new Movement(level, Movement.DIR_LEFT_RELEASE));
+
+		getInputMap().put(KeyStroke.getKeyStroke("released D"), RELEASE_RIGHT);	
+		getActionMap().put(RELEASE_RIGHT, new Movement(level, Movement.DIR_RIGHT_RELEASE));
+		
+		// Roll action
+		getInputMap().put(KeyStroke.getKeyStroke("SPACE"), ROLL);
+		getActionMap().put(ROLL, new RollAction(level));
+
+	}
+	
 	public void setFPS(int newFPS) {
 		// This isn't true fps, because it changes the speed of the game as well, but it functions pretty much the same
 		// Maybe this will be referenced in some settings menu (if that gets made)
@@ -100,32 +151,17 @@ public class GameInstance extends JPanel implements MouseListener, MouseMotionLi
 		Graphics2D g2d = (Graphics2D) g;
 		level.repaintLevel(g2d);
 		g2d.drawImage(level.getSprite(), level.getX(), level.getY(), this);
-		g2d.drawImage(player.getImage(), player.getX(), player.getY(), this);
+		//g2d.drawImage(player.getImage(), player.getX(), player.getY(), this);
+		player.updateSprite(g, this);
 	}
 	
-	@Override
-	public void keyTyped(KeyEvent e) {
-		// Won't be used but needs to stay here
-	}
-	
-	@Override
-	public void keyPressed(KeyEvent e) {
-		player.keyPressed(e, character.getAgility());
-		level.keyPressed(e, character.getAgility(), getGraphics());
-	}
-	
-	@Override
-	public void keyReleased(KeyEvent e) {
-		player.keyReleased(e);
-		level.keyReleased(e);
-	}
 	
 	private class Listener implements ActionListener {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// This method is run continuously on the timer made above
-			player.updateSprite();
+			//player.updateSprite();
 			level.move(getGraphics());
 			repaint();
 			try {
@@ -135,7 +171,8 @@ public class GameInstance extends JPanel implements MouseListener, MouseMotionLi
 			}
 		}
 		
-	}
+	}	
+	
 
 	@Override
 	public void mouseClicked(MouseEvent e) {

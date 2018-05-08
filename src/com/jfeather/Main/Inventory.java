@@ -430,7 +430,7 @@ public class Inventory extends JPanel implements MouseListener {
 			healthTimer++;
 			
 			// Auto regen mana
-			if (character.getMana() < character.getMaxMana() && manaTimer > 8) {
+			if (character.getMana() < character.getMaxMana() && manaTimer > 4) {
 				character.addMana(1);
 				manaTimer = 0;
 			}

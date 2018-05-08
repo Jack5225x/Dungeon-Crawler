@@ -1,11 +1,17 @@
 package com.jfeather.Player;
 
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URL;
 
 import javax.swing.ImageIcon;
+import javax.swing.JPanel;
 
 public class PlayerInstance {
 	
@@ -27,6 +33,7 @@ public class PlayerInstance {
 		initialize();
 		x = startX - sprite.getWidth(null) / 2;
 		y = startY - sprite.getHeight(null) / 2;
+		sprite = createImage("Sprites/Character/Character.png");
 	}
 	
 	public void initialize() {
@@ -55,7 +62,7 @@ public class PlayerInstance {
 	public void addA(int increment) {
 		angle += increment;
 	}
-	
+		
 	public int getWidth() {
 		return w;
 	}
@@ -72,17 +79,24 @@ public class PlayerInstance {
 		return sprite;
 	}
 	
+	public void setDirection(int newDirection) {
+		facing = newDirection;
+	}
+	
 	public void move() {
 		x += dx;
 		y += dy;
 		angle += da;
-		updateSprite();
 		if (roll && rollReady)
 			roll();
 	}
 	
 	public void setSprite(Image newSprite) {
 		sprite = newSprite;
+	}
+	
+	public void setSprite(String path) {
+		sprite = createImage(path);
 	}
 	
 	public void setRollCooldown(int  newCooldown) {
@@ -96,6 +110,22 @@ public class PlayerInstance {
 	public void setSpritePath(String imagePath) {
 		ImageIcon icon = new ImageIcon(imagePath);
 		sprite = icon.getImage();
+	}
+	
+	public void setLeft(boolean newLeft) {
+		left = newLeft;
+	}
+	
+	public void setRight(boolean newRight) {
+		right = newRight;
+	}
+	
+	public void setUp(boolean newUp) {
+		up = newUp;
+	}
+	
+	public void setDown(boolean newDown) {
+		down = newDown;
 	}
 	
 	// https://help.adobe.com/en_US/AS2LCR/Flash_10.0/help.html?content=00000520.html
@@ -228,36 +258,62 @@ public class PlayerInstance {
     	}.start();
     	
     }
-    
-    public void updateSprite() {
-    	// Round 2 baby
+        
+    public void updateSprite(Graphics g, JPanel dialog) {
+    	
+    	Graphics2D g2d = (Graphics2D) g;
+    	double angle = 0;
+    	/*
+    	switch (facing) {
+    	case 0:
+    		// Left
+    		angle = Math.toRadians(-90);
+    		break;
+    	case 1:
+    		// Right
+    		angle = Math.toRadians(90);
+    		break;
+    	case 2:
+    		// Up
+    		angle = Math.toRadians(0);
+    		break;
+    	case 3:
+    		// Down
+    		angle = Math.toRadians(180);
+    		break;
+    	} */
+    	//System.out.println(left + " " + right + " " + up + " " + down);
     	if (left && !right && !down && !up) {
-    		sprite = createImage("Sprites/Character/CharacterLeft.png");
     		facing = DIR_LEFT;
+    		angle = Math.toRadians(-90);
     	} else {
     		if (!left && right && !down && !up) {
-        		sprite = createImage("Sprites/Character/CharacterRight.png");
         		facing = DIR_RIGHT;
+        		angle = Math.toRadians(90);
     		} else {
     			if (!left && !right && down && !up) {
-    	    		sprite = createImage("Sprites/Character/CharacterDown.png");
     	    		facing = DIR_DOWN;
+    	    		angle = Math.toRadians(180);
     			} else {
     				if (!left && !right && !down && up) {
-    		    		sprite = createImage("Sprites/Character/CharacterUp.png");
     		    		facing = DIR_UP;
+    		    		angle = Math.toRadians(0);
     				} else {
     					if (left && !right && down && !up) {
     						//System.out.println("Down left");
+    						angle = Math.toRadians(-135);
     					} else {
     						if (left && !right && !down && up) {
     							//System.out.println("Up left");
+    							angle = Math.toRadians(-45);
     						} else {
     							if (!left && right && down && !up) {
     								//System.out.println("Down right");
+    								angle = Math.toRadians(135);
     							} else {
     								if (!left && right && !down && up) {
     									//System.out.println("Up right");
+    									angle = Math.toRadians(45);
     								} else {
     									// Do nothing here, because this runs whenever nothing else changes
     								}
@@ -268,6 +324,14 @@ public class PlayerInstance {
     			}
     		}
     	}
+
+    	
+    	
+    	AffineTransform tx = AffineTransform.getRotateInstance(angle, x + sprite.getWidth(null) / 2, y + sprite.getHeight(null) / 2);
+    	
+    	g2d.setTransform(tx);
+    	g2d.drawImage(sprite, x, y, null);
+
     }
     
 	public Image createImage(String path) {
