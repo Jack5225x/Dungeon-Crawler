@@ -25,7 +25,7 @@ public class Inventory extends JPanel implements MouseListener {
 	private static final long serialVersionUID = 1L;
 	public JButton[] slots;
 	public Item[] items;
-	public JLabel healthBar, manaBar;
+	public JLabel healthBar, manaBar, invulnBar;
 	public JButton armorSlot, weaponSlot, helmetSlot, statsButton;
 	public static final int MAX_SLOTS = 10;
 	public int weaponSlotIndex, armorSlotIndex, helmetSlotIndex, capacity;
@@ -39,20 +39,25 @@ public class Inventory extends JPanel implements MouseListener {
 	private boolean showStats;
 	private JLabel statsLine1, statsLine2, statsLine3;
 	private TitleText statsName;
-	private int manaTimer;
+	private int manaTimer, healthTimer;
 	
-	public Inventory(Character c, int inventoryCapacity) throws InventoryCapacityException {
+	public Inventory(Character c, int inventoryCapacity) {
 		character = c;
 		capacity = inventoryCapacity;
 		showStats = false;
 		manaTimer = 0;
+		healthTimer = 0;
 		if (inventoryCapacity > MAX_SLOTS)
-			throw new InventoryCapacityException();
+			try {
+				throw new InventoryCapacityException();
+			} catch (Exception ex) {
+				// Ignore
+			}
 		else {
 			setPreferredSize(new Dimension(640, 150));
 			setLayout(new BorderLayout(0, 0));
-			setBackground(new Color(94, 80, 30));
-			addMouseListener(this);
+			setBackground(new Color(150, 150, 150));
+			//addMouseListener(this);
 			
 			// Initialize the array the JButtons		
 			slots = new JButton[MAX_SLOTS + 3];
@@ -126,6 +131,12 @@ public class Inventory extends JPanel implements MouseListener {
 			manaBar.setBounds(290, 105, 181, 25);
 			add(manaBar);
 			
+			invulnBar = new JLabel(new ImageIcon("Sprites/Inventory/InvulnerableHealthBar.png"));
+			invulnBar.setBounds(290, 75, 181, 25);
+			add(invulnBar);
+			invulnBar.setVisible(false);
+			invulnBar.setToolTipText("Invulnerable");
+			
 			new Thread() {
 				@Override
 				public void run() {
@@ -197,6 +208,7 @@ public class Inventory extends JPanel implements MouseListener {
 					toggleSlots(false);
 					healthBar.setVisible(false);
 					manaBar.setVisible(false);
+					invulnBar.setVisible(false);
 					
 					statsName.setVisible(true);
 					statsLine1.setVisible(true);
@@ -210,7 +222,8 @@ public class Inventory extends JPanel implements MouseListener {
 					toggleSlots(true);
 					healthBar.setVisible(true);
 					manaBar.setVisible(true);
-					
+					invulnBar.setVisible(true);
+
 					statsName.setVisible(false);
 					statsLine1.setVisible(false);
 					statsLine2.setVisible(false);
@@ -414,24 +427,42 @@ public class Inventory extends JPanel implements MouseListener {
 	public void updateStats() {
 		if (character.getHealth() != 0) {
 			manaTimer++;
+			healthTimer++;
+			
 			// Auto regen mana
 			if (character.getMana() < character.getMaxMana() && manaTimer > 8) {
 				character.addMana(1);
 				manaTimer = 0;
 			}
 			
+			if (character.getHealth() < character.getMaxHealth() && healthTimer > 15) {
+				character.addHealth(1);
+				healthTimer = 0;
+			}
+			
 			totalStrength = items[MAX_SLOTS].getStrength() + items[MAX_SLOTS + 1].getStrength() + items[MAX_SLOTS + 2].getStrength() + character.getStrength();
 			totalIntelligence = items[MAX_SLOTS].getIntelligence() + items[MAX_SLOTS + 1].getIntelligence() + items[MAX_SLOTS + 2].getIntelligence() + character.getIntelligence();
 			totalDefense = items[MAX_SLOTS].getDefense() + items[MAX_SLOTS + 1].getDefense() + items[MAX_SLOTS + 2].getDefense() + character.getDefense();
 			totalAgility = items[MAX_SLOTS].getAgility() + items[MAX_SLOTS + 1].getAgility() + items[MAX_SLOTS + 2].getAgility() + character.getAgility();
-			
-			// TODO: make this be cropped, because right now, when your health decreases, it just moves it bar to the left sorta
 			totalLuck = items[MAX_SLOTS].getLuck() + items[MAX_SLOTS + 1].getLuck() + items[MAX_SLOTS + 2].getLuck() + character.getLuck();
+
+			// TODO: make this be cropped, because right now, when your health decreases, it just moves it bar to the left sorta
 			healthBar.setBounds(290, 75, (int)(((double)character.getHealth() / (double)character.getMaxHealth()) * 181), 25);
 			manaBar.setBounds(manaBar.getX(), manaBar.getY(), (int)(((double)character.getMana() / (double)character.getMaxMana()) * 181), 25);
+			invulnBar.setBounds(290, 75, (int)(((double)character.getHealth() / (double)character.getMaxHealth()) * 181), 25);
 			healthBar.setToolTipText("<html>Health: <font color='red'>"+character.getHealth() + "</font>/<font color='red'>" + character.getMaxHealth());
 			manaBar.setToolTipText("<html>Mana: <font color='red'>"+character.getMana() + "</font>/<font color='red'>" + character.getMaxMana());
-		
+			
+			if (character.isInvulnerable() && !statsButton.getToolTipText().equals("See your character's items")) {
+				healthBar.setVisible(false);
+				invulnBar.setVisible(true);
+			} else {
+				if (!statsButton.getToolTipText().equals("See your character's items")) {
+					healthBar.setVisible(true);
+					invulnBar.setVisible(false);
+				}
+			}
+			
 			// Update the stats panel
 			statsLine1.setText("<html> Level: <font color='green'>" + character.getLevel() + "</font> &emsp; &emsp; Health: <font color='red'>" + character.getMaxHealth() + "</font> &emsp; &emsp; Mana: <font color='blue'>" + character.getMaxMana());
 			statsLine2.setText("<html> Strength: <font color='red'>" + totalStrength + "</font> &emsp; &emsp; Intelligence: <font color='red'>" + totalIntelligence + "</font> &emsp; &emsp; Defense: <font color='red'>" + totalDefense);

@@ -2,6 +2,7 @@ package com.jfeather.Main;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
@@ -39,6 +40,7 @@ public class GameWindow extends JFrame {
 				try {
 					frame = new GameWindow();
 					frame.setVisible(true);
+					JFrame frame2 = new JFrame();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -48,7 +50,7 @@ public class GameWindow extends JFrame {
 	
 	public GameWindow() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 640, 520);
+		setBounds(100, 100, 640, 530);
 		contentPane = new JPanel();
 		contentPane.setLayout(new BorderLayout());
 		setContentPane(contentPane);
@@ -61,10 +63,11 @@ public class GameWindow extends JFrame {
 		Inventory inv = createInv(jack, 5);
 
 		GameInstance instance = new GameInstance(jack);
-		//add(instance, BorderLayout.NORTH);
-		add(instance);
+		add(instance, BorderLayout.NORTH);
+		//add(instance);
+		contentPane.addKeyListener(instance.KL);
 		addKeyListener(instance.KL);
-		inv.addKeyListener(instance.KL);
+		//inv.addKeyListener(instance.KL);
 		addMouseListener(instance.ML);
 		//inv.addMouseListener(instance.ML);
 		addMouseMotionListener(instance.MML);
@@ -72,8 +75,17 @@ public class GameWindow extends JFrame {
 		instance.setFPS(60);
 		//jack.setActiveWeapon(WeaponsGen.genWeapon(jack, Weapon.BOW));
 		
-		Weapon test = WeaponsGen.genWeapon(jack, Weapon.BOW);
+		Weapon test = WeaponsGen.genWeapon(jack);
 		inv.setActiveWeapon(test);
+		
+		//instance.setRequestFocusEnabled(true);
+		//inv.setRequestFocusEnabled(false);
+		instance.requestFocus();
+		System.out.println(instance.hasFocus());
+
+		JPanel panel = new JPanel();
+		panel.setPreferredSize(new Dimension());
+		//add(panel);
 		/*
 		for (int i = 0; i < 5; i++) {
 			Weapon testSword = WeaponsGen.genWeapon(jack, Weapon.WAND);
@@ -101,14 +113,36 @@ public class GameWindow extends JFrame {
 			public void run() {
 				//while (true) {
 					try {
-						Thread.sleep(1000);
+						Thread.sleep(2000);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
-					//jack.subtractMana(50);
+					//jack.setInvulnerable(true);
+					jack.subtractHealth(50);
+					try {
+						Thread.sleep(2000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					//jack.setInvulnerable(false);
 				//}
 			}
 		}.start();
+		
+		new Thread () {
+			@Override
+			public void run() {
+				while (true) {
+					try {
+						Thread.sleep(100);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					//jack.subtractHealth(2);
+				}
+			}
+		}.start();
+
 		
 		inv.setUpdate(true);
 		//inv.setUpdateInterval(40);

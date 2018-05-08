@@ -32,9 +32,9 @@ public class GameInstance extends JPanel implements MouseListener, MouseMotionLi
 	private static final long serialVersionUID = 1L;
 	
 	// These are defined so they can referenced in the GameWindow class
-	public final KeyListener KL = this;
 	public final MouseListener ML = this;
 	public final MouseMotionListener MML = this;
+	public final KeyListener KL = this;
 	
 	private int frames = 33;
 	private Timer timer;
@@ -48,14 +48,13 @@ public class GameInstance extends JPanel implements MouseListener, MouseMotionLi
 	public GameInstance(Character c) {
 		character = c;
 		initialize();
-
+		
 		// Start the overarching game loop that refreshes the screen
 		// Listener is defined below to repaint and do other various things
 		timer = new Timer(frames, new Listener());
 		timer.start();
 		//Obstacle rockTest = new Obstacle("Sprites/Level/Rock.png");
 		//rockTest.addAt(this, 50, 50);
-
 	}
 	
 	public void initialize() {
@@ -122,7 +121,7 @@ public class GameInstance extends JPanel implements MouseListener, MouseMotionLi
 	}
 	
 	private class Listener implements ActionListener {
-
+		
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// This method is run continuously on the timer made above

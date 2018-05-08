@@ -9,6 +9,8 @@ import com.jfeather.Items.*;
 import com.jfeather.Player.Character;
 public class WeaponsGen {
 	
+	public static String[] workingWeaponTypes = {Weapon.SWORD, Weapon.BOW, Weapon.WAND};
+	
 	// These can be changed and updated and the rest of the code will adjust dynamically, so go wild
 	private static String[] preConstructions = {"The ", ""};
 	private static String[] basePreAdjectives = {"Mighty", "Strong" ,"Steadfast", "Crystal", "Shiny", "Angelic", "Demonic", "Adorned", "Void"};
@@ -444,7 +446,9 @@ public class WeaponsGen {
 	
 	public static String genType() {
 		Random rng = new Random();
-		String[] arr = Weapon.TYPES;
+		// TODO: once all of the weapon types are done change flip the commented lines
+		//String[] arr = Weapon.TYPES;
+		String[] arr = workingWeaponTypes;
 		return arr[rng.nextInt(arr.length)];
 	}
 }

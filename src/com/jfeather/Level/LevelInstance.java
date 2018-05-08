@@ -382,8 +382,8 @@ public class LevelInstance {
     	int ogX = spriteLocations.get(0).get(0);
     	int ogY = spriteLocations.get(0).get(1);
     	
-    	System.out.println(finalX + " " + ogX + " " + dx);
-    	System.out.println(finalY + " " + ogY + " " + dy);
+    	//System.out.println(finalX + " " + ogX + " " + dx);
+    	//System.out.println(finalY + " " + ogY + " " + dy);
     	
     	// TODO make this not throw you to infinity sometimes when you roll, idk why?
     	
