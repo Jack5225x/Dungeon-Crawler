@@ -1,6 +1,9 @@
 package com.jfeather.Items;
 
+import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -19,6 +22,8 @@ public class Weapon {
 	public static String HAMMER = "hammer";
 	public static String CROSSBOW = "crossbow";
 	
+	public static String[] TYPES = {SWORD, DAGGER, WAND, STAFF, BOW, HAMMER, CROSSBOW};
+	
 	private int damage, strength, intelligence, speed, rarity, agility, luck;
 	private double range;
 	private ImageIcon sprite, projectile;
@@ -28,6 +33,8 @@ public class Weapon {
 	private int mouseX, mouseY;
 	private JPanel dialog;
 	private volatile int[][] arr;
+	private volatile ArrayList<int[][]> shotPaths;
+	private volatile int shotCount;
 	
 	public Weapon(String itemName, String itemDescr, int itemRarity, int itemDamage, int itemSpeed, double itemRange, int itemStrength, int itemIntelligence, int itemAgility, int itemLuck, ImageIcon itemSprite, ImageIcon itemProjectile) {
 		strength = itemStrength;
@@ -43,6 +50,8 @@ public class Weapon {
 		name = itemName;
 		descr = itemDescr;
 		String rarityColor = "";
+		shotCount = 0;
+		shotPaths = new ArrayList<>();
 		switch (itemRarity) {
 			case 0: rarityColor = "black"; break;
 			case 1: rarityColor = "white"; break;
@@ -98,6 +107,10 @@ public class Weapon {
 		return speed;
 	}
 	
+	public void setSpeed(int newSpeed) {
+		speed = newSpeed;
+	}
+	
 	public double getRange() {
 		return range;
 	}
@@ -134,27 +147,31 @@ public class Weapon {
 	public void shoot(int xo, int yo, int xf, int yf, JPanel dialog) {
 		if (name != null) {
 			Line path = new Line(xo, yo, xf, yf);
-			arr = path.genPoints(range);
+			shotPaths.add(shotCount, path.genPoints(range));
 			//path.printMatrix(arr);
-			JLabel[] labels = new JLabel[arr.length];
+			
+			Graphics2D g2d = (Graphics2D) dialog.getGraphics();
+			double angle = Math.toRadians(path.getAngleFromX());
+			
+			int index = shotCount;
+			shotCount++;
 			new Thread() {
 				public void run() {
 					// Create a label for each position the projectile will be in during its path
-					for (int i = 0; i < arr.length; i++) {
-						labels[i] = new JLabel(projectile);
-						dialog.add(labels[i]);
-						//System.out.println(arr[i][0] + " " + arr[i][1]);
-						if (arr[i][0] > 0 && arr[i][1] > 0)
-							labels[i].setBounds(arr[i][0], arr[i][1], projectile.getIconWidth(), projectile.getIconHeight());
-						labels[i].setVisible(true);
+					for (int i = 0; i < shotPaths.get(index).length; i++) {
+				    	AffineTransform tx = AffineTransform.getRotateInstance(Math.PI / 2  - angle, shotPaths.get(index)[i][0] + sprite.getIconWidth() / 2, shotPaths.get(index)[i][1] + sprite.getIconHeight() / 2);
+						g2d.setTransform(tx);
+				    	g2d.drawImage(projectile.getImage(), shotPaths.get(index)[i][0], shotPaths.get(index)[i][1], null);
 						try {
-							Thread.sleep((int) (speed * 2.5));
-							//labels[i].setVisible(false);
+							Thread.sleep((int) (speed * 1.5));
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
+						// Pretty sure its just luck that makes this work
+						// i.e. you don't have to delete the projectiles because they just get written over
 					}
 				}
+				
 			}.start();
 		}
 	}
@@ -168,7 +185,7 @@ public class Weapon {
 				public void run() {
 					shootReady = false;
 					try {
-						// TODO Make this properly scale with speed or something
+						// TODO: Make this properly scale with speed or something
 						// It sorta does this now, but it can certainly be improved
 						Thread.sleep(1000 / speed);
 					} catch (InterruptedException e) {
@@ -205,10 +222,12 @@ public class Weapon {
 	}
 	
 	public void setArr(int[][] newArr) {
-		arr = newArr;
+		shotPaths.set(shotCount, newArr);
 	}
 	
 	public int[][] getArr() {
-		return arr;
+		if (shotPaths.get(shotCount) != null)
+			return shotPaths.get(shotCount);
+		return new int[1][2];
 	}
 }

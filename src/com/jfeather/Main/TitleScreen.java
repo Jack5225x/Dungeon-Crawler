@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 import com.jfeather.Exceptions.InventoryCapacityException;
 import com.jfeather.Game.GameInstance;
 import com.jfeather.Player.SaveSelect;
+import com.jfeather.Player.Character;
 
 public class TitleScreen implements MouseListener {
 
@@ -24,11 +25,12 @@ public class TitleScreen implements MouseListener {
 	private GameWindow gw = new GameWindow();
 	public MouseListener ml = this;
 	public TitleText start, startHighlighted, exit, exitHighlighted;
+	private Character character;
 	
-	public TitleScreen(JPanel dialogPanel) {
+	public TitleScreen(JPanel dialogPanel, Character c) {
 		dialog = new JPanel();
 		dialog = dialogPanel;
-		
+		character = c;
 		// Set up the pointer
 		pointer = new JLabel[3];
 		for (int i = 0; i < pointer.length; i++) {
@@ -76,6 +78,7 @@ public class TitleScreen implements MouseListener {
 				dispose();
 				//SaveSelect ss = new SaveSelect(dialog);
 				// TODO make this able to transition to save screen easily
+				GameInstance instance = new GameInstance(character);
 			}
 			if (exit.isWithin(e)) {
 				// Close the window

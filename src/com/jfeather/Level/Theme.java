@@ -48,7 +48,7 @@ public class Theme {
 		BACKGROUND_COLORS.put(DUNGEON, new Color(0, 0, 0));
 		BACKGROUND_COLORS.put(HALLS, new Color(0, 0, 0));
 		BACKGROUND_COLORS.put(CAVE, new Color(0, 0, 0));
-		BACKGROUND_COLORS.put(RAINBOW, new Color(0, 0, 0));
+		BACKGROUND_COLORS.put(RAINBOW, new Color(255, 255, 255));
 	}
 	
 	public String getFolder() {

@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import javax.swing.ImageIcon;
+import javax.swing.KeyStroke;
 
 import com.jfeather.Game.GameInstance;
 import com.jfeather.Items.Weapon;
@@ -40,6 +41,8 @@ public class LevelInstance {
 	private Color background;
 	private Theme theme;
 	
+	public static final int ROLL_COST = 25;
+	
 	public LevelInstance(int floorNumber, PlayerInstance p, GameInstance i, Theme newTheme) {
 		floor = floorNumber;
 		player = p;
@@ -48,6 +51,10 @@ public class LevelInstance {
 		weapon = character.getActiveWeapon();
 		a = 0;
 		theme = newTheme;
+		left = false;
+		right = false;
+		up = false;
+		down = false;
 		character = player.getCharacter();
 		sprite = (new ImageIcon("Sprites/Level/TestLevel.png")).getImage();
 		mapCount = 0;
@@ -65,6 +72,30 @@ public class LevelInstance {
 
 	public int getFloor() {
 		return floor;
+	}
+	
+	public boolean getMoveable() {
+		return moveable;
+	}
+	
+	public void setMoveable(boolean newMove) {
+		moveable = newMove;
+	}
+	
+	public void setRollReady(boolean toggle) {
+		rollReady = toggle;
+	}
+	
+	public boolean getRollReady() {
+		return rollReady;
+	}
+	
+	public int getRollCooldown() {
+		return rollCooldown;
+	}
+	
+	public PlayerInstance getPlayer() {
+		return player;
 	}
 
 	public void setFloor(int newFloor) {
@@ -106,6 +137,50 @@ public class LevelInstance {
 	public void setCoords(int newX, int newY) {
 		x = newX;
 		y = newY;
+	}
+	
+	public void setdX(int newdX) {
+		dx = newdX;
+	}
+	
+	public void setdY(int newdY) {
+		dy = newdY;
+	}
+
+	public void setRight(boolean newRight) {
+		right = newRight;
+		player.setRight(newRight);
+	}
+	
+	public void setLeft(boolean newLeft) {
+		left = newLeft;
+		player.setLeft(newLeft);
+	}
+	
+	public void setUp(boolean newUp) {
+		up = newUp;
+		player.setUp(newUp);
+	}
+	
+	public void setDown(boolean newDown) {
+		down = newDown;
+		player.setDown(newDown);
+	}
+	
+	public boolean getUp() {
+		return up;
+	}
+	
+	public boolean getDown() {
+		return down;
+	}
+	
+	public boolean getLeft() {
+		return left;
+	}
+	
+	public boolean getRight() {
+		return right;
 	}
 		
 	public ArrayList<Integer> getCoords() {
@@ -150,84 +225,6 @@ public class LevelInstance {
 		spriteLocations = map;
 	}
 	
-    public void keyPressed(KeyEvent e, int speed, Graphics g) {
-        int key = e.getKeyCode();
-        if (moveable) {
-	        int d = (int) (8 / (1 + Math.pow(2.717, speed / -10)));
-	        if (key == 65) {
-	        	// A
-	            dx = d;
-	            left = true;
-	        }
-	        if (key == 68) {
-	        	// D
-	            dx = -d;
-	            right = true;
-	        }
-	        if (key == 87) {
-	        	// W
-	            dy = d;
-	            up = true;
-	        }
-	        if (key == 83) {
-	        	// S
-	            dy = -d;
-	            down = true;
-	        }
-	        if (key == 81)
-	        	// Q
-	        	da = -3;
-	        if (key == 69)
-	        	// E
-	        	da = 3;
-	        if (key == 32) {
-	        	// Space
-	        	roll = true;
-	        }
-	        if (key == 88) {
-	        	toggleOffset();
-	        }
-        }
-    }
-
-    public void keyReleased(KeyEvent e) {    
-        int key = e.getKeyCode();
-        if (key == 65) {
-        	// A
-        	if (!right)
-        		dx = 0;
-            left = false;
-        }
-        if (key == 68) {
-        	// D
-        	if (!left)
-        		dx = 0;
-            right = false;
-        }
-        if (key == 87) {
-        	// W
-        	if (!down)
-        		dy = 0;
-            up = false;
-        }
-        if (key == 83) {
-        	// S
-        	if (!up)
-        		dy = 0;
-            down = false;
-        }
-        if (key == 81)
-        	// Q
-        	da = 0;
-        if (key == 69)
-        	// E
-        	da = 0;
-        if (key == 32) {
-        	// Space
-        	roll = false;
-        }
-    }
-	
 	public void move(Graphics g) {
 		// TODO: make actual bounds
 		//if (!isOutOfBounds()) {
@@ -237,8 +234,6 @@ public class LevelInstance {
 			//moveShots();
 			
 			addIncrementsToMap(dx, dy);
-			if (rollReady && roll)
-				roll();
 		//}
 	}
 	
@@ -251,11 +246,17 @@ public class LevelInstance {
 	}
 	
 	private void moveShots() {
-		int[][] arr = weapon.getArr();
-		for (int i = 0; i < arr.length; i++) {
-			arr[i][0] += dx;
-			arr[i][1] += dy;
-		}
+		weapon = character.getActiveWeapon();
+		//if (weapon != null) {
+			int[][] arr = weapon.getArr();
+			System.out.println(arr.length);
+			for (int i = 0; i < arr.length; i++) {
+				arr[i][0] += dx;
+				arr[i][1] += dy;
+			}
+			weapon.setArr(arr);
+			System.out.println("moved");
+		//}
 	}
 	
 	private boolean isOutOfBounds() {
@@ -343,6 +344,7 @@ public class LevelInstance {
     		    						dx = (int)(-d / root);
     		    						dy = (int)(d / root);
     								} else {
+    									// If the player is standing still, roll in the direction they are looking
     									if (player.getDirection() == PlayerInstance.DIR_RIGHT) {
     										dx = -d;
     										dy = 0;
@@ -374,8 +376,8 @@ public class LevelInstance {
     	int ogX = spriteLocations.get(0).get(0);
     	int ogY = spriteLocations.get(0).get(1);
     	
-    	System.out.println(finalX + " " + ogX + " " + dx);
-    	System.out.println(finalY + " " + ogY + " " + dy);
+    	//System.out.println(finalX + " " + ogX + " " + dx);
+    	//System.out.println(finalY + " " + ogY + " " + dy);
     	
     	// TODO make this not throw you to infinity sometimes when you roll, idk why?
     	
@@ -396,7 +398,6 @@ public class LevelInstance {
     				try {
 						Thread.sleep(2);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
     			}
@@ -422,7 +423,6 @@ public class LevelInstance {
     				try {
 						Thread.sleep(2);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
     			}
@@ -433,10 +433,10 @@ public class LevelInstance {
 
     	
     	// Activate the cooldown
-    	if (character.getAgility() < 150)
-    		rollCooldown = 2500 - character.getAgility() * 10;
+    	if (character.getAgility() < 100)
+    		rollCooldown = 1500 - character.getAgility() * 10;
     	else
-    		rollCooldown = 750;
+    		rollCooldown = 500;
     	rollReady = false;
     	new Thread() {
     		@Override
@@ -444,16 +444,17 @@ public class LevelInstance {
     			try {
 					Thread.sleep(rollCooldown);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
     			rollReady = true;
     		}
     	}.start();
     	dy = 0;
-    	dx = 0;
+    	dx = 0; 
+    	character.subtractMana(ROLL_COST);
     }
     
+    // Deprecated Method (more or less)
     public void toggleOffset() {
     	isOffset = !isOffset;
     	if (isOffset) {
@@ -465,6 +466,7 @@ public class LevelInstance {
     	}
     }
     
+    // Deprecated Method
     public void rotate(Graphics g, Image image, int angle) {
     	Graphics2D g2d = (Graphics2D) g.create();
     	g2d.rotate(Math.toRadians(angle), player.getX(), player.getY());

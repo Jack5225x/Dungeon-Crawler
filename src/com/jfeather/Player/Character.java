@@ -13,7 +13,7 @@ public class Character {
 	private int level, health, maxHealth, mana, maxMana, intelligence, strength, defense, agility, luck;
 	private String name;
 	private ImageIcon sprite;
-	private boolean isInvulnerable;
+	private boolean invulnerable;
 	private Weapon activeWeapon;
 	private Armor activeArmor;
 	private Helmet activeHelmet;
@@ -31,7 +31,7 @@ public class Character {
 		defense = 0;
 		agility = 1;
 		luck = 1;
-		isInvulnerable = false;
+		invulnerable = false;
 	}
 	
 	public void levelUp() {
@@ -209,11 +209,13 @@ public class Character {
 	}
 	
 	public void subtractHealth(int healthDecrement) {
-		health -= healthDecrement;
+		if (!invulnerable && healthDecrement > 0)
+			health -= healthDecrement;
 	}
 	
 	public void addHealth(int healthIncrement) {
-		health += healthIncrement;
+		if (healthIncrement > 0)
+			health += healthIncrement;
 	}
 	
 	public void subtractMana(int manaDecrement) {
@@ -225,11 +227,11 @@ public class Character {
 	}
 	
 	public void setInvulnerable(boolean trueOrFalse) {
-		isInvulnerable = trueOrFalse;
+		invulnerable = trueOrFalse;
 	}
 	
 	public boolean isInvulnerable() {
-		return isInvulnerable;
+		return invulnerable;
 	}
 	
 	public void setActiveWeapon(Weapon weapon) {

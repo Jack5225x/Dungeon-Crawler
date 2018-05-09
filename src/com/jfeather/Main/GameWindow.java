@@ -1,6 +1,8 @@
 package com.jfeather.Main;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
@@ -29,8 +31,10 @@ public class GameWindow extends JFrame {
 	public static GameWindow frame;
 	public GameInstance instance;
 	public volatile TitleScreen ts;
-	public static String TITLE = "Dungeon Dash";
-	// TODO: credit to cheesy for the title
+	private Inventory inv;
+	private Character character;
+	public static final String TITLE = "Dungeon Dash";
+	// TODO: credit to Cheesy for the title
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -38,6 +42,7 @@ public class GameWindow extends JFrame {
 				try {
 					frame = new GameWindow();
 					frame.setVisible(true);
+					JFrame frame2 = new JFrame();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -47,60 +52,88 @@ public class GameWindow extends JFrame {
 	
 	public GameWindow() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 640, 480);
+		setBounds(100, 100, 640, 520);
 		contentPane = new JPanel();
 		contentPane.setLayout(new BorderLayout());
 		setContentPane(contentPane);
 		setTitle(TITLE);
 		setResizable(false);
+		setBackground(new Color(0, 0, 0));
 		
 		Character jack = new Character("Jack");
-		jack.setAgility(200);
-		//Inventory inv = createInv(jack, 10);
-		
+		/*
+
 		GameInstance instance = new GameInstance(jack);
-		add(instance);
-		addKeyListener(instance.KL);
-		//inv.addKeyListener(instance.KL);
+		add(instance, BorderLayout.NORTH);
 		addMouseListener(instance.ML);
-		//inv.addMouseListener(instance.ML);
 		addMouseMotionListener(instance.MML);
-		//inv.addMouseMotionListener(instance.MML);
 		instance.setFPS(60);
-		jack.setActiveWeapon(WeaponsGen.genWeapon(jack, Weapon.SWORD));
+		
+		Weapon test = WeaponsGen.genWeapon(jack);
+		inv.setActiveWeapon(test);
+		
+		instance.requestFocus();
 		
 		/*
-		for (int i = 0; i < 9; i++) {
-			Weapon testSword = WeaponsGen.genWeapon(jack, Weapon.SWORD);
+		for (int i = 0; i < 5; i++) {
+			Weapon testSword = WeaponsGen.genWeapon(jack, Weapon.WAND);
 			inv.addItem(testSword);
 		}
-		/*
-		/*Thread title = new Thread() {
+		
+		for (int i = 5; i < 10; i++) {
+			Weapon testSword = WeaponsGen.genWeapon(jack, Weapon.BOW);
+			inv.addItem(testSword);
+		}
+		*/
+		
+		Thread title = new Thread() {
 			@Override
 			public void run() {
-				ts = new TitleScreen(contentPane);
+				ts = new TitleScreen(contentPane, jack);
 				pack();
 			}
 		};
 		title.start();
-		*/
+		
+		/*
+		new Thread () {
+			@Override
+			public void run() {
+				//while (true) {
+					try {
+						Thread.sleep(2000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					//jack.setInvulnerable(true);
+					//jack.subtractHealth(50);
+					try {
+						Thread.sleep(2000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					//jack.setInvulnerable(false);
+				//}
+			}
+		}.start();
 		
 		new Thread () {
 			@Override
 			public void run() {
 				while (true) {
 					try {
-						Thread.sleep(500);
+						Thread.sleep(100);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					//jack.subtractHealth(1);
+					//jack.subtractHealth(2);
 				}
 			}
 		}.start();
+
+		*/
 		//inv.setUpdate(true);
-		//inv.setUpdateInterval(1000);
+		//inv.setUpdateInterval(40);
 		
 	}
 	
@@ -108,8 +141,9 @@ public class GameWindow extends JFrame {
 		Inventory inv;
 		try {
 			inv = new Inventory(c, capacity);
-			contentPane.add(inv.dialog, BorderLayout.SOUTH);
-			// This has to be here to initialize the tooltips, because otherwise they are only done when you click
+			add(inv, BorderLayout.SOUTH);
+			//add(inv);
+			// This has to be here to initialize the tool tips, because otherwise they are only initialized when you click
 			for (int i = 0; i < capacity; i++) {
 				inv.slots[i].setToolTipText("Empty Slot");
 			}
@@ -119,9 +153,18 @@ public class GameWindow extends JFrame {
 		}
 		return null;
 	}
-		
+	
 	public void close() {
 		frame.dispose();
 	}
-
+	
+	public void beginGame() {
+		GameInstance instance = new GameInstance(character);
+		add(instance, BorderLayout.NORTH);
+		addMouseListener(instance.ML);
+		addMouseMotionListener(instance.MML);
+		instance.setFPS(60);
+		inv = createInv(character, 5);
+	}
+	
 }
